@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:note_app/futures/list_notes/view/list_notes.dart';
 import 'package:note_app/futures/notes/view/notes.dart';
 
 @RoutePage()
@@ -11,20 +12,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final PageController _pageController = PageController();
   int _indexPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   onPageChanged(int indexPage) {
     setState(() {
       _indexPage = indexPage;
     });
   }
 
+  onBottomNavigationBarTap(int index) {
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   final List<Widget> pages = [
     const NotesPage(),
-    Container(
-      color: Colors.deepPurple,
-    ),
+    const ListNotesPage(),
     Container(
       color: Colors.deepOrange,
+    ),
+    Container(
+      color: Colors.blue,
     ),
   ];
 
@@ -32,28 +50,17 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: bottomNavigationBar(),
-      body: IndexedStack(
-        index: _indexPage,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: onPageChanged,
         children: pages,
       ),
-      // body: CustomScrollView(
-      //   slivers: [
-      //     SliverAppBar(
-      //       centerTitle: true,
-      //       actions: [
-      //         IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-      //         IconButton(onPressed: () {}, icon: const Icon(Icons.add))
-      //       ],
-      //       title: const Text('EchoNotes '),
-      //     ),
-      //     // SliverToBoxAdapter(child: ,)
-      //   ],
     );
   }
 
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
-      onTap: onPageChanged,
+      onTap: onBottomNavigationBarTap,
       unselectedItemColor: Colors.black,
       currentIndex: _indexPage,
       selectedItemColor: Colors.blue[800],
@@ -62,6 +69,8 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(icon: Icon(Icons.notes), label: 'Notes'),
         BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
         BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Folder'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.account_box), label: 'Account'),
       ],
     );
   }

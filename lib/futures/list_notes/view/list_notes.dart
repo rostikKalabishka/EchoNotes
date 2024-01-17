@@ -2,14 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
-class NotesPage extends StatefulWidget {
-  const NotesPage({Key? key}) : super(key: key);
+class ListNotesPage extends StatefulWidget {
+  const ListNotesPage({super.key});
 
   @override
-  State<NotesPage> createState() => _NotesPageState();
+  State<ListNotesPage> createState() => _ListNotesPageState();
 }
 
-class _NotesPageState extends State<NotesPage> {
+class _ListNotesPageState extends State<ListNotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,16 +42,32 @@ class _NotesPageState extends State<NotesPage> {
                     color: Colors.grey[400],
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Expanded(
+                  child: Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Notes'),
-                          Text('empty'),
-                          Row(
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.bottomLeft,
+                                  colors: [
+                                    Colors.blue,
+                                    Colors.green,
+                                    Colors.red,
+                                  ],
+                                )),
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Text('0 %'),
+                            ),
+                          ),
+                          const Text('Notes'),
+                          const Row(
                             children: [
                               Icon(
                                 Icons.calendar_month,
