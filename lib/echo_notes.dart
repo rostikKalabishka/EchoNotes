@@ -15,12 +15,13 @@ class _EchoNotesState extends State<EchoNotes> {
   final _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        // theme: ThemeData(
+        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        //   useMaterial3: true,
+        // ),
         //  routerConfig: _appRouter.config(),
         home: const HomePage());
   }
