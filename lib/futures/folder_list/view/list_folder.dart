@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
-class NotesPage extends StatefulWidget {
-  const NotesPage({Key? key}) : super(key: key);
+class FolderListPage extends StatefulWidget {
+  const FolderListPage({Key? key}) : super(key: key);
 
   @override
-  State<NotesPage> createState() => _NotesPageState();
+  State<FolderListPage> createState() => _FolderListPageState();
 }
 
-class _NotesPageState extends State<NotesPage> {
+class _FolderListPageState extends State<FolderListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,22 +49,31 @@ class CardInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Notes'),
-          Text('empty'),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.calendar_month,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const Text('My Folder'),
               ),
-              Text('17.01.2024'),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.more_vert),
+              )
             ],
           ),
+          const SizedBox(
+            height: 5,
+          ),
+          AspectRatio(
+            aspectRatio: 4 / 1.85,
+            child: Image.network(
+                'https://cdn.pixabay.com/photo/2016/03/31/18/33/blue-1294461_640.png'),
+          )
         ],
       ),
     );

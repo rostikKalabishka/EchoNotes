@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:note_app/futures/account_settings/view/account_settings.dart';
+import 'package:note_app/futures/folder_list/view/list_folder.dart';
 import 'package:note_app/futures/list_notes/view/list_notes.dart';
 import 'package:note_app/futures/notes/view/notes.dart';
 
@@ -38,12 +40,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     const NotesPage(),
     const ListNotesPage(),
-    Container(
-      color: Colors.deepOrange,
-    ),
-    Container(
-      color: Colors.blue,
-    ),
+    const FolderListPage(),
+    const AccountSettingsPage()
   ];
 
   @override

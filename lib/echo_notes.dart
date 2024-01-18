@@ -23,6 +23,6 @@ class _EchoNotesState extends State<EchoNotes> {
         //   useMaterial3: true,
         // ),
         //  routerConfig: _appRouter.config(),
-        home: const HomePage());
+        home: HomePage());
   }
 }
