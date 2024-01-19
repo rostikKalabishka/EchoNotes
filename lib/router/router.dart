@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:note_app/futures/account_settings/view/account_settings.dart';
 import 'package:note_app/futures/add_notes/view/add_notes.dart';
 import 'package:note_app/futures/folder_list/view/list_folder.dart';
 import 'package:note_app/futures/home/view/home_page.dart';
 import 'package:note_app/futures/list_notes/view/list_notes.dart';
+import 'package:note_app/futures/note/view/note.dart';
 import 'package:note_app/futures/notes/view/notes.dart';
 import 'package:note_app/futures/search/search.dart';
+import 'package:note_app/repository/model/model.dart';
 part 'router.gr.dart';
 
 @AutoRouterConfig()
@@ -32,7 +35,11 @@ class AppRouter extends _$AppRouter {
         ]),
         AutoRoute(
           page: AddNotesRoute.page,
-          path: '/',
+          path: '/add_notes',
+        ),
+        AutoRoute(
+          page: NoteRoute.page,
+          path: '/note',
         )
       ];
 }

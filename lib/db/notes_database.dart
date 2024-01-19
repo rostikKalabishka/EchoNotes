@@ -1,4 +1,4 @@
-import 'package:note_app/repository/db/abstract_notes_database.dart';
+import 'package:note_app/db/abstract_notes_database.dart';
 
 class NotesDataBase implements AbstractNotesDataBase {
   @override

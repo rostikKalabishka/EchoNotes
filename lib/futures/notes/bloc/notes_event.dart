@@ -10,10 +10,20 @@ sealed class NotesEvent extends Equatable {
 class LoadNotesEvent extends NotesEvent {}
 
 class OpenNotesEvent extends NotesEvent {
-  final int id;
+  final Note note;
+  final BuildContext context;
 
-  const OpenNotesEvent({required this.id});
+  const OpenNotesEvent({required this.note, required this.context});
 
   @override
-  List<Object> get props => super.props..add(id);
+  List<Object> get props => super.props..addAll([note, context]);
+}
+
+class OpenAddPage extends NotesEvent {
+  final BuildContext context;
+
+  const OpenAddPage({required this.context});
+
+  @override
+  List<Object> get props => super.props..addAll([context]);
 }

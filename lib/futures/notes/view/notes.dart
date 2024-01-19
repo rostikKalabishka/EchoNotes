@@ -25,7 +25,9 @@ class _NotesPageState extends State<NotesPage> {
       builder: (context, state) {
         return Scaffold(
           floatingActionButton: CustomFloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              context.read<NotesBloc>().add(OpenAddPage(context: context));
+            },
           ),
           body: CustomScrollView(
             slivers: [
@@ -45,7 +47,11 @@ class _NotesPageState extends State<NotesPage> {
                           name: notes.name,
                           description: notes.description,
                           dateTime: notes.createDate.toString()),
-                      onTap: () {},
+                      onTap: () {
+                        context
+                            .read<NotesBloc>()
+                            .add(OpenNotesEvent(context: context, note: notes));
+                      },
                     ),
                   );
                 }),
