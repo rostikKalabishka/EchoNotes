@@ -23,6 +23,8 @@ dependencies:
   image_picker: ^1.0.5
   json_annotation: ^4.8.1
   flutter_local_notifications: ^16.3.0
+  speech_to_text: ^6.5.1
+  get_it: ^7.6.7
 
 dev_dependencies:
   flutter_test:

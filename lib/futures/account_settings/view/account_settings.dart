@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
+@RoutePage()
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({super.key});
 

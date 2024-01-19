@@ -1,10 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'notes_bloc.dart';
 
-sealed class NotesState extends Equatable {
-  const NotesState();
-  
-  @override
-  List<Object> get props => [];
-}
+class NotesState extends Equatable {
+  final List<Note> noteList;
+  final Object error;
+  final bool isLoading;
 
-final class NotesInitial extends NotesState {}
+  const NotesState(
+      {this.noteList = const [], this.error = '', this.isLoading = false});
+  @override
+  List<Object?> get props => [noteList, error, isLoading];
+
+  NotesState copyWith({
+    List<Note>? noteList,
+    Object? error,
+    bool? isLoading,
+  }) {
+    return NotesState(
+      noteList: noteList ?? this.noteList,
+      error: error ?? this.error,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}

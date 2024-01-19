@@ -15,10 +15,22 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AccountSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountSettingsPage(),
+      );
+    },
     AddNotesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const AddNotesPage(),
+      );
+    },
+    FolderListRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const FolderListPage(),
       );
     },
     HomeRoute.name: (routeData) {
@@ -49,6 +61,20 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
+/// [AccountSettingsPage]
+class AccountSettingsRoute extends PageRouteInfo<void> {
+  const AccountSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [AddNotesPage]
 class AddNotesRoute extends PageRouteInfo<void> {
   const AddNotesRoute({List<PageRouteInfo>? children})
@@ -58,6 +84,20 @@ class AddNotesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AddNotesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [FolderListPage]
+class FolderListRoute extends PageRouteInfo<void> {
+  const FolderListRoute({List<PageRouteInfo>? children})
+      : super(
+          FolderListRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'FolderListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

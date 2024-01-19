@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
+import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/router/router.dart';
-
-import 'futures/home/home.dart';
+import 'package:note_app/ui/theme/theme.dart';
 
 class EchoNotes extends StatefulWidget {
   const EchoNotes({super.key});
@@ -13,16 +14,21 @@ class EchoNotes extends StatefulWidget {
 
 class _EchoNotesState extends State<EchoNotes> {
   final _appRouter = AppRouter();
+  final _accountSettingsBloc = AccountSettingsBloc();
+  final _notesBloc = NotesBloc();
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => _accountSettingsBloc),
+        BlocProvider(create: (_) => _notesBloc),
+      ],
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        // theme: ThemeData(
-        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        //   useMaterial3: true,
-        // ),
-        //  routerConfig: _appRouter.config(),
-        home: HomePage());
+        theme: lightTheme,
+        routerConfig: _appRouter.config(),
+      ),
+    );
   }
 }
