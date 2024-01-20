@@ -21,10 +21,24 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountSettingsPage(),
       );
     },
-    AddNotesRoute.name: (routeData) {
+    AddDefaultNotesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AddNotesPage(),
+        child: const AddDefaultNotesPage(),
+      );
+    },
+    AddNotesRoute.name: (routeData) {
+      final args = routeData.argsAs<AddNotesRouteArgs>(
+          orElse: () => const AddNotesRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AddNotesPage(key: args.key),
+      );
+    },
+    AddVoiceNoteRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AddVoiceNotePage(),
       );
     },
     FolderListRoute.name: (routeData) {
@@ -85,15 +99,58 @@ class AccountSettingsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [AddNotesPage]
-class AddNotesRoute extends PageRouteInfo<void> {
-  const AddNotesRoute({List<PageRouteInfo>? children})
+/// [AddDefaultNotesPage]
+class AddDefaultNotesRoute extends PageRouteInfo<void> {
+  const AddDefaultNotesRoute({List<PageRouteInfo>? children})
       : super(
+          AddDefaultNotesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AddDefaultNotesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AddNotesPage]
+class AddNotesRoute extends PageRouteInfo<AddNotesRouteArgs> {
+  AddNotesRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           AddNotesRoute.name,
+          args: AddNotesRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'AddNotesRoute';
+
+  static const PageInfo<AddNotesRouteArgs> page =
+      PageInfo<AddNotesRouteArgs>(name);
+}
+
+class AddNotesRouteArgs {
+  const AddNotesRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'AddNotesRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [AddVoiceNotePage]
+class AddVoiceNoteRoute extends PageRouteInfo<void> {
+  const AddVoiceNoteRoute({List<PageRouteInfo>? children})
+      : super(
+          AddVoiceNoteRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AddVoiceNoteRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

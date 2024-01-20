@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
+import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/router/router.dart';
 import 'package:note_app/ui/theme/theme.dart';
@@ -16,12 +17,14 @@ class _EchoNotesState extends State<EchoNotes> {
   final _appRouter = AppRouter();
   final _accountSettingsBloc = AccountSettingsBloc();
   final _notesBloc = NotesBloc();
+  final _addDefaultNoteBloc = AddDefaultNoteBloc();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => _accountSettingsBloc),
         BlocProvider(create: (_) => _notesBloc),
+        BlocProvider(create: (_) => _addDefaultNoteBloc),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

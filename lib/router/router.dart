@@ -1,14 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:note_app/futures/account_settings/view/account_settings.dart';
-import 'package:note_app/futures/add_notes/view/add_notes.dart';
-import 'package:note_app/futures/folder_list/view/list_folder.dart';
-import 'package:note_app/futures/home/view/home_page.dart';
-import 'package:note_app/futures/list_notes/view/list_notes.dart';
-import 'package:note_app/futures/note/view/note.dart';
-import 'package:note_app/futures/notes/view/notes.dart';
-import 'package:note_app/futures/search/search.dart';
-import 'package:note_app/repository/model/model.dart';
+import 'package:note_app/futures/account_settings/account_settings.dart';
+import 'package:note_app/futures/add_notes/add_default_notes/add_default_notes.dart';
+import 'package:note_app/futures/add_notes/add_notes.dart';
+import 'package:note_app/futures/add_notes/add_voice_note/add_voice_note.dart';
+import 'package:note_app/futures/folder_list/folder_list.dart';
+import 'package:note_app/futures/home/home.dart';
+import 'package:note_app/futures/list_notes/list_notes.dart';
+import 'package:note_app/futures/note/note.dart';
+import 'package:note_app/futures/notes/notes.dart';
+import 'package:note_app/futures/search/view/search.dart';
+
+import '../repository/model/model.dart';
+
 part 'router.gr.dart';
 
 @AutoRouterConfig()
@@ -34,12 +38,20 @@ class AppRouter extends _$AppRouter {
           )
         ]),
         AutoRoute(
+          page: NoteRoute.page,
+          path: '/note',
+        ),
+        AutoRoute(
           page: AddNotesRoute.page,
           path: '/add_notes',
         ),
         AutoRoute(
-          page: NoteRoute.page,
-          path: '/note',
+          page: AddVoiceNoteRoute.page,
+          path: '/add_voice_note',
+        ),
+        AutoRoute(
+          page: AddDefaultNotesRoute.page,
+          path: '/add_default_note',
         )
       ];
 }

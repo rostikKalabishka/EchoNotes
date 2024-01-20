@@ -25,6 +25,8 @@ dependencies:
   flutter_local_notifications: ^16.3.0
   speech_to_text: ^6.5.1
   get_it: ^7.6.7
+  path: ^1.9.0
+  # lottie: ^3.0.0
 
 dev_dependencies:
   flutter_test:
