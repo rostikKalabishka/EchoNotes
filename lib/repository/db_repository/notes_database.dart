@@ -3,10 +3,10 @@ import 'package:note_app/repository/model/note.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class NotesDataBase implements AbstractNotesDataBase {
-  // static final NotesDatabase instance = NotesDatabase._init();
+class NotesDatabase implements AbstractNotesDataBase {
+  static final NotesDatabase instance = NotesDatabase._init();
   Database? _database;
-  //  NotesDatabase._init();
+  NotesDatabase._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;

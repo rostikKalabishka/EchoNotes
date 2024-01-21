@@ -6,3 +6,5 @@ sealed class NotePageEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class ImagePickerEvent extends NotePageEvent {}

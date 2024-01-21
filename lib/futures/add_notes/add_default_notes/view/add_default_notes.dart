@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
+import '../../../../utilities/utilities.dart';
+
 @RoutePage()
 class AddDefaultNotesPage extends StatefulWidget {
   const AddDefaultNotesPage({super.key});
@@ -15,6 +17,8 @@ class AddDefaultNotesPage extends StatefulWidget {
 class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
   final TextEditingController noteName = TextEditingController();
   final TextEditingController description = TextEditingController();
+  final _utilities = Utilities();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AddDefaultNoteBloc, AddDefaultNoteState>(
@@ -25,23 +29,39 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
               SliverAppBar(
                 title: const Text('Add new note'),
                 actions: [
-                  TextButton(onPressed: () {}, child: const Text('Add'))
+                  TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          context.read<AddDefaultNoteBloc>().add(AddDefaultNote(
+                              noteName: noteName.text,
+                              description: description.text,
+                              context: context));
+                        }
+                      },
+                      child: const Text('Add'))
                 ],
               ),
               SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      hintText: 'Add note name',
-                      textEditorController: noteName,
-                      maxLines: 1,
-                    ),
-                    CustomTextField(
-                      hintText: 'Add description',
-                      textEditorController: description,
-                      maxLines: 25,
-                    )
-                  ],
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        validator: (value) =>
+                            _utilities.textFieldValidator(value!),
+                        hintText: 'Add note name',
+                        textEditorController: noteName,
+                        maxLines: 1,
+                      ),
+                      CustomTextField(
+                        validator: (value) =>
+                            _utilities.textFieldValidator(value!),
+                        hintText: 'Add description',
+                        textEditorController: description,
+                        maxLines: 25,
+                      )
+                    ],
+                  ),
                 ),
               )
             ],

@@ -91,8 +91,8 @@ Future<void> showModalMenuBottomsSheet(BuildContext context) async {
       margin: const EdgeInsets.all(8.0),
       child: Image.network(
         'https://cdn.pixabay.com/photo/2016/03/31/18/33/blue-1294461_640.png',
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
       ),
     );
   });
@@ -127,8 +127,7 @@ Future<void> showModalMenuBottomsSheet(BuildContext context) async {
               height: 20,
             ),
             SizedBox(
-              height:
-                  100, // Встановлюємо фіксовану висоту для горизонтального списку
+              height: 100,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: images,
@@ -143,16 +142,16 @@ Future<void> showModalMenuBottomsSheet(BuildContext context) async {
                 children: [
                   TextFormField(
                     controller: folderNameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Name folder',
-                      contentPadding: const EdgeInsets.symmetric(
+                      contentPadding: EdgeInsets.symmetric(
                         vertical: 12.0,
                         horizontal: 16.0,
                       ),
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 50,
                   ),
                   ElevatedButton(
                     onPressed: () {},
