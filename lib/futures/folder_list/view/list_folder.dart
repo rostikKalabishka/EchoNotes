@@ -15,7 +15,9 @@ class _FolderListPageState extends State<FolderListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: CustomFloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalMenuBottomsSheet(context);
+        },
       ),
       body: CustomScrollView(
         slivers: [
@@ -56,9 +58,9 @@ class CardInfoWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: const Text('My Folder'),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text('My Folder'),
               ),
               IconButton(
                 onPressed: () {},
@@ -78,4 +80,98 @@ class CardInfoWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> showModalMenuBottomsSheet(BuildContext context) async {
+  double screenHeight = MediaQuery.of(context).size.height;
+  double modalHeight = screenHeight * 0.9;
+  final TextEditingController folderNameController = TextEditingController();
+  final List<Widget> images = List.generate(20, (index) {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      child: Image.network(
+        'https://cdn.pixabay.com/photo/2016/03/31/18/33/blue-1294461_640.png',
+        width: 100,
+        height: 100,
+      ),
+    );
+  });
+
+  return showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return Container(
+        height: modalHeight,
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                ),
+                const Text('Create folder'),
+                IconButton(
+                  onPressed: () {
+                    AutoRouter.of(context).pop();
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height:
+                  100, // Встановлюємо фіксовану висоту для горизонтального списку
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: images,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: folderNameController,
+                    decoration: InputDecoration(
+                      hintText: 'Name folder',
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 16.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all(
+                        const Size(double.infinity, 40.0),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text('Save'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
