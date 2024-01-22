@@ -181,7 +181,27 @@ class _NotePageState extends State<NotePage> {
                       backgroundColor: const Color.fromARGB(255, 156, 77, 77),
                       onTap: () {},
                       iconColor: Colors.red,
-                      icon: Icons.delete_outline,
+                      icon: Icons.edit_outlined,
+                      text: 'Change note name',
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonInBottomSheet(
+                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                      onTap: () {},
+                      iconColor: Colors.red,
+                      icon: Icons.folder_outlined,
+                      text: 'Add to folder',
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonInBottomSheet(
+                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                      onTap: () {},
+                      iconColor: Colors.red,
+                      icon: Icons.change_circle_outlined,
                       text: 'Delete note',
                     ),
                     const SizedBox(
@@ -191,28 +211,8 @@ class _NotePageState extends State<NotePage> {
                       backgroundColor: const Color.fromARGB(255, 156, 77, 77),
                       onTap: () {},
                       iconColor: Colors.red,
-                      icon: Icons.delete_outline,
-                      text: 'Delete note',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.delete_outline,
-                      text: 'Delete note',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.delete_outline,
-                      text: 'Delete note',
+                      icon: Icons.save,
+                      text: 'Save change',
                     ),
                     const SizedBox(
                       height: 10,

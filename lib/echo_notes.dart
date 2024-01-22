@@ -7,6 +7,8 @@ import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/router/router.dart';
 import 'package:note_app/ui/theme/theme.dart';
 
+import 'futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
+
 class EchoNotes extends StatefulWidget {
   const EchoNotes({super.key});
 
@@ -20,6 +22,7 @@ class _EchoNotesState extends State<EchoNotes> {
   final _notesBloc = NotesBloc();
   final _addDefaultNoteBloc = AddDefaultNoteBloc();
   final _notePageBloc = NotePageBloc();
+  final _addVoiceNoteBloc = AddVoiceNoteBloc();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -28,6 +31,7 @@ class _EchoNotesState extends State<EchoNotes> {
         BlocProvider(create: (_) => _notesBloc),
         BlocProvider(create: (_) => _addDefaultNoteBloc),
         BlocProvider(create: (_) => _notePageBloc),
+        BlocProvider(create: (_) => _addVoiceNoteBloc),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

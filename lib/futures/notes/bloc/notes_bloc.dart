@@ -30,6 +30,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
       final List<Note> listNotes = List.generate(
           12,
           (int index) => Note(
+                voiceNote: '',
                 isImportant: false,
                 id: index,
                 createDate: createDate,

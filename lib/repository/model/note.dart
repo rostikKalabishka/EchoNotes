@@ -7,7 +7,8 @@ class NoteFields {
     name,
     description,
     isDone,
-    createDate
+    createDate,
+    voiceNote
   ];
 
   static const String id = '_id';
@@ -16,6 +17,7 @@ class NoteFields {
   static const String description = 'description';
   static const String isDone = 'isDone';
   static const String createDate = 'createDate';
+  static const String voiceNote = 'voiceNote';
 }
 
 class Note {
@@ -25,10 +27,12 @@ class Note {
   final String createDate;
   final bool isDone;
   final bool isImportant;
+  final String voiceNote;
 
   Note(
       {this.id,
       required this.name,
+      required this.voiceNote,
       required this.description,
       required this.createDate,
       required this.isImportant,
@@ -41,15 +45,16 @@ class Note {
     String? createDate,
     bool? isDone,
     bool? isImportant,
+    String? voiceNote,
   }) {
     return Note(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      createDate: createDate ?? this.createDate,
-      isDone: isDone ?? this.isDone,
-      isImportant: isImportant ?? this.isImportant,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        createDate: createDate ?? this.createDate,
+        isDone: isDone ?? this.isDone,
+        isImportant: isImportant ?? this.isImportant,
+        voiceNote: voiceNote ?? this.voiceNote);
   }
 
   factory Note.fromJson(Map<String, Object?> json) => Note(
@@ -58,7 +63,8 @@ class Note {
       description: json[NoteFields.description] as String,
       createDate: json[NoteFields.createDate] as String,
       isImportant: json[NoteFields.isImportant] as bool,
-      isDone: json[NoteFields.isDone] as bool);
+      isDone: json[NoteFields.isDone] as bool,
+      voiceNote: json[NoteFields.voiceNote] as String);
 
   Map<String, Object?> toJson() => {
         NoteFields.id: id,
