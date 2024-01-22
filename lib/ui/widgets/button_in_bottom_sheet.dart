@@ -17,7 +17,7 @@ class ButtonInBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      radius: 16,
+      borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Row(children: [
         Container(

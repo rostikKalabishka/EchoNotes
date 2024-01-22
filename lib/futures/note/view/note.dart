@@ -23,6 +23,13 @@ class _NotePageState extends State<NotePage> {
     return BlocBuilder<NotePageBloc, NotePageState>(
       builder: (context, state) {
         return Scaffold(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: CustomFloatingActionButton(
+            onPressed: () {
+              showModalMenuBottomsSheet(context);
+            },
+          ),
           body: Stack(
             children: [
               CustomScrollView(
@@ -43,12 +50,13 @@ class _NotePageState extends State<NotePage> {
                       height: 30,
                     ),
                   ),
-                  const SliverFillRemaining(
+                  SliverFillRemaining(
+                    hasScrollBody: false,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          CustomBoxShadowContainer(
+                          const CustomBoxShadowContainer(
                             cardInfo: Column(
                               children: [
                                 Row(
@@ -76,6 +84,26 @@ class _NotePageState extends State<NotePage> {
                               ],
                             ),
                           ),
+                          // SizedBox(
+                          //   height: MediaQuery.of(context).size.height * 0.05,
+                          // ),
+                          state.selectedImage.isNotEmpty
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.54,
+                                    ),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child:
+                                            Image.asset(state.selectedImage)),
+                                  ),
+                                )
+                              : const SizedBox.shrink()
                         ],
                       ),
                     ),
@@ -95,14 +123,6 @@ class _NotePageState extends State<NotePage> {
                         cardInfo: TextButton(
                           onPressed: () {},
                           child: const Text('UA'),
-                        ),
-                      ),
-                      CustomBoxShadowContainer(
-                        cardInfo: TextButton(
-                          onPressed: () {
-                            showModalMenuBottomsSheet(context);
-                          },
-                          child: const Icon(Icons.add),
                         ),
                       ),
                       CustomBoxShadowContainer(
