@@ -7,17 +7,22 @@ class ClickedCardWidget extends StatelessWidget {
     super.key,
     required this.cardInfo,
     required this.onTap,
+    required this.colorsCard,
   });
   final Widget cardInfo;
   final VoidCallback onTap;
+  final Color colorsCard;
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      CustomBoxShadowContainer(cardInfo: cardInfo),
+      CustomBoxShadowContainer(
+        cardInfo: cardInfo,
+        cardColor: colorsCard,
+      ),
       Material(
         color: Colors.transparent,
         child: InkWell(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
             onTap: onTap),
       )
     ]);

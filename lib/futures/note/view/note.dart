@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
+import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/repository/model/model.dart';
 
 import 'package:note_app/ui/widgets/widget.dart';
@@ -19,6 +21,8 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     double bottomPadding = MediaQuery.of(context).padding.bottom;
+    final theme = Theme.of(context);
+    Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<NotePageBloc, NotePageState>(
       builder: (context, state) {
@@ -56,29 +60,38 @@ class _NotePageState extends State<NotePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          const CustomBoxShadowContainer(
+                          CustomBoxShadowContainer(
+                            cardColor: theme.cardColor,
                             cardInfo: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.all(10.0),
                                       child: CustomBoxShadowContainer(
-                                        width: 50,
-                                        height: 50,
-                                        cardInfo: Icon(Icons.play_arrow),
+                                        width: 60,
+                                        height: 60,
+                                        cardInfo:
+                                            const Icon(FontAwesomeIcons.play),
+                                        cardColor: theme.cardColor,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
-                                    Text('0:00:08')
+                                    Text(
+                                      '0:00:08',
+                                      style: theme.textTheme.labelLarge,
+                                    )
                                   ],
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 10),
                                   child: Text(
-                                    'bibiabibibbboasdasdazsd saddasddas',
+                                    'bibiabibibbboasdasdazsd saddas ddas',
+                                    style: theme.textTheme.labelLarge,
                                   ),
                                 )
                               ],
@@ -119,21 +132,22 @@ class _NotePageState extends State<NotePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomBoxShadowContainer(
-                        cardInfo: TextButton(
-                          onPressed: () {},
-                          child: const Text('UA'),
+                      CustomButtonWidget(
+                        theme: theme,
+                        size: size,
+                        onTap: () {},
+                        child: Text(
+                          'UA',
+                          style: theme.textTheme.labelMedium,
                         ),
                       ),
-                      CustomBoxShadowContainer(
-                        cardInfo: TextButton(
-                          onPressed: () {
-                            context
-                                .read<NotePageBloc>()
-                                .add(ImagePickerEvent());
-                          },
-                          child: const Icon(Icons.attachment),
-                        ),
+                      CustomButtonWidget(
+                        theme: theme,
+                        size: size,
+                        onTap: () {
+                          context.read<NotePageBloc>().add(ImagePickerEvent());
+                        },
+                        child: const Icon(Icons.attachment),
                       ),
                     ],
                   ),
@@ -147,7 +161,9 @@ class _NotePageState extends State<NotePage> {
   }
 
   Future showModalMenuBottomsSheet(BuildContext context) async {
+    final theme = Theme.of(context);
     return showModalBottomSheet(
+      backgroundColor: theme.dialogBackgroundColor,
       context: context,
       builder: (context) {
         return SizedBox(
@@ -160,7 +176,10 @@ class _NotePageState extends State<NotePage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.15,
                   ),
-                  const Text('Menu'),
+                  Text(
+                    'Menu',
+                    style: theme.textTheme.labelLarge,
+                  ),
                   IconButton(
                     onPressed: () {
                       AutoRouter.of(context).pop();

@@ -7,13 +7,15 @@ class CustomBoxShadowContainer extends StatelessWidget {
       this.height,
       this.width,
       this.colorContainer,
-      this.boxShadow});
+      this.boxShadow,
+      required this.cardColor});
 
   final Widget cardInfo;
   final double? height;
   final double? width;
   final Color? colorContainer;
   final Color? boxShadow;
+  final Color cardColor;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CustomBoxShadowContainer extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-          color: Colors.grey[400],
+          color: cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(

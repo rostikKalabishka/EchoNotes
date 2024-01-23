@@ -21,23 +21,24 @@ class _FolderListPageState extends State<FolderListPage> {
       ),
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
-            centerTitle: true,
-            title: Text('EchoNotes'),
-          ),
-          SliverGrid.count(
-            crossAxisCount: 2,
-            children: List.generate(20, (index) {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: ClickedCardWidget(
-                  cardInfo: const CardInfoWidget(),
-                  onTap: () {},
-                ),
-              );
-            }),
-          ),
+          // const SliverAppBar(
+          //   centerTitle: true,
+          //   title: Text('EchoNotes'),
+          // ),
+          // SliverGrid.count(
+          //   crossAxisCount: 2,
+          //   children: List.generate(20, (index) {
+          //     return Padding(
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          //       child: ClickedCardWidget(
+          //         cardInfo: const CardInfoWidget(),
+          //         onTap: () {},
+          //         colorsCard: Colors.green,
+          //       ),
+          //     );
+          //   }),
+          // ),
         ],
       ),
     );

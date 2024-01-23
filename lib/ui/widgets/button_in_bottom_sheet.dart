@@ -16,6 +16,7 @@ class ButtonInBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
@@ -35,7 +36,10 @@ class ButtonInBottomSheet extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Text(text)
+        Text(
+          text,
+          style: theme.textTheme.labelMedium,
+        )
       ]),
     );
   }

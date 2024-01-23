@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:note_app/futures/account_settings/view/account_settings.dart';
 import 'package:note_app/futures/folder_list/view/list_folder.dart';
 import 'package:note_app/futures/list_notes/view/list_notes.dart';
@@ -46,7 +48,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       bottomNavigationBar: bottomNavigationBar(),
       body: PageView(
         controller: _pageController,
@@ -56,19 +60,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBar bottomNavigationBar() {
-    return BottomNavigationBar(
-      onTap: onBottomNavigationBarTap,
-      unselectedItemColor: Colors.black,
-      currentIndex: _indexPage,
-      selectedItemColor: Colors.blue[800],
-      type: BottomNavigationBarType.fixed,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.notes), label: 'Notes'),
-        BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
-        BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Folder'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.account_box), label: 'Account'),
+  bottomNavigationBar() {
+    return GNav(
+      // padding: const EdgeInsets.all(8),
+      gap: 8,
+      onTabChange: onBottomNavigationBarTap,
+      selectedIndex: _indexPage,
+      tabs: const [
+        GButton(
+          icon: FontAwesomeIcons.noteSticky,
+          text: 'Notes',
+        ),
+        GButton(
+          icon: FontAwesomeIcons.listCheck,
+          text: 'List',
+        ),
+        GButton(
+          icon: FontAwesomeIcons.folder,
+          text: 'Folder',
+        ),
+        GButton(
+          icon: FontAwesomeIcons.user,
+          text: 'Account',
+        )
       ],
     );
   }

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 const String tableNotes = 'notes';
 
 class NoteFields {
@@ -20,7 +22,7 @@ class NoteFields {
   static const String voiceNote = 'voiceNote';
 }
 
-class Note {
+class Note extends Equatable {
   final int? id;
   final String name;
   final String description;
@@ -29,7 +31,7 @@ class Note {
   final bool isImportant;
   final String voiceNote;
 
-  Note(
+  const Note(
       {this.id,
       required this.name,
       required this.voiceNote,
@@ -74,4 +76,8 @@ class Note {
         NoteFields.isDone: isDone,
         NoteFields.isImportant: isImportant
       };
+
+  @override
+  List<Object?> get props =>
+      [id, createDate, description, name, isDone, isImportant];
 }

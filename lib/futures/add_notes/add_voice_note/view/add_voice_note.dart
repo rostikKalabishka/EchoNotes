@@ -18,6 +18,7 @@ class AddVoiceNotePage extends StatefulWidget {
 class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     double bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
@@ -124,8 +125,10 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                           onPressed: () {},
                           child: const Text('UA'),
                         ),
+                        cardColor: Colors.white,
                       ),
                       CustomBoxShadowContainer(
+                        cardColor: theme.cardColor,
                         cardInfo: TextButton(
                           onPressed: () {
                             // context

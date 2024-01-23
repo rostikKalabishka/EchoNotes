@@ -16,18 +16,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
     return const Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            title: Text('EchoNotes'),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(12),
-              child: Text('Settings'),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: ColumnSettings(),
-          )
+          // SliverAppBar(
+          //   title: Text('EchoNotes'),
+          // ),
+          // SliverToBoxAdapter(
+          //   child: Padding(
+          //     padding: EdgeInsets.all(12),
+          //     child: Text('Settings'),
+          //   ),
+          // ),
+          // SliverToBoxAdapter(
+          //   child: ColumnSettings(),
+          // )
         ],
       ),
     );
@@ -84,6 +84,7 @@ class _SettingsInfoWidgetState extends State<SettingsInfoWidget> {
   @override
   Widget build(BuildContext context) {
     return CustomBoxShadowContainer(
+      cardColor: Colors.green,
       cardInfo: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(

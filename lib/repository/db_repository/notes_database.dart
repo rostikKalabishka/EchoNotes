@@ -23,10 +23,10 @@ class NotesDatabase implements AbstractNotesDataBase {
   }
 
   Future<void> _createDB(Database db, int version) async {
-    const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const String textType = 'TEXT NOT NULL';
-    const String boolType = 'BOOLEAN NOT NULL';
-    const String integerType = 'INTEGER NOT NULL';
+    // const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    // const String textType = 'TEXT NOT NULL';
+    // const String boolType = 'BOOLEAN NOT NULL';
+    // const String integerType = 'INTEGER NOT NULL';
 
     await db.execute('''CREATE TABLE $tableNotes()''');
   }

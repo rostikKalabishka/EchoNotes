@@ -30,6 +30,7 @@ class AddNotesPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: CustomBoxShadowContainer(
+                      cardColor: Colors.amber,
                       cardInfo: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 16,

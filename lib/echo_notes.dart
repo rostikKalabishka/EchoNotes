@@ -36,7 +36,7 @@ class _EchoNotesState extends State<EchoNotes> {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: lightTheme,
+        theme: darkTheme,
         routerConfig: _appRouter.config(),
       ),
     );

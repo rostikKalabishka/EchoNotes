@@ -4,7 +4,7 @@ import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
 class ListNotesPage extends StatefulWidget {
-  const ListNotesPage({super.key});
+  const ListNotesPage({Key? key}) : super(key: key);
 
   @override
   State<ListNotesPage> createState() => _ListNotesPageState();
@@ -23,18 +23,27 @@ class _ListNotesPageState extends State<ListNotesPage> {
             centerTitle: true,
             title: Text('EchoNotes'),
           ),
-          SliverGrid.count(
-            crossAxisCount: 2,
-            children: List.generate(20, (index) {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: ClickedCardWidget(
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                int taskCount = index * 5;
+                String date = '17.01.2024';
+
+                return ClickedCardWidget(
                   onTap: () {},
-                  cardInfo: const CardInfoWidget(),
-                ),
-              );
-            }),
+                  cardInfo: CardInfoWidget(
+                    taskCount: taskCount,
+                    date: date,
+                  ),
+                );
+              },
+              childCount: 20,
+            ),
           ),
         ],
       ),
@@ -42,10 +51,36 @@ class _ListNotesPageState extends State<ListNotesPage> {
   }
 }
 
+class ClickedCardWidget extends StatelessWidget {
+  final VoidCallback onTap;
+  final CardInfoWidget cardInfo;
+
+  const ClickedCardWidget({
+    Key? key,
+    required this.onTap,
+    required this.cardInfo,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        child: cardInfo,
+      ),
+    );
+  }
+}
+
 class CardInfoWidget extends StatelessWidget {
+  final int taskCount;
+  final String date;
+
   const CardInfoWidget({
-    super.key,
-  });
+    Key? key,
+    required this.taskCount,
+    required this.date,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,38 +91,51 @@ class CardInfoWidget extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Colors.blue,
-                      Colors.green,
-                      Colors.red,
-                    ],
-                  )),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text('0 %'),
-              ),
-            ),
-            const Text('Notes'),
-            const Row(
-              children: [
-                Icon(
-                  Icons.calendar_month,
-                ),
-                Text('17.01.2024'),
-              ],
-            ),
-          ],
-        ),
+        // child: Column(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Container(
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(12),
+        //         gradient: const LinearGradient(
+        //           begin: Alignment.topRight,
+        //           end: Alignment.bottomLeft,
+        //           colors: [
+        //             Colors.blue,
+        //             Colors.green,
+        //             Colors.red,
+        //           ],
+        //         ),
+        //       ),
+        //       child: Padding(
+        //         padding: const EdgeInsets.symmetric(horizontal: 8),
+        //         child: Text('$taskCount %'),
+        //       ),
+        //     ),
+        //     const Text('Notes'),
+        //     Row(
+        //       children: [
+        //         const Icon(
+        //           Icons.calendar_month,
+        //         ),
+        //         Text(date),
+        //       ],
+        //     ),
+        //     Expanded(
+        //       child: ListView.builder(
+        //         shrinkWrap: true,
+        //         physics: const NeverScrollableScrollPhysics(),
+        //         itemCount: taskCount,
+        //         itemBuilder: (context, index) {
+        //           return ListTile(
+        //             title: Text('Task $index'),
+        //           );
+        //         },
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
     );
   }

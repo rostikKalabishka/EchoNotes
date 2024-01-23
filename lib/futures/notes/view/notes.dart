@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
@@ -21,9 +22,11 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<NotesBloc, NotesState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: theme.scaffoldBackgroundColor,
           floatingActionButton: CustomFloatingActionButton(
             onPressed: () {
               context.read<NotesBloc>().add(OpenAddPage(context: context));
@@ -43,6 +46,7 @@ class _NotesPageState extends State<NotesPage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 20),
                     child: ClickedCardWidget(
+                      colorsCard: theme.cardColor,
                       cardInfo: CardInfoWidget(
                           name: notes.name,
                           description: notes.description,
@@ -77,20 +81,30 @@ class CardInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(name),
-          Text(description),
+          Text(
+            name,
+            style: theme.textTheme.labelLarge,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(description, style: theme.textTheme.labelMedium),
           Row(
             children: [
-              const Icon(
-                Icons.calendar_month,
+              const Icon(FontAwesomeIcons.calendar),
+              SizedBox(
+                width: size.width * 0.025,
               ),
-              Text(dateTime),
+              Text(
+                dateTime,
+                style: theme.textTheme.labelSmall,
+              ),
             ],
           ),
         ],
