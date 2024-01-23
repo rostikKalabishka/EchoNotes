@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
@@ -16,6 +17,7 @@ class _ListNotesPageState extends State<ListNotesPage> {
     return Scaffold(
       floatingActionButton: CustomFloatingActionButton(
         onPressed: () {},
+        dataButton: const Icon(FontAwesomeIcons.plus),
       ),
       body: CustomScrollView(
         slivers: [

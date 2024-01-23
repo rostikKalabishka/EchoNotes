@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:note_app/futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
+import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/ui/widgets/button_in_bottom_sheet.dart';
-import 'package:note_app/ui/widgets/custom_box_shadow_container_widget.dart';
+
 import 'package:note_app/ui/widgets/custom_floating_action_button_widget.dart';
 
 @RoutePage()
@@ -20,6 +22,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     double bottomPadding = MediaQuery.of(context).padding.bottom;
+    Size size = MediaQuery.of(context).size;
 
     return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
       builder: (context, state) {
@@ -27,9 +30,13 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: CustomFloatingActionButton(
-            onPressed: () {
-              showModalMenuBottomsSheet(context);
-            },
+            height: size.height * 0.075,
+            width: size.height * 0.075,
+            borderRadius: BorderRadius.circular(12),
+            onPressed: () {},
+            dataButton: const Icon(Icons.mic_outlined
+                //?? Icons.mic_off_outlined
+                ),
           ),
           body: Stack(
             children: [
@@ -54,7 +61,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                   const SliverFillRemaining(
                     hasScrollBody: false,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
                           //add image
@@ -120,23 +127,22 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomBoxShadowContainer(
-                        cardInfo: TextButton(
-                          onPressed: () {},
-                          child: const Text('UA'),
+                      CustomButtonWidget(
+                        theme: theme,
+                        size: size,
+                        onTap: () {},
+                        child: Text(
+                          'UA',
+                          style: theme.textTheme.labelMedium,
                         ),
-                        cardColor: Colors.white,
                       ),
-                      CustomBoxShadowContainer(
-                        cardColor: theme.cardColor,
-                        cardInfo: TextButton(
-                          onPressed: () {
-                            // context
-                            //     .read<AddVoiceNotePageBloc>()
-                            //     .add(ImagePickerEvent());
-                          },
-                          child: const Icon(Icons.attachment),
-                        ),
+                      CustomButtonWidget(
+                        theme: theme,
+                        size: size,
+                        onTap: () {
+                          //   context.read<NotePageBloc>().add(ImagePickerEvent());
+                        },
+                        child: const Icon(Icons.attachment),
                       ),
                     ],
                   ),

@@ -8,6 +8,11 @@ ThemeData darkTheme = ThemeData(
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: floatingButtonColor, foregroundColor: Colors.white),
     //indicatorColor: ,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: elevatedButton,
+      ),
+    ),
     appBarTheme: const AppBarTheme(
         elevation: 0,
         backgroundColor: appBarColor,

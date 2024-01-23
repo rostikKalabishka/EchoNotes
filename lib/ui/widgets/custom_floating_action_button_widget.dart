@@ -4,22 +4,43 @@ class CustomFloatingActionButton extends StatelessWidget {
   const CustomFloatingActionButton({
     super.key,
     required this.onPressed,
+    this.borderRadius,
+    this.height,
+    this.width,
+    required this.dataButton,
   });
   final VoidCallback onPressed;
+  final BorderRadiusGeometry? borderRadius;
+  final double? height;
+  final double? width;
+  final Widget dataButton;
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-          bottomLeft: Radius.circular(30.0),
-          bottomRight: Radius.circular(30.0),
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color:
+                theme.floatingActionButtonTheme.backgroundColor!.withOpacity(1),
+            blurRadius: 50,
+            offset: const Offset(0, 2)),
+      ]),
+      height: height,
+      width: width,
+      child: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: borderRadius ??
+              const BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              ),
         ),
+        onPressed: onPressed,
+        child: dataButton,
       ),
-      onPressed: onPressed,
-      child: const Icon(Icons.add),
     );
   }
 }

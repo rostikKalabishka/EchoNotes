@@ -18,6 +18,7 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  bool play = false;
   @override
   Widget build(BuildContext context) {
     double bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -30,16 +31,23 @@ class _NotePageState extends State<NotePage> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: CustomFloatingActionButton(
+            height: size.height * 0.075,
+            width: size.height * 0.075,
+            borderRadius: BorderRadius.circular(12),
             onPressed: () {
               showModalMenuBottomsSheet(context);
             },
+            dataButton: const Icon(FontAwesomeIcons.plus),
           ),
           body: Stack(
             children: [
               CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    title: const Text('Note'),
+                    title: Text(
+                      'Note',
+                      style: theme.textTheme.labelLarge,
+                    ),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -69,12 +77,22 @@ class _NotePageState extends State<NotePage> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: CustomBoxShadowContainer(
-                                        width: 60,
-                                        height: 60,
-                                        cardInfo:
-                                            const Icon(FontAwesomeIcons.play),
-                                        cardColor: theme.cardColor,
+                                      child: InkWell(
+                                        onTap: () {
+                                          play = !play;
+                                          setState(() {});
+                                        },
+                                        child: CustomBoxShadowContainer(
+                                          width: size.height * 0.07,
+                                          height: size.height * 0.07,
+                                          cardInfo: Icon(play == false
+                                              ? FontAwesomeIcons.play
+                                              : FontAwesomeIcons.pause),
+                                          cardColor: theme
+                                                  .floatingActionButtonTheme
+                                                  .backgroundColor ??
+                                              theme.cardColor,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(
@@ -90,7 +108,7 @@ class _NotePageState extends State<NotePage> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
                                   child: Text(
-                                    'bibiabibibbboasdasdazsd saddas ddas',
+                                    'bibiabibibbboasdasdazsd saddas ddas\ndsadsad213 dsfasd 123sa',
                                     style: theme.textTheme.labelLarge,
                                   ),
                                 )

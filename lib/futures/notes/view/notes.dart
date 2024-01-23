@@ -31,6 +31,7 @@ class _NotesPageState extends State<NotesPage> {
             onPressed: () {
               context.read<NotesBloc>().add(OpenAddPage(context: context));
             },
+            dataButton: const Icon(FontAwesomeIcons.plus),
           ),
           body: CustomScrollView(
             slivers: [

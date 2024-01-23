@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/add_notes/bloc/add_notes_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
@@ -10,6 +11,7 @@ class AddNotesPage extends StatelessWidget {
   final addNotesPageBloc = AddNotesPageBloc();
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<AddNotesPageBloc, AddNotesState>(
       bloc: addNotesPageBloc,
       builder: (context, state) {
@@ -30,7 +32,7 @@ class AddNotesPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: CustomBoxShadowContainer(
-                      cardColor: Colors.amber,
+                      cardColor: theme.cardColor,
                       cardInfo: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 16,
@@ -42,7 +44,7 @@ class AddNotesPage extends StatelessWidget {
                           children: [
                             ButtonOptionCreateNote(
                               textButton: 'Add default note',
-                              buttonIcon: Icons.notes,
+                              buttonIcon: FontAwesomeIcons.noteSticky,
                               onPressed: () {
                                 addNotesPageBloc.add(
                                     NavigateToAddNotePage(context: context));
@@ -85,6 +87,7 @@ class ButtonOptionCreateNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ElevatedButton(
       onPressed: onPressed,
       child: Row(
@@ -95,7 +98,10 @@ class ButtonOptionCreateNote extends StatelessWidget {
           const SizedBox(
             width: 15,
           ),
-          Text(textButton)
+          Text(
+            textButton,
+            style: theme.textTheme.labelLarge,
+          )
         ],
       ),
     );
