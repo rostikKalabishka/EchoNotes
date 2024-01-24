@@ -13,17 +13,23 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(), borderRadius: BorderRadius.circular(12)),
+          border: Border.all(
+              width: 3,
+              color: theme.floatingActionButtonTheme.backgroundColor!),
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TextFormField(
             validator: validator,
             maxLines: maxLines,
             decoration: InputDecoration(
+              errorStyle: const TextStyle(color: Colors.red),
               hintText: hintText,
               border: InputBorder.none,
             ),

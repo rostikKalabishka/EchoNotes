@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
@@ -30,15 +31,18 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                 title: const Text('Add new note'),
                 actions: [
                   TextButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<AddDefaultNoteBloc>().add(AddDefaultNote(
-                              noteName: noteName.text,
-                              description: description.text,
-                              context: context));
-                        }
-                      },
-                      child: const Text('Add'))
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<AddDefaultNoteBloc>().add(
+                              AddDefaultNote(
+                                  noteName: noteName.text,
+                                  description: description.text,
+                                  context: context),
+                            );
+                      }
+                    },
+                    child: const Icon(FontAwesomeIcons.plus),
+                  )
                 ],
               ),
               SliverToBoxAdapter(
@@ -54,11 +58,11 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                         maxLines: 1,
                       ),
                       CustomTextField(
-                        validator: (value) =>
-                            _utilities.textFieldValidator(value!),
+                        // validator: (value) =>
+                        //     _utilities.textFieldValidator(value!),
                         hintText: 'Add description',
                         textEditorController: description,
-                        maxLines: 25,
+                        maxLines: 23,
                       )
                     ],
                   ),
