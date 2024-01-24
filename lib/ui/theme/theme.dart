@@ -13,6 +13,9 @@ ThemeData darkTheme = ThemeData(
         backgroundColor: elevatedButton,
       ),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      errorStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+    ),
     appBarTheme: const AppBarTheme(
         elevation: 0,
         backgroundColor: appBarColor,

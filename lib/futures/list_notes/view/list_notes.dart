@@ -116,6 +116,7 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
+    final double modalHeight = size.height * 0.4;
 
     return Container(
       decoration: BoxDecoration(
@@ -153,7 +154,14 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
                     ),
                   ),
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+                IconButton(
+                    onPressed: () {
+                      showModalMenuBottomSheet(
+                          context: context,
+                          modalHeight: modalHeight,
+                          child: const ChangeFolder());
+                    },
+                    icon: const Icon(Icons.more_vert))
               ],
             ),
 
@@ -207,6 +215,64 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ChangeFolder extends StatelessWidget {
+  const ChangeFolder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+            Text(
+              'Menu',
+              style: theme.textTheme.labelLarge,
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Column(
+            children: [
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.edit_outlined,
+                text: 'Change note name',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.delete_outline,
+                text: 'Delete note',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

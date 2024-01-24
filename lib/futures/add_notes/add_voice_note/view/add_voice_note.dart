@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:note_app/futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/ui/widgets/button_in_bottom_sheet.dart';
 
 import 'package:note_app/ui/widgets/custom_floating_action_button_widget.dart';
+import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
 class AddVoiceNotePage extends StatefulWidget {
@@ -23,6 +25,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
     final theme = Theme.of(context);
     double bottomPadding = MediaQuery.of(context).padding.bottom;
     Size size = MediaQuery.of(context).size;
+    double modalHeight = size.height * 0.5;
 
     return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
       builder: (context, state) {
@@ -47,7 +50,10 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                     actions: [
                       IconButton(
                         onPressed: () {
-                          showModalMenuBottomsSheet(context);
+                          showModalMenuBottomSheet(
+                              context: context,
+                              modalHeight: modalHeight,
+                              child: const MenuWidget());
                         },
                         icon: const Icon(Icons.more_horiz),
                       ),
@@ -58,13 +64,21 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                       height: 30,
                     ),
                   ),
-                  const SliverFillRemaining(
+                  SliverFillRemaining(
                     hasScrollBody: false,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
                           //add image
+
+                          Lottie.asset('assets/voice.json',
+                              //  height: size.height * 0.65,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) {
+                            print(error);
+                            return Text('$error');
+                          }),
 
                           // const CustomBoxShadowContainer(
                           //   cardInfo: Column(
@@ -154,92 +168,94 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
       },
     );
   }
+}
 
-  Future showModalMenuBottomsSheet(BuildContext context) async {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.5,
+class MenuWidget extends StatelessWidget {
+  const MenuWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+            Text(
+              'Menu',
+              style: theme.textTheme.labelLarge,
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                  ),
-                  const Text('Menu'),
-                  IconButton(
-                    onPressed: () {
-                      AutoRouter.of(context).pop();
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.edit_outlined,
+                text: 'Change note name',
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: Column(
-                  children: [
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.edit_outlined,
-                      text: 'Change note name',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.folder_outlined,
-                      text: 'Add to folder',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.change_circle_outlined,
-                      text: 'Delete note',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.save,
-                      text: 'Save change',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ButtonInBottomSheet(
-                      backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                      onTap: () {},
-                      iconColor: Colors.red,
-                      icon: Icons.delete_outline,
-                      text: 'Delete note',
-                    ),
-                  ],
-                ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.folder_outlined,
+                text: 'Add to folder',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.change_circle_outlined,
+                text: 'Delete note',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.save,
+                text: 'Save change',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {},
+                iconColor: Colors.red,
+                icon: Icons.delete_outline,
+                text: 'Delete note',
               ),
             ],
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

@@ -29,7 +29,7 @@ class CustomTextField extends StatelessWidget {
             validator: validator,
             maxLines: maxLines,
             decoration: InputDecoration(
-              errorStyle: const TextStyle(color: Colors.red),
+              errorStyle: theme.inputDecorationTheme.errorStyle,
               hintText: hintText,
               border: InputBorder.none,
             ),

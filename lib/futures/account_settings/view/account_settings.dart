@@ -13,21 +13,25 @@ class AccountSettingsPage extends StatefulWidget {
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final theme = Theme.of(context);
+    return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // SliverAppBar(
-          //   title: Text('EchoNotes'),
-          // ),
-          // SliverToBoxAdapter(
-          //   child: Padding(
-          //     padding: EdgeInsets.all(12),
-          //     child: Text('Settings'),
-          //   ),
-          // ),
-          // SliverToBoxAdapter(
-          //   child: ColumnSettings(),
-          // )
+          const SliverAppBar(
+            title: Text('EchoNotes'),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              child: Text(
+                'Settings',
+                style: theme.textTheme.labelLarge,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: ColumnSettings(),
+          )
         ],
       ),
     );
@@ -44,27 +48,25 @@ class ColumnSettings extends StatefulWidget {
 class _ColumnSettingsState extends State<ColumnSettings> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SettingsInfoWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            SettingsInfoWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            SettingsInfoWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            SettingsInfoWidget()
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.all(12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SettingsInfoWidget(),
+          SizedBox(
+            height: 20,
+          ),
+          SettingsInfoWidget(),
+          SizedBox(
+            height: 20,
+          ),
+          SettingsInfoWidget(),
+          SizedBox(
+            height: 20,
+          ),
+          SettingsInfoWidget()
+        ],
       ),
     );
   }
@@ -83,14 +85,18 @@ class _SettingsInfoWidgetState extends State<SettingsInfoWidget> {
   bool switchValue = true;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return CustomBoxShadowContainer(
-      cardColor: Colors.green,
+      cardColor: theme.cardColor,
       cardInfo: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Dark Mode'),
+            Text(
+              'Dark Mode',
+              style: theme.textTheme.labelMedium,
+            ),
             Transform.scale(
               scale: 0.8,
               child: Switch.adaptive(
