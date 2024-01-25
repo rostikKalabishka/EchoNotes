@@ -95,7 +95,12 @@ class CardInfoWidget extends StatelessWidget {
             style: theme.textTheme.labelLarge,
             overflow: TextOverflow.ellipsis,
           ),
-          Text(description, style: theme.textTheme.labelMedium),
+          Text(
+            description,
+            style: theme.textTheme.labelMedium,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
           Row(
             children: [
               const Icon(FontAwesomeIcons.calendar),

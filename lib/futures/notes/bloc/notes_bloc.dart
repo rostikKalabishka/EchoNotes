@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/model.dart';
 import 'package:note_app/router/router.dart';
 
@@ -11,7 +11,8 @@ part 'notes_event.dart';
 part 'notes_state.dart';
 
 class NotesBloc extends Bloc<NotesEvent, NotesState> {
-  NotesBloc() : super(const NotesState()) {
+  final AbstractNotesDataBase abstractNotesDataBase;
+  NotesBloc(this.abstractNotesDataBase) : super(const NotesState()) {
     on<NotesEvent>((event, emit) async {
       if (event is LoadNotesEvent) {
         await _loadNotes(event, emit);
@@ -23,25 +24,15 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     }, transformer: sequential());
   }
 
-  Future<void> _loadNotes(NotesEvent event, Emitter<NotesState> emit) async {
+  Future<void> _loadNotes(
+      LoadNotesEvent event, Emitter<NotesState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
-      final List<Note> listNotes = List.generate(
-          12,
-          (int index) => Note(
-                voiceNote: '',
-                isImportant: false,
-                id: index,
-                createDate: createDate,
-                name: 'Name $index',
-                description: 'description $index',
-                isDone: false,
-              ));
+      final List<Note> listNotes = await abstractNotesDataBase.readAllNotes();
 
-      emit(state.copyWith(isLoading: true, noteList: listNotes));
+      emit(state.copyWith(isLoading: false, noteList: listNotes));
     } catch (e) {
-      emit(state.copyWith(isLoading: true, error: e));
+      emit(state.copyWith(isLoading: false, error: e));
     }
   }
 

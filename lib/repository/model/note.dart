@@ -8,6 +8,7 @@ class NoteFields {
     isImportant,
     name,
     description,
+    imageUrl,
     isDone,
     createDate,
     voiceNote
@@ -19,6 +20,7 @@ class NoteFields {
   static const String description = 'description';
   static const String isDone = 'isDone';
   static const String createDate = 'createDate';
+  static const String imageUrl = 'imageUrl';
   static const String voiceNote = 'voiceNote';
 }
 
@@ -27,6 +29,7 @@ class Note extends Equatable {
   final String name;
   final String description;
   final String createDate;
+  final String imageUrl;
   final bool isDone;
   final bool isImportant;
   final String voiceNote;
@@ -37,6 +40,7 @@ class Note extends Equatable {
       required this.voiceNote,
       required this.description,
       required this.createDate,
+      required this.imageUrl,
       required this.isImportant,
       required this.isDone});
 
@@ -48,6 +52,7 @@ class Note extends Equatable {
     bool? isDone,
     bool? isImportant,
     String? voiceNote,
+    String? imageUrl,
   }) {
     return Note(
         id: id ?? this.id,
@@ -55,6 +60,7 @@ class Note extends Equatable {
         description: description ?? this.description,
         createDate: createDate ?? this.createDate,
         isDone: isDone ?? this.isDone,
+        imageUrl: imageUrl ?? this.imageUrl,
         isImportant: isImportant ?? this.isImportant,
         voiceNote: voiceNote ?? this.voiceNote);
   }
@@ -64,8 +70,9 @@ class Note extends Equatable {
       name: json[NoteFields.name] as String,
       description: json[NoteFields.description] as String,
       createDate: json[NoteFields.createDate] as String,
-      isImportant: json[NoteFields.isImportant] as bool,
-      isDone: json[NoteFields.isDone] as bool,
+      isImportant: json[NoteFields.isImportant] == 1,
+      imageUrl: json[NoteFields.imageUrl] as String,
+      isDone: json[NoteFields.isDone] == 0,
       voiceNote: json[NoteFields.voiceNote] as String);
 
   Map<String, Object?> toJson() => {
@@ -73,11 +80,21 @@ class Note extends Equatable {
         NoteFields.createDate: createDate,
         NoteFields.description: description,
         NoteFields.name: name,
-        NoteFields.isDone: isDone,
-        NoteFields.isImportant: isImportant
+        NoteFields.isDone: isDone ? 0 : 1,
+        NoteFields.isImportant: isImportant ? 1 : 0,
+        NoteFields.voiceNote: voiceNote,
+        NoteFields.imageUrl: imageUrl
       };
 
   @override
-  List<Object?> get props =>
-      [id, createDate, description, name, isDone, isImportant];
+  List<Object?> get props => [
+        id,
+        createDate,
+        description,
+        name,
+        isDone,
+        isImportant,
+        voiceNote,
+        imageUrl
+      ];
 }

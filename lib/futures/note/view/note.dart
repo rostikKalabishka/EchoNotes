@@ -1,11 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/repository/model/model.dart';
-
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
@@ -18,6 +19,12 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  @override
+  void initState() {
+    context.read<NotePageBloc>().add(LoadNoteInfoEvent(id: widget.note.id!));
+    super.initState();
+  }
+
   bool play = false;
   @override
   Widget build(BuildContext context) {
@@ -39,7 +46,9 @@ class _NotePageState extends State<NotePage> {
               showModalMenuBottomSheet(
                   context: context,
                   modalHeight: modalHeight,
-                  child: const MenuWidget());
+                  child: MenuWidget(
+                    note: widget.note,
+                  ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
           ),
@@ -49,7 +58,7 @@ class _NotePageState extends State<NotePage> {
                 slivers: [
                   SliverAppBar(
                     title: Text(
-                      'Note',
+                      state.name,
                       style: theme.textTheme.labelLarge,
                     ),
                     actions: [
@@ -58,7 +67,9 @@ class _NotePageState extends State<NotePage> {
                           showModalMenuBottomSheet(
                               context: context,
                               modalHeight: modalHeight,
-                              child: const MenuWidget());
+                              child: MenuWidget(
+                                note: widget.note,
+                              ));
                         },
                         icon: const Icon(Icons.more_horiz),
                       ),
@@ -76,46 +87,49 @@ class _NotePageState extends State<NotePage> {
                       child: Column(
                         children: [
                           CustomBoxShadowContainer(
+                            width: size.height * 0.9,
                             cardColor: theme.cardColor,
                             cardInfo: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          play = !play;
-                                          setState(() {});
-                                        },
-                                        child: CustomBoxShadowContainer(
-                                          width: size.height * 0.07,
-                                          height: size.height * 0.07,
-                                          cardInfo: Icon(play == false
-                                              ? FontAwesomeIcons.play
-                                              : FontAwesomeIcons.pause),
-                                          cardColor: theme
-                                                  .floatingActionButtonTheme
-                                                  .backgroundColor ??
-                                              theme.cardColor,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      '0:00:08',
-                                      style: theme.textTheme.labelLarge,
-                                    )
-                                  ],
-                                ),
+                                state.voice.isNotEmpty
+                                    ? Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: InkWell(
+                                              onTap: () {
+                                                play = !play;
+                                                setState(() {});
+                                              },
+                                              child: CustomBoxShadowContainer(
+                                                width: size.height * 0.07,
+                                                height: size.height * 0.07,
+                                                cardInfo: Icon(play == false
+                                                    ? FontAwesomeIcons.play
+                                                    : FontAwesomeIcons.pause),
+                                                cardColor: theme
+                                                        .floatingActionButtonTheme
+                                                        .backgroundColor ??
+                                                    theme.cardColor,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            '0:00:08',
+                                            style: theme.textTheme.labelLarge,
+                                          )
+                                        ],
+                                      )
+                                    : const SizedBox.shrink(),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
                                   child: Text(
-                                    'bibiabibibbboasdasdazsd saddas ddas\ndsadsad213 dsfasd 123sa',
+                                    state.description,
                                     style: theme.textTheme.labelLarge,
                                   ),
                                 )
@@ -188,9 +202,10 @@ class _NotePageState extends State<NotePage> {
 
 class MenuWidget extends StatelessWidget {
   const MenuWidget({
-    super.key,
-  });
-
+    Key? key,
+    required this.note,
+  }) : super(key: key);
+  final Note note;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -263,7 +278,11 @@ class MenuWidget extends StatelessWidget {
               ),
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
+                onTap: () {
+                  context
+                      .read<NotePageBloc>()
+                      .add(DeleteNoteEvent(note: note, context: context));
+                },
                 iconColor: Colors.red,
                 icon: Icons.delete_outline,
                 text: 'Delete note',

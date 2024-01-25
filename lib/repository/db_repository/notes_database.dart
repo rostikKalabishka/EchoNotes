@@ -7,7 +7,7 @@ class NotesDatabase implements AbstractNotesDataBase {
   static final NotesDatabase instance = NotesDatabase._init();
   Database? _database;
   NotesDatabase._init();
-
+  NotesDatabase();
   @override
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -27,7 +27,6 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const String textType = 'TEXT NOT NULL';
     const String boolType = 'BOOLEAN NOT NULL';
-    // const String integerType = 'INTEGER NOT NULL';
 
     await db.execute('''CREATE TABLE $tableNotes(
       ${NoteFields.id} $idType,
@@ -36,7 +35,8 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.description} $textType,
       ${NoteFields.isDone} $boolType,
       ${NoteFields.isImportant} $boolType,
-       ${NoteFields.voiceNote} $textType
+      ${NoteFields.voiceNote} $textType,
+      ${NoteFields.imageUrl} $textType
     )''');
   }
 

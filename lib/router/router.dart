@@ -11,8 +11,7 @@ import 'package:note_app/futures/list_notes/list_notes.dart';
 import 'package:note_app/futures/note/note.dart';
 import 'package:note_app/futures/notes/notes.dart';
 import 'package:note_app/futures/search/view/search.dart';
-
-import '../repository/model/model.dart';
+import 'package:note_app/repository/model/note.dart';
 
 part 'router.gr.dart';
 
