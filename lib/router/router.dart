@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/futures/account_settings/account_settings.dart';
+import 'package:note_app/futures/add_list_notes/view/add_list_notes.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/add_default_notes.dart';
 import 'package:note_app/futures/add_notes/add_notes.dart';
 import 'package:note_app/futures/add_notes/add_voice_note/add_voice_note.dart';
@@ -52,6 +53,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: AddDefaultNotesRoute.page,
           path: '/add_default_note',
+        ),
+        AutoRoute(
+          page: AddListNotesRoute.page,
+          path: '/add_list_notes',
         )
       ];
 }

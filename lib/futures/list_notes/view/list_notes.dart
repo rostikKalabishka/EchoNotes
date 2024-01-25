@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:note_app/futures/list_notes/bloc/list_notes_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
@@ -14,40 +16,48 @@ class ListNotesPage extends StatefulWidget {
 class _ListNotesPageState extends State<ListNotesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: CustomFloatingActionButton(
-        onPressed: () {},
-        dataButton: const Icon(FontAwesomeIcons.plus),
-      ),
-      body: CustomScrollView(
-        slivers: [
-          const SliverAppBar(
-            centerTitle: true,
-            title: Text('EchoNotes'),
+    return BlocBuilder<ListNotesBloc, ListNotesState>(
+      builder: (context, state) {
+        return Scaffold(
+          floatingActionButton: CustomFloatingActionButton(
+            onPressed: () {
+              context
+                  .read<ListNotesBloc>()
+                  .add(NavigateToAddListNotesEvent(context: context));
+            },
+            dataButton: const Icon(FontAwesomeIcons.plus),
           ),
-          SliverGrid(
-            gridDelegate: MySliverGridDelegateWithMaxCrossAxisExtent(),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                int taskCount = (index + 1) * 2;
-                String date = '17.01.2024';
+          body: CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                centerTitle: true,
+                title: Text('EchoNotes'),
+              ),
+              SliverGrid(
+                gridDelegate: MySliverGridDelegateWithMaxCrossAxisExtent(),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    int taskCount = (index + 1) * 2;
+                    String date = '17.01.2024';
 
-                return Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: ClickedCardWidget(
-                    onTap: () {},
-                    cardInfo: CardInfoWidget(
-                      taskCount: taskCount,
-                      date: date,
-                    ),
-                  ),
-                );
-              },
-              childCount: 5,
-            ),
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: ClickedCardWidget(
+                        onTap: () {},
+                        cardInfo: CardInfoWidget(
+                          taskCount: taskCount,
+                          date: date,
+                        ),
+                      ),
+                    );
+                  },
+                  childCount: 5,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

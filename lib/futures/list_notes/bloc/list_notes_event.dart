@@ -6,3 +6,11 @@ sealed class ListNotesEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class NavigateToAddListNotesEvent extends ListNotesEvent {
+  final BuildContext context;
+
+  const NavigateToAddListNotesEvent({required this.context});
+  @override
+  List<Object> get props => super.props..addAll([context]);
+}

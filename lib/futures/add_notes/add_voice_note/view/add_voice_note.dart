@@ -18,7 +18,6 @@ class AddVoiceNotePage extends StatefulWidget {
   State<AddVoiceNotePage> createState() => _AddVoiceNotePageState();
 }
 
-@RoutePage()
 class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
   @override
   Widget build(BuildContext context) {
