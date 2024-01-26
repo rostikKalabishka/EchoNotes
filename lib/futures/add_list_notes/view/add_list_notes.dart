@@ -60,7 +60,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                     children: [
                       //add image
 
-                      Lottie.asset('assets/voice.json', fit: BoxFit.fill,
+                      Lottie.asset('assets/lottie/voice.json', fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                         print(error);
                         return Text('$error');
@@ -141,9 +141,9 @@ class ChangeFolder extends StatelessWidget {
           child: Column(
             children: [
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
                 onTap: () {},
-                iconColor: Colors.red,
+                iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
               ),

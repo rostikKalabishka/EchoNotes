@@ -37,7 +37,7 @@ class AddDefaultNoteBloc
           isImportant: false,
           isDone: false);
 
-      await abstractNotesDataBase.create(note);
+      await abstractNotesDataBase.createNotes(note);
       emit(state);
 
       _autoRoute.pushAndPopUntil(const NotesRoute(),

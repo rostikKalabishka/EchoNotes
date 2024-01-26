@@ -2,28 +2,36 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:note_app/futures/list_notes/bloc/list_notes_bloc.dart';
+import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
+import 'package:note_app/repository/model/todo_list.dart';
+
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
-class ListNotesPage extends StatefulWidget {
-  const ListNotesPage({Key? key}) : super(key: key);
+class ListTodoPage extends StatefulWidget {
+  const ListTodoPage({Key? key}) : super(key: key);
 
   @override
-  State<ListNotesPage> createState() => _ListNotesPageState();
+  State<ListTodoPage> createState() => _ListTodoPageState();
 }
 
-class _ListNotesPageState extends State<ListNotesPage> {
+class _ListTodoPageState extends State<ListTodoPage> {
+  @override
+  void initState() {
+    context.read<ListTodoBloc>().add(LoadTodoListEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListNotesBloc, ListNotesState>(
+    return BlocBuilder<ListTodoBloc, ListTodoState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButton: CustomFloatingActionButton(
             onPressed: () {
               context
-                  .read<ListNotesBloc>()
-                  .add(NavigateToAddListNotesEvent(context: context));
+                  .read<ListTodoBloc>()
+                  .add(NavigateToAddTodoNotesEvent(context: context));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
           ),
@@ -33,27 +41,28 @@ class _ListNotesPageState extends State<ListNotesPage> {
                 centerTitle: true,
                 title: Text('EchoNotes'),
               ),
-              SliverGrid(
-                gridDelegate: MySliverGridDelegateWithMaxCrossAxisExtent(),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    int taskCount = (index + 1) * 2;
-                    String date = '17.01.2024';
+              state.todoList.isNotEmpty
+                  ? SliverGrid(
+                      gridDelegate:
+                          MySliverGridDelegateWithMaxCrossAxisExtent(),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          final todoList = state.todoList[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: ClickedCardWidget(
-                        onTap: () {},
-                        cardInfo: CardInfoWidget(
-                          taskCount: taskCount,
-                          date: date,
-                        ),
+                          return Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: ClickedCardWidget(
+                              onTap: () {},
+                              cardInfo: CardInfoWidget(
+                                todoList: todoList,
+                              ),
+                            ),
+                          );
+                        },
+                        childCount: 5,
                       ),
-                    );
-                  },
-                  childCount: 5,
-                ),
-              ),
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         );
@@ -99,28 +108,13 @@ class ClickedCardWidget extends StatelessWidget {
   }
 }
 
-class CardInfoWidget extends StatefulWidget {
-  final int taskCount;
-  final String date;
+class CardInfoWidget extends StatelessWidget {
+  final TodoList todoList;
 
   const CardInfoWidget({
     Key? key,
-    required this.taskCount,
-    required this.date,
+    required this.todoList,
   }) : super(key: key);
-
-  @override
-  State<CardInfoWidget> createState() => _CardInfoWidgetState();
-}
-
-class _CardInfoWidgetState extends State<CardInfoWidget> {
-  List<bool> taskCheckList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    taskCheckList = List.generate(widget.taskCount, (index) => false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +153,7 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      '${widget.taskCount} %',
+                      '${todoList.percentage} %',
                       style: theme.textTheme.labelMedium,
                     ),
                   ),
@@ -176,7 +170,7 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
             ),
 
             Text(
-              'List name',
+              todoList.name,
               style: theme.textTheme.labelLarge,
               overflow: TextOverflow.ellipsis,
             ),
@@ -191,7 +185,7 @@ class _CardInfoWidgetState extends State<CardInfoWidget> {
                 SizedBox(
                   width: size.width * 0.025,
                 ),
-                Text(widget.date, style: theme.textTheme.labelSmall),
+                Text(todoList.createDate, style: theme.textTheme.labelSmall),
               ],
             ),
             SizedBox(
@@ -263,9 +257,9 @@ class ChangeFolder extends StatelessWidget {
           child: Column(
             children: [
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: Color.fromARGB(187, 191, 179, 4),
                 onTap: () {},
-                iconColor: Colors.red,
+                iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
               ),

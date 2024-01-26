@@ -1,5 +1,7 @@
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/note.dart';
+import 'package:note_app/repository/model/todo.dart';
+import 'package:note_app/repository/model/todo_list.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -20,13 +22,14 @@ class NotesDatabase implements AbstractNotesDataBase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 4, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
     const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const String textType = 'TEXT NOT NULL';
     const String boolType = 'BOOLEAN NOT NULL';
+    const String integerType = 'INTEGER NOT NULL';
 
     await db.execute('''CREATE TABLE $tableNotes(
       ${NoteFields.id} $idType,
@@ -38,15 +41,37 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.voiceNote} $textType,
       ${NoteFields.imageUrl} $textType
     )''');
+
+    await db.execute('''CREATE TABLE $tableTodoList(
+  ${TodoListFields.id} $idType,
+  ${TodoListFields.createDate} $textType,
+  ${TodoListFields.name} $textType,
+  ${TodoListFields.percentage} $integerType,
+  
+)''');
+//FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
+//     await db.execute('''CREATE TABLE $tableTodo(
+//   ${TodoFields.id} $idType,
+//   ${TodoFields.name} $textType,
+//   ${TodoFields.createDate} $textType,
+//   ${TodoFields.isDone} $boolType,
+//   ${TodoFields.listNoteId} $integerType,
+//   FOREIGN KEY (${TodoFields.listNoteId}) REFERENCES $tableTodoList(${TodoListFields.id})
+// )''');
   }
 
   @override
   Future<Note> readNote(int id) async {
-    final db = await instance.database;
-    final maps = await db.query(tableNotes,
-        columns: NoteFields.values,
-        where: '${NoteFields.id} = ?',
-        whereArgs: [id]);
+    // final db = await instance.database;
+    // final maps = await db.query(tableNotes,
+    //     columns: NoteFields.values,
+    //     where: '${NoteFields.id} = ?',
+    //     whereArgs: [id]);
+    const List<String> columns = NoteFields.values;
+    const String where = '${NoteFields.id} = ?';
+    final List<Object?> whereArgs = [id];
+    final maps = await read(
+        id: id, columns: columns, where: where, whereArgs: whereArgs);
     if (maps.isNotEmpty) {
       return Note.fromJson(maps.first);
     } else {
@@ -54,31 +79,41 @@ class NotesDatabase implements AbstractNotesDataBase {
     }
   }
 
+  Future<List<Map<String, Object?>>> read(
+      {required int id,
+      List<String>? columns,
+      String? where,
+      List<Object?>? whereArgs}) async {
+    final db = await instance.database;
+    return await db.query(tableNotes,
+        columns: columns, where: where, whereArgs: whereArgs);
+  }
+
   @override
   Future<List<Note>> readAllNotes() async {
     final db = await instance.database;
-    const String orderBy = '${NoteFields.createDate} ASC';
+    const String orderBy = '${NoteFields.createDate} DESC';
     final result = await db.query(tableNotes, orderBy: orderBy);
 
     return result.map((json) => Note.fromJson(json)).toList();
   }
 
   @override
-  Future<int> update(Note note) async {
+  Future<int> updateNote(Note note) async {
     final db = await instance.database;
     return db.update(tableNotes, note.toJson(),
         where: '${NoteFields.id} = ?', whereArgs: [note.id]);
   }
 
   @override
-  Future<int> delete(Note note) async {
+  Future<int> deleteNote(Note note) async {
     final db = await instance.database;
     return db.delete(tableNotes,
         where: '${NoteFields.id} = ?', whereArgs: [note.id]);
   }
 
   @override
-  Future<Note> create(Note note) async {
+  Future<Note> createNotes(Note note) async {
     final db = await instance.database;
     final id = await db.insert(tableNotes, note.toJson());
     return note.copyWith(id: id);
@@ -89,5 +124,35 @@ class NotesDatabase implements AbstractNotesDataBase {
     final db = await instance.database;
 
     db.close();
+  }
+
+  @override
+  Future<int> deleteTodoList(TodoList todoList) async {
+    final db = await instance.database;
+    return db.delete(tableTodoList,
+        where: '${TodoListFields.id} = ?', whereArgs: [todoList.id]);
+  }
+
+  @override
+  Future<List<TodoList>> readAllTodoList() async {
+    final db = await instance.database;
+    const String orderBy = '${TodoListFields.createDate} DESC';
+    final result = await db.query(tableTodoList, orderBy: orderBy);
+
+    return result.map((json) => TodoList.fromJson(json)).toList();
+  }
+
+  @override
+  Future<int> updateTodoList(TodoList todoList) async {
+    final db = await instance.database;
+    return db.update(tableTodoList, todoList.toJson(),
+        where: '${TodoListFields.id} = ?', whereArgs: [todoList.id]);
+  }
+
+  @override
+  Future<TodoList> createTodoList(TodoList todoList) async {
+    final db = await instance.database;
+    final id = await db.insert(tableTodoList, todoList.toJson());
+    return todoList.copyWith(id: id);
   }
 }

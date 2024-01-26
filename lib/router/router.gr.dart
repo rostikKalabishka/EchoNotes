@@ -59,10 +59,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomePage(),
       );
     },
-    ListNotesRoute.name: (routeData) {
+    ListTodoRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ListNotesPage(),
+        child: const ListTodoPage(),
       );
     },
     NoteRoute.name: (routeData) {
@@ -204,15 +204,15 @@ class HomeRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ListNotesPage]
-class ListNotesRoute extends PageRouteInfo<void> {
-  const ListNotesRoute({List<PageRouteInfo>? children})
+/// [ListTodoPage]
+class ListTodoRoute extends PageRouteInfo<void> {
+  const ListTodoRoute({List<PageRouteInfo>? children})
       : super(
-          ListNotesRoute.name,
+          ListTodoRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'ListNotesRoute';
+  static const String name = 'ListTodoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

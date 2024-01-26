@@ -7,7 +7,8 @@ import 'package:note_app/futures/add_notes/add_notes.dart';
 import 'package:note_app/futures/add_notes/add_voice_note/add_voice_note.dart';
 import 'package:note_app/futures/folder_list/folder_list.dart';
 import 'package:note_app/futures/home/home.dart';
-import 'package:note_app/futures/list_notes/list_notes.dart';
+import 'package:note_app/futures/list_todo/view/list_notes.dart';
+
 import 'package:note_app/futures/note/note.dart';
 import 'package:note_app/futures/notes/notes.dart';
 import 'package:note_app/futures/search/view/search.dart';
@@ -25,7 +26,7 @@ class AppRouter extends _$AppRouter {
             path: 'notes',
           ),
           AutoRoute(
-            page: ListNotesRoute.page,
+            page: ListTodoRoute.page,
             path: 'list_notes',
           ),
           AutoRoute(

@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
-import 'package:note_app/futures/list_notes/bloc/list_notes_bloc.dart';
+import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
+
 import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
@@ -21,13 +22,14 @@ class EchoNotes extends StatefulWidget {
 
 class _EchoNotesState extends State<EchoNotes> {
   final _appRouter = AppRouter();
-  final _accountSettingsBloc = AccountSettingsBloc();
+  final _accountSettingsBloc =
+      AccountSettingsBloc(GetIt.I<AbstractNotesDataBase>());
   final _notesBloc = NotesBloc(GetIt.I<AbstractNotesDataBase>());
   final _addDefaultNoteBloc =
       AddDefaultNoteBloc(GetIt.I<AbstractNotesDataBase>());
   final _notePageBloc = NotePageBloc(GetIt.I<AbstractNotesDataBase>());
-  final _addVoiceNoteBloc = AddVoiceNoteBloc();
-  final _listNotesBloc = ListNotesBloc();
+  final _addVoiceNoteBloc = AddVoiceNoteBloc(GetIt.I<AbstractNotesDataBase>());
+  final _listNotesBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

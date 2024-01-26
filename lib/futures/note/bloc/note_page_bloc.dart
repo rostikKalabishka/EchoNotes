@@ -56,7 +56,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     final autoRouter = AutoRouter.of(event.context);
 
     try {
-      await abstractNotesDataBase.delete(event.note);
+      await abstractNotesDataBase.deleteNote(event.note);
       autoRouter.push(const NotesRoute());
     } catch (e) {
       emit(state.copyWith(error: e));

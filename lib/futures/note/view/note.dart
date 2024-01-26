@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -237,9 +236,9 @@ class MenuWidget extends StatelessWidget {
           child: Column(
             children: [
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
                 onTap: () {},
-                iconColor: Colors.red,
+                iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
               ),
@@ -247,9 +246,9 @@ class MenuWidget extends StatelessWidget {
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: const Color.fromARGB(228, 45, 151, 28),
                 onTap: () {},
-                iconColor: Colors.red,
+                iconColor: const Color.fromARGB(255, 74, 254, 80),
                 icon: Icons.folder_outlined,
                 text: 'Add to folder',
               ),
@@ -257,19 +256,19 @@ class MenuWidget extends StatelessWidget {
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: const Color.fromARGB(255, 6, 70, 246),
                 onTap: () {},
-                iconColor: Colors.red,
-                icon: Icons.change_circle_outlined,
+                iconColor: Colors.blue,
+                icon: FontAwesomeIcons.faceDizzy,
                 text: 'Delete note',
               ),
               const SizedBox(
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                backgroundColor: const Color.fromARGB(217, 155, 36, 179),
                 onTap: () {},
-                iconColor: Colors.red,
+                iconColor: const Color.fromARGB(255, 236, 66, 255),
                 icon: Icons.save,
                 text: 'Save change',
               ),
