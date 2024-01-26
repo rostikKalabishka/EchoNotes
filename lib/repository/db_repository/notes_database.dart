@@ -47,17 +47,17 @@ class NotesDatabase implements AbstractNotesDataBase {
   ${TodoListFields.createDate} $textType,
   ${TodoListFields.name} $textType,
   ${TodoListFields.percentage} $integerType,
-  
+  //FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
 )''');
-//FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
-//     await db.execute('''CREATE TABLE $tableTodo(
-//   ${TodoFields.id} $idType,
-//   ${TodoFields.name} $textType,
-//   ${TodoFields.createDate} $textType,
-//   ${TodoFields.isDone} $boolType,
-//   ${TodoFields.listNoteId} $integerType,
-//   FOREIGN KEY (${TodoFields.listNoteId}) REFERENCES $tableTodoList(${TodoListFields.id})
-// )''');
+
+    await db.execute('''CREATE TABLE $tableTodo(
+  ${TodoFields.id} $idType,
+  ${TodoFields.name} $textType,
+  ${TodoFields.createDate} $textType,
+  ${TodoFields.isDone} $boolType,
+  ${TodoFields.listNoteId} $integerType,
+  FOREIGN KEY (${TodoFields.listNoteId}) REFERENCES $tableTodoList(${TodoListFields.id})
+)''');
   }
 
   @override

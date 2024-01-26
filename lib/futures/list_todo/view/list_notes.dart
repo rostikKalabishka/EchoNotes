@@ -41,28 +41,28 @@ class _ListTodoPageState extends State<ListTodoPage> {
                 centerTitle: true,
                 title: Text('EchoNotes'),
               ),
-              state.todoList.isNotEmpty
-                  ? SliverGrid(
-                      gridDelegate:
-                          MySliverGridDelegateWithMaxCrossAxisExtent(),
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          final todoList = state.todoList[index];
+              // state.todoList.isNotEmpty
+              //     ?
+              SliverGrid.count(
+                crossAxisCount: 2,
+                children: List.generate(
+                  state.todoList.length,
+                  (index) {
+                    final todoList = state.todoList[index];
 
-                          return Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: ClickedCardWidget(
-                              onTap: () {},
-                              cardInfo: CardInfoWidget(
-                                todoList: todoList,
-                              ),
-                            ),
-                          );
-                        },
-                        childCount: 5,
+                    return Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: ClickedCardWidget(
+                        onTap: () {},
+                        cardInfo: CardInfoWidget(
+                          todoList: todoList,
+                        ),
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    );
+                  },
+                ),
+              )
+              // : const SizedBox.shrink(),
             ],
           ),
         );
