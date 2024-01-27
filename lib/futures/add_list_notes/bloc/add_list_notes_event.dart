@@ -6,3 +6,25 @@ sealed class AddListNotesEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CreateTodoEvent extends AddListNotesEvent {
+  final String name;
+  final BuildContext context;
+
+  const CreateTodoEvent({
+    required this.name,
+    required this.context,
+  });
+  @override
+  List<Object> get props => super.props..addAll([name]);
+}
+
+class CreateTodoListEvent extends AddListNotesEvent {
+  final String name;
+
+  const CreateTodoListEvent({
+    required this.name,
+  });
+  @override
+  List<Object> get props => super.props..addAll([name]);
+}

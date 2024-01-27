@@ -1,10 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'add_list_notes_bloc.dart';
 
-sealed class AddListNotesState extends Equatable {
-  const AddListNotesState();
-  
-  @override
-  List<Object> get props => [];
-}
+class AddListTodoState extends Equatable {
+  const AddListTodoState(
+      {this.todoListName = 'Todo', this.error = '', this.todo = const []});
+  final String todoListName;
+  final Object error;
+  final List<Todo> todo;
 
-final class AddListNotesInitial extends AddListNotesState {}
+  @override
+  List<Object> get props => [todoListName, error, todo];
+
+  AddListTodoState copyWith({
+    String? todoListName,
+    Object? error,
+    List<Todo>? todo,
+  }) {
+    return AddListTodoState(
+      todoListName: todoListName ?? this.todoListName,
+      error: error ?? this.error,
+      todo: todo ?? this.todo,
+    );
+  }
+}

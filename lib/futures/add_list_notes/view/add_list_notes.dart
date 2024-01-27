@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
+import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
+
 import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
 class AddListNotesPage extends StatefulWidget {
@@ -14,101 +17,184 @@ class AddListNotesPage extends StatefulWidget {
 }
 
 class _AddListNotesPageState extends State<AddListNotesPage> {
+  final TextEditingController addTodoController = TextEditingController();
+  final Utilities utilities = Utilities();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    double bottomPadding = MediaQuery.of(context).padding.bottom;
-    Size size = MediaQuery.of(context).size;
-    double modalHeight = size.height * 0.4;
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: CustomFloatingActionButton(
-        height: size.height * 0.075,
-        width: size.height * 0.075,
-        borderRadius: BorderRadius.circular(12),
-        onPressed: () {},
-        dataButton: const Icon(FontAwesomeIcons.plus),
-      ),
-      body: Stack(
-        children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                title: const Text('Note'),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      showModalMenuBottomSheet(
-                          context: context,
-                          modalHeight: modalHeight,
-                          child: const ChangeFolder());
-                    },
-                    icon: const Icon(Icons.more_horiz),
-                  ),
-                ],
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 30,
-                ),
-              ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    children: [
-                      //add image
 
-                      Lottie.asset('assets/lottie/voice.json', fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                        print(error);
-                        return Text('$error');
-                      }),
+    final Size size = MediaQuery.of(context).size;
+    final double modalHeight = size.height * 0.4;
+    final double modalAddTodoHeight = size.height * 0.7;
+    return BlocBuilder<AddListNotesBloc, AddListTodoState>(
+      builder: (context, state) {
+        return Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          floatingActionButton: CustomFloatingActionButton(
+            height: size.height * 0.075,
+            width: size.height * 0.075,
+            borderRadius: BorderRadius.circular(12),
+            onPressed: () {
+              showModalMenuBottomSheet(
+                  context: context,
+                  modalHeight: modalAddTodoHeight,
+                  child: AddTodo(
+                    addTodoController: addTodoController,
+                    utilities: utilities,
+                    formKey: _formKey,
+                  ));
+            },
+            dataButton: const Icon(FontAwesomeIcons.plus),
+          ),
+          body: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    title: Text(state.todoListName),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          showModalMenuBottomSheet(
+                              context: context,
+                              modalHeight: modalHeight,
+                              child: ChangeFolder(
+                                todoListName: state.todoListName,
+                              ));
+                        },
+                        icon: const Icon(Icons.more_horiz),
+                      ),
                     ],
                   ),
-                ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 30,
+                    ),
+                  ),
+                  state.todo.isEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Lottie.asset('assets/lottie/voice.json',
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                              return Text('$error');
+                            }),
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final todo = state.todo[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: CustomBoxShadowContainer(
+                                  cardColor: theme.cardColor,
+                                  cardInfo: ListTile(
+                                    title: Text(todo.name),
+                                    leading: Checkbox(
+                                      value: todo.isDone,
+                                      onChanged: (bool? value) {
+                                        //value = !value!;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            childCount: state.todo.length,
+                          ),
+                        ),
+                ],
               ),
             ],
           ),
-          Positioned(
-            bottom: bottomPadding,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomButtonWidget(
-                    theme: theme,
-                    size: size,
-                    onTap: () {},
-                    child: Text(
-                      'UA',
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ),
-                  CustomButtonWidget(
-                    theme: theme,
-                    size: size,
-                    onTap: () {
-                      //   context.read<NotePageBloc>().add(ImagePickerEvent());
+        );
+      },
+    );
+  }
+}
+
+class AddTodo extends StatelessWidget {
+  const AddTodo({
+    Key? key,
+    required this.addTodoController,
+    required this.utilities,
+    required this.formKey,
+  }) : super(key: key);
+  final TextEditingController addTodoController;
+  final Utilities utilities;
+  final GlobalKey<FormState> formKey;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+            Text(
+              'Todo',
+              style: theme.textTheme.labelLarge,
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                CustomTextField(
+                  mixLines: 1,
+                  validator: (value) => utilities.textFieldValidator(value!),
+                  hintText: 'Add note name',
+                  textEditorController: addTodoController,
+                  maxLines: 15,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AddListNotesBloc>().add(
+                              CreateTodoEvent(
+                                  name: addTodoController.text,
+                                  context: context),
+                            );
+                        addTodoController.clear();
+                      }
                     },
-                    child: const Icon(Icons.attachment),
-                  ),
-                ],
-              ),
+                    child: Text(
+                      'add todo',
+                      style: theme.textTheme.labelLarge,
+                    ))
+              ],
             ),
           ),
-        ],
-      ),
+        )
+      ],
     );
   }
 }
 
 class ChangeFolder extends StatelessWidget {
-  const ChangeFolder({super.key});
+  const ChangeFolder({super.key, required this.todoListName});
+  final String todoListName;
 
   @override
   Widget build(BuildContext context) {
@@ -151,11 +237,15 @@ class ChangeFolder extends StatelessWidget {
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
-                iconColor: Colors.red,
-                icon: Icons.delete_outline,
-                text: 'Delete note',
+                backgroundColor: const Color.fromARGB(255, 15, 68, 17),
+                onTap: () {
+                  context
+                      .read<AddListNotesBloc>()
+                      .add(CreateTodoListEvent(name: todoListName));
+                },
+                iconColor: const Color.fromARGB(255, 81, 255, 87),
+                icon: Icons.save,
+                text: 'Save todo list',
               ),
             ],
           ),

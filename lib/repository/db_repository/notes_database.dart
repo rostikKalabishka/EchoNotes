@@ -22,7 +22,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 4, onCreate: _createDB);
+    return await openDatabase(path, version: 6, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -30,6 +30,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String textType = 'TEXT NOT NULL';
     const String boolType = 'BOOLEAN NOT NULL';
     const String integerType = 'INTEGER NOT NULL';
+    const String integerNullType = 'INTEGER';
 
     await db.execute('''CREATE TABLE $tableNotes(
       ${NoteFields.id} $idType,
@@ -42,13 +43,22 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.imageUrl} $textType
     )''');
 
+//     await db.execute('''CREATE TABLE todo_list(
+//   _id INTEGER PRIMARY KEY AUTOINCREMENT,
+//   createDate TEXT NOT NULL,
+//   name TEXT NOT NULL,
+//   percentage INTEGER NOT NULL
+// )''');
+
     await db.execute('''CREATE TABLE $tableTodoList(
   ${TodoListFields.id} $idType,
   ${TodoListFields.createDate} $textType,
   ${TodoListFields.name} $textType,
-  ${TodoListFields.percentage} $integerType,
-  //FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
+  ${TodoListFields.percentage} $integerNullType
 )''');
+
+//,
+    //FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
 
     await db.execute('''CREATE TABLE $tableTodo(
   ${TodoFields.id} $idType,
@@ -154,5 +164,35 @@ class NotesDatabase implements AbstractNotesDataBase {
     final db = await instance.database;
     final id = await db.insert(tableTodoList, todoList.toJson());
     return todoList.copyWith(id: id);
+  }
+
+  @override
+  Future<Todo> createTodo(Todo todo) async {
+    final db = await instance.database;
+    final id = await db.insert(tableTodo, todo.toJson());
+    return todo.copyWith(id: id);
+  }
+
+  @override
+  Future<int> deleteTodo(Todo todo) async {
+    final db = await instance.database;
+    return db.delete(tableTodoList,
+        where: '${TodoFields.id} = ?', whereArgs: [todo.id]);
+  }
+
+  @override
+  Future<List<Todo>> readAllTodo() async {
+    final db = await instance.database;
+    const String orderBy = '${TodoFields.createDate} DESC';
+    final result = await db.query(tableTodo, orderBy: orderBy);
+
+    return result.map((json) => Todo.fromJson(json)).toList();
+  }
+
+  @override
+  Future<int> updateTodo(Todo todo) async {
+    final db = await instance.database;
+    return db.update(tableTodo, todo.toJson(),
+        where: '${TodoFields.id} = ?', whereArgs: [todo.id]);
   }
 }

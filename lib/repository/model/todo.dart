@@ -14,7 +14,7 @@ class TodoFields {
 
 class Todo extends Equatable {
   final int? id;
-  final int listNoteId;
+  final int? listNoteId;
   final bool isDone;
   final String name;
   final String createDate;
@@ -34,7 +34,7 @@ class Todo extends Equatable {
       name: json[TodoFields.name] as String,
       createDate: json[TodoFields.createDate] as String,
       isDone: json[TodoFields.isDone] == 0,
-      listNoteId: json[TodoFields.listNoteId] as int);
+      listNoteId: json[TodoFields.listNoteId] as int?);
 
   Map<String, Object?> toJson() => {
         TodoFields.id: id,

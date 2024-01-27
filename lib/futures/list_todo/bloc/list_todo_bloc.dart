@@ -29,12 +29,13 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
 
   Future<void> _loadTodoList(
       LoadTodoListEvent event, Emitter<ListTodoState> emit) async {
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isLoading: true));
     try {
       final List<TodoList> todoList =
           await abstractNotesDataBase.readAllTodoList();
       emit(state.copyWith(isLoading: false, todoList: todoList));
     } catch (e) {
+      print(e);
       emit(state.copyWith(isLoading: false, error: e));
     }
   }

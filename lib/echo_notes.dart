@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
+import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
 import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 
@@ -30,6 +31,7 @@ class _EchoNotesState extends State<EchoNotes> {
   final _notePageBloc = NotePageBloc(GetIt.I<AbstractNotesDataBase>());
   final _addVoiceNoteBloc = AddVoiceNoteBloc(GetIt.I<AbstractNotesDataBase>());
   final _listNotesBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
+  final _addListNotesBloc = AddListNotesBloc(GetIt.I<AbstractNotesDataBase>());
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -40,6 +42,7 @@ class _EchoNotesState extends State<EchoNotes> {
         BlocProvider(create: (_) => _notePageBloc),
         BlocProvider(create: (_) => _addVoiceNoteBloc),
         BlocProvider(create: (_) => _listNotesBloc),
+        BlocProvider(create: (_) => _addListNotesBloc),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
