@@ -3,23 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
+
+import 'package:note_app/futures/current_todo_list_info/bloc/current_todo_list_info_bloc.dart';
+import 'package:note_app/repository/model/todo_list.dart';
 
 import 'package:note_app/ui/widgets/widget.dart';
 import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
-class AddListNotesPage extends StatefulWidget {
-  const AddListNotesPage({super.key});
-
+class CurrentTodoListInfoPage extends StatefulWidget {
+  const CurrentTodoListInfoPage({super.key, required this.todoList});
+  final TodoList todoList;
   @override
-  State<AddListNotesPage> createState() => _AddListNotesPageState();
+  State<CurrentTodoListInfoPage> createState() => _CurrentTodoListInfoState();
 }
 
-class _AddListNotesPageState extends State<AddListNotesPage> {
+class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
   final TextEditingController addTodoController = TextEditingController();
   final Utilities utilities = Utilities();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    context
+        .read<CurrentTodoListInfoBloc>()
+        .add(LoadTodoListEvent(todoList: widget.todoList));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -27,7 +38,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
     final Size size = MediaQuery.of(context).size;
     final double modalHeight = size.height * 0.4;
     final double modalAddTodoHeight = size.height * 0.7;
-    return BlocBuilder<AddListNotesBloc, AddListTodoState>(
+    return BlocBuilder<CurrentTodoListInfoBloc, CurrentTodoListInfoState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -52,7 +63,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
               CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    title: Text(state.todoListName),
+                    title: Text(state.name),
                     actions: [
                       IconButton(
                         onPressed: () {
@@ -60,7 +71,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                               context: context,
                               modalHeight: modalHeight,
                               child: ChangeFolder(
-                                todoListName: state.todoListName,
+                                todoListName: state.name,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -72,40 +83,41 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                       height: 30,
                     ),
                   ),
-                  state.todo.isEmpty
-                      ? SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Lottie.asset('assets/lottie/voice.json',
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) {
-                              return Text('$error');
-                            }),
-                          ),
-                        )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final todo = state.todo[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: CustomBoxShadowContainer(
-                                  cardColor: theme.cardColor,
-                                  cardInfo: ListTile(
-                                    title: Text(todo.name),
-                                    leading: Checkbox(
-                                      value: todo.isDone,
-                                      onChanged: (bool? value) {
-                                        //value = !value!;
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            childCount: state.todo.length,
-                          ),
-                        ),
+                  // state.listTodo.isEmpty
+                  //     ?
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Lottie.asset('assets/lottie/voice.json',
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) {
+                        return Text('$error');
+                      }),
+                    ),
+                  )
+                  // : SliverList(
+                  //     delegate: SliverChildBuilderDelegate(
+                  //       (context, index) {
+                  //         final todo = state.listTodo[index];
+                  //         return Padding(
+                  //           padding: const EdgeInsets.all(10),
+                  //           child: CustomBoxShadowContainer(
+                  //             cardColor: theme.cardColor,
+                  //             cardInfo: ListTile(
+                  //               title: Text(todo.name),
+                  //               leading: Checkbox(
+                  //                 value: todo.isDone,
+                  //                 onChanged: (bool? value) {
+                  //                   //value = !value!;
+                  //                 },
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //       childCount: state.listTodo.length,
+                  //     ),
+                  //   ),
                 ],
               ),
             ],
@@ -171,11 +183,6 @@ class AddTodo extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        context.read<AddListNotesBloc>().add(
-                              CreateTodoEvent(
-                                  name: addTodoController.text,
-                                  context: context),
-                            );
                         addTodoController.clear();
                       }
                     },
@@ -238,10 +245,7 @@ class ChangeFolder extends StatelessWidget {
               ),
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 15, 68, 17),
-                onTap: () {
-                  context.read<AddListNotesBloc>().add(CreateTodoListEvent(
-                      name: todoListName, context: context));
-                },
+                onTap: () {},
                 iconColor: const Color.fromARGB(255, 81, 255, 87),
                 icon: Icons.save,
                 text: 'Save todo list',

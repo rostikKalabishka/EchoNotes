@@ -21,10 +21,11 @@ class CreateTodoEvent extends AddListNotesEvent {
 
 class CreateTodoListEvent extends AddListNotesEvent {
   final String name;
-
+  final BuildContext context;
   const CreateTodoListEvent({
     required this.name,
+    required this.context,
   });
   @override
-  List<Object> get props => super.props..addAll([name]);
+  List<Object> get props => super.props..addAll([name, context]);
 }

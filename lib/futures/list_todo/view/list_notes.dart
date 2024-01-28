@@ -53,7 +53,11 @@ class _ListTodoPageState extends State<ListTodoPage> {
                     return Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: ClickedCardWidget(
-                        onTap: () {},
+                        onTap: () {
+                          context.read<ListTodoBloc>().add(
+                              NavigateToCurrentTodoInfoListEvent(
+                                  context: context, todoList: todoList));
+                        },
                         cardInfo: CardInfoWidget(
                           todoList: todoList,
                         ),
@@ -163,7 +167,9 @@ class CardInfoWidget extends StatelessWidget {
                       showModalMenuBottomSheet(
                           context: context,
                           modalHeight: modalHeight,
-                          child: const ChangeFolder());
+                          child: ChangeFolder(
+                            todoList: todoList,
+                          ));
                     },
                     icon: const Icon(Icons.more_vert))
               ],
@@ -224,8 +230,8 @@ class CardInfoWidget extends StatelessWidget {
 }
 
 class ChangeFolder extends StatelessWidget {
-  const ChangeFolder({super.key});
-
+  const ChangeFolder({super.key, required this.todoList});
+  final TodoList todoList;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -268,7 +274,11 @@ class ChangeFolder extends StatelessWidget {
               ),
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
+                onTap: () {
+                  context
+                      .read<ListTodoBloc>()
+                      .add(DeleteTodoListEvent(todoList: todoList));
+                },
                 iconColor: Colors.red,
                 icon: Icons.delete_outline,
                 text: 'Delete note',

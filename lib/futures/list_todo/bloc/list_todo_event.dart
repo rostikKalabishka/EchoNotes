@@ -16,3 +16,21 @@ class NavigateToAddTodoNotesEvent extends ListTodoListEvent {
   @override
   List<Object> get props => super.props..addAll([context]);
 }
+
+class NavigateToCurrentTodoInfoListEvent extends ListTodoListEvent {
+  final BuildContext context;
+  final TodoList todoList;
+
+  const NavigateToCurrentTodoInfoListEvent(
+      {required this.context, required this.todoList});
+  @override
+  List<Object> get props => super.props..addAll([context, todoList]);
+}
+
+class DeleteTodoListEvent extends ListTodoListEvent {
+  final TodoList todoList;
+
+  const DeleteTodoListEvent({required this.todoList});
+  @override
+  List<Object> get props => super.props..addAll([todoList]);
+}

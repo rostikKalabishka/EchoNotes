@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'add_list_notes_bloc.dart';
 
 class AddListTodoState extends Equatable {

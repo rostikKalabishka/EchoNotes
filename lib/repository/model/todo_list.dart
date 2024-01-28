@@ -1,10 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:note_app/repository/model/todo.dart';
-
 const String tableTodoList = 'todo_list';
 
 class TodoListFields {
+  static const List<String> values = [
+    id,
+    name,
+    createDate,
+    percentage,
+  ];
+
   static const String id = '_id';
   // static const String listTodo = 'listTodo';
   static const String name = 'name';

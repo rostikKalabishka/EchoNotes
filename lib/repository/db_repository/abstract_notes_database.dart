@@ -14,7 +14,9 @@ abstract interface class AbstractNotesDataBase {
   Future<List<TodoList>> readAllTodoList();
   Future<int> updateTodoList(TodoList todoList);
   Future<int> deleteTodoList(TodoList todoList);
+  Future<TodoList> readTodoList(int id);
 
+  Future<Todo> readTodo(int id);
   Future<Todo> createTodo(Todo todo);
   Future<List<Todo>> readAllTodo();
   Future<int> updateTodo(Todo todo);

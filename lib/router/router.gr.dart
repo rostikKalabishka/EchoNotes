@@ -47,6 +47,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AddVoiceNotePage(),
       );
     },
+    CurrentTodoListInfoRoute.name: (routeData) {
+      final args = routeData.argsAs<CurrentTodoListInfoRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CurrentTodoListInfoPage(
+          key: args.key,
+          todoList: args.todoList,
+        ),
+      );
+    },
     FolderListRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -173,6 +183,45 @@ class AddVoiceNoteRoute extends PageRouteInfo<void> {
   static const String name = 'AddVoiceNoteRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CurrentTodoListInfoPage]
+class CurrentTodoListInfoRoute
+    extends PageRouteInfo<CurrentTodoListInfoRouteArgs> {
+  CurrentTodoListInfoRoute({
+    Key? key,
+    required TodoList todoList,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CurrentTodoListInfoRoute.name,
+          args: CurrentTodoListInfoRouteArgs(
+            key: key,
+            todoList: todoList,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CurrentTodoListInfoRoute';
+
+  static const PageInfo<CurrentTodoListInfoRouteArgs> page =
+      PageInfo<CurrentTodoListInfoRouteArgs>(name);
+}
+
+class CurrentTodoListInfoRouteArgs {
+  const CurrentTodoListInfoRouteArgs({
+    this.key,
+    required this.todoList,
+  });
+
+  final Key? key;
+
+  final TodoList todoList;
+
+  @override
+  String toString() {
+    return 'CurrentTodoListInfoRouteArgs{key: $key, todoList: $todoList}';
+  }
 }
 
 /// generated route for

@@ -43,22 +43,13 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.imageUrl} $textType
     )''');
 
-//     await db.execute('''CREATE TABLE todo_list(
-//   _id INTEGER PRIMARY KEY AUTOINCREMENT,
-//   createDate TEXT NOT NULL,
-//   name TEXT NOT NULL,
-//   percentage INTEGER NOT NULL
-// )''');
-
     await db.execute('''CREATE TABLE $tableTodoList(
   ${TodoListFields.id} $idType,
   ${TodoListFields.createDate} $textType,
   ${TodoListFields.name} $textType,
-  ${TodoListFields.percentage} $integerNullType
+  ${TodoListFields.percentage} $integerNullType,
+  PRIMARY KEY (${TodoListFields.id})
 )''');
-
-//,
-    //FOREIGN KEY (${TodoListFields.listTodo}) REFERENCES $tableNotes(${NoteFields.id})
 
     await db.execute('''CREATE TABLE $tableTodo(
   ${TodoFields.id} $idType,
@@ -72,11 +63,6 @@ class NotesDatabase implements AbstractNotesDataBase {
 
   @override
   Future<Note> readNote(int id) async {
-    // final db = await instance.database;
-    // final maps = await db.query(tableNotes,
-    //     columns: NoteFields.values,
-    //     where: '${NoteFields.id} = ?',
-    //     whereArgs: [id]);
     const List<String> columns = NoteFields.values;
     const String where = '${NoteFields.id} = ?';
     final List<Object?> whereArgs = [id];
@@ -153,6 +139,20 @@ class NotesDatabase implements AbstractNotesDataBase {
   }
 
   @override
+  Future<TodoList> readTodoList(int id) async {
+    const List<String> columns = TodoListFields.values;
+    const String where = '${TodoListFields.id} = ?';
+    final List<Object?> whereArgs = [id];
+    final maps = await read(
+        id: id, columns: columns, where: where, whereArgs: whereArgs);
+    if (maps.isNotEmpty) {
+      return TodoList.fromJson(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
+  }
+
+  @override
   Future<int> updateTodoList(TodoList todoList) async {
     final db = await instance.database;
     return db.update(tableTodoList, todoList.toJson(),
@@ -194,5 +194,19 @@ class NotesDatabase implements AbstractNotesDataBase {
     final db = await instance.database;
     return db.update(tableTodo, todo.toJson(),
         where: '${TodoFields.id} = ?', whereArgs: [todo.id]);
+  }
+
+  @override
+  Future<Todo> readTodo(int id) async {
+    const List<String> columns = TodoFields.values;
+    const String where = '${TodoFields.id} = ?';
+    final List<Object?> whereArgs = [id];
+    final maps = await read(
+        id: id, columns: columns, where: where, whereArgs: whereArgs);
+    if (maps.isNotEmpty) {
+      return Todo.fromJson(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
   }
 }

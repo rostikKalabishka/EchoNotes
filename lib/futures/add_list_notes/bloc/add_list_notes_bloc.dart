@@ -5,9 +5,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/todo.dart';
 import 'package:note_app/repository/model/todo_list.dart';
+import 'package:note_app/router/router.dart';
 
 part 'add_list_notes_event.dart';
 part 'add_list_notes_state.dart';
@@ -46,6 +48,7 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
 
   Future<void> _createTodoList(
       CreateTodoListEvent event, Emitter<AddListTodoState> emit) async {
+    final autoRouter = AutoRouter.of(event.context);
     try {
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
       final todoList = TodoList(
@@ -53,8 +56,18 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         name: event.name,
         createDate: createDate,
       );
-      await abstractNotesDataBase.createTodoList(todoList);
-      emit(state);
+      final createdTodoList =
+          await abstractNotesDataBase.createTodoList(todoList);
+      final List<Todo> existingTodos = state.todo;
+
+      final updatedTodos = existingTodos.map((todo) {
+        return todo.copyWith(listNoteId: createdTodoList.id);
+      }).toList();
+
+      emit(state.copyWith(todo: updatedTodos));
+
+      autoRouter.pushAndPopUntil(const ListTodoRoute(),
+          predicate: (route) => false);
     } catch (e) {
       log('$e');
       emit(state.copyWith(error: e));
