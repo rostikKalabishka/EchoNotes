@@ -83,41 +83,40 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                       height: 30,
                     ),
                   ),
-                  // state.listTodo.isEmpty
-                  //     ?
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Lottie.asset('assets/lottie/voice.json',
-                          fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                        return Text('$error');
-                      }),
-                    ),
-                  )
-                  // : SliverList(
-                  //     delegate: SliverChildBuilderDelegate(
-                  //       (context, index) {
-                  //         final todo = state.listTodo[index];
-                  //         return Padding(
-                  //           padding: const EdgeInsets.all(10),
-                  //           child: CustomBoxShadowContainer(
-                  //             cardColor: theme.cardColor,
-                  //             cardInfo: ListTile(
-                  //               title: Text(todo.name),
-                  //               leading: Checkbox(
-                  //                 value: todo.isDone,
-                  //                 onChanged: (bool? value) {
-                  //                   //value = !value!;
-                  //                 },
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         );
-                  //       },
-                  //       childCount: state.listTodo.length,
-                  //     ),
-                  //   ),
+                  state.todo.isEmpty
+                      ? SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Lottie.asset('assets/lottie/voice.json',
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                              return Text('$error');
+                            }),
+                          ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final todo = state.todo[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: CustomBoxShadowContainer(
+                                  cardColor: theme.cardColor,
+                                  cardInfo: ListTile(
+                                    title: Text(todo.name),
+                                    leading: Checkbox(
+                                      value: todo.isDone,
+                                      onChanged: (bool? value) {
+                                        //value = !value!;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            childCount: state.todo.length,
+                          ),
+                        ),
                 ],
               ),
             ],

@@ -21,6 +21,12 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
   final Utilities utilities = Utilities();
   final _formKey = GlobalKey<FormState>();
   @override
+  void initState() {
+    context.read<AddListNotesBloc>().add(LoadDefaultValue());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 

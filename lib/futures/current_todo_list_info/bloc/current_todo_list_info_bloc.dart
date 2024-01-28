@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
@@ -18,16 +20,16 @@ class CurrentTodoListInfoBloc
       }
     });
   }
+
   Future<void> _loadTodoList(
       LoadTodoListEvent event, Emitter<CurrentTodoListInfoState> emit) async {
     emit(state.copyWith(isLoading: true));
     try {
       final todoList =
           await abstractNotesDataBase.readTodoList(event.todoList.id!);
-      emit(state.copyWith(
-          isLoading: false,
-          // listTodo: ,
-          name: todoList.name));
+      final List<Todo> todo =
+          await abstractNotesDataBase.readAllTodo(event.todoList.id!);
+      emit(state.copyWith(isLoading: false, todo: todo, name: todoList.name));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e));
     }

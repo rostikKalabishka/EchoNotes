@@ -7,6 +7,8 @@ sealed class AddListNotesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoadDefaultValue extends AddListNotesEvent {}
+
 class CreateTodoEvent extends AddListNotesEvent {
   final String name;
   final BuildContext context;
@@ -17,6 +19,10 @@ class CreateTodoEvent extends AddListNotesEvent {
   });
   @override
   List<Object> get props => super.props..addAll([name]);
+}
+
+class ExitPageEvent extends AddListNotesEvent {
+  const ExitPageEvent();
 }
 
 class CreateTodoListEvent extends AddListNotesEvent {

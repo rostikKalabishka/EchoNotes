@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'current_todo_list_info_bloc.dart';
 
 class CurrentTodoListInfoState extends Equatable {
@@ -14,7 +13,7 @@ class CurrentTodoListInfoState extends Equatable {
       this.isLoading = false});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [todo, name, error, isLoading];
 
   CurrentTodoListInfoState copyWith({
     List<Todo>? todo,

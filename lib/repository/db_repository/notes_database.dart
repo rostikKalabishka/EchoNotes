@@ -22,7 +22,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 6, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -30,7 +30,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String textType = 'TEXT NOT NULL';
     const String boolType = 'BOOLEAN NOT NULL';
     const String integerType = 'INTEGER NOT NULL';
-    const String integerNullType = 'INTEGER';
+    // const String integerNullType = 'INTEGER';
 
     await db.execute('''CREATE TABLE $tableNotes(
       ${NoteFields.id} $idType,
@@ -46,11 +46,12 @@ class NotesDatabase implements AbstractNotesDataBase {
     await db.execute('''CREATE TABLE $tableTodoList(
   ${TodoListFields.id} $idType,
   ${TodoListFields.createDate} $textType,
-  ${TodoListFields.name} $textType,
-  ${TodoListFields.percentage} $integerNullType,
-  PRIMARY KEY (${TodoListFields.id})
+  ${TodoListFields.percentage} $textType,
+  ${TodoListFields.name} $textType
 )''');
 
+//,
+    // PRIMARY KEY (${TodoListFields.id})
     await db.execute('''CREATE TABLE $tableTodo(
   ${TodoFields.id} $idType,
   ${TodoFields.name} $textType,
@@ -67,7 +68,11 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String where = '${NoteFields.id} = ?';
     final List<Object?> whereArgs = [id];
     final maps = await read(
-        id: id, columns: columns, where: where, whereArgs: whereArgs);
+        id: id,
+        columns: columns,
+        where: where,
+        whereArgs: whereArgs,
+        tableName: tableNotes);
     if (maps.isNotEmpty) {
       return Note.fromJson(maps.first);
     } else {
@@ -78,10 +83,11 @@ class NotesDatabase implements AbstractNotesDataBase {
   Future<List<Map<String, Object?>>> read(
       {required int id,
       List<String>? columns,
+      required String tableName,
       String? where,
       List<Object?>? whereArgs}) async {
     final db = await instance.database;
-    return await db.query(tableNotes,
+    return await db.query(tableName,
         columns: columns, where: where, whereArgs: whereArgs);
   }
 
@@ -144,7 +150,11 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String where = '${TodoListFields.id} = ?';
     final List<Object?> whereArgs = [id];
     final maps = await read(
-        id: id, columns: columns, where: where, whereArgs: whereArgs);
+        id: id,
+        columns: columns,
+        where: where,
+        whereArgs: whereArgs,
+        tableName: tableTodoList);
     if (maps.isNotEmpty) {
       return TodoList.fromJson(maps.first);
     } else {
@@ -181,10 +191,13 @@ class NotesDatabase implements AbstractNotesDataBase {
   }
 
   @override
-  Future<List<Todo>> readAllTodo() async {
+  Future<List<Todo>> readAllTodo(int listNoteId) async {
     final db = await instance.database;
     const String orderBy = '${TodoFields.createDate} DESC';
-    final result = await db.query(tableTodo, orderBy: orderBy);
+    const String where = '${TodoFields.listNoteId} = ?';
+    final List<int> whereArgs = [listNoteId];
+    final result = await db.query(tableTodo,
+        orderBy: orderBy, where: where, whereArgs: whereArgs);
 
     return result.map((json) => Todo.fromJson(json)).toList();
   }
@@ -202,7 +215,11 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String where = '${TodoFields.id} = ?';
     final List<Object?> whereArgs = [id];
     final maps = await read(
-        id: id, columns: columns, where: where, whereArgs: whereArgs);
+        id: id,
+        columns: columns,
+        where: where,
+        whereArgs: whereArgs,
+        tableName: tableTodo);
     if (maps.isNotEmpty) {
       return Todo.fromJson(maps.first);
     } else {

@@ -23,8 +23,15 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         await _createTodo(event, emit);
       } else if (event is CreateTodoListEvent) {
         await _createTodoList(event, emit);
+      } else if (event is LoadDefaultValue) {
+        _loadDefaultValue(event, emit);
       }
     });
+  }
+
+  void _loadDefaultValue(
+      LoadDefaultValue event, Emitter<AddListTodoState> emit) {
+    emit(state.copyWith(todo: [], todoListName: 'Todo', error: ''));
   }
 
   Future<void> _createTodo(
@@ -41,35 +48,41 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
       emit(state.copyWith(todo: updatedList));
       AutoRouter.of(event.context).pop();
     } catch (e) {
-      log('$e');
       emit(state.copyWith(error: e));
     }
   }
 
   Future<void> _createTodoList(
-      CreateTodoListEvent event, Emitter<AddListTodoState> emit) async {
+    CreateTodoListEvent event,
+    Emitter<AddListTodoState> emit,
+  ) async {
     final autoRouter = AutoRouter.of(event.context);
     try {
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
+      String percentage = 0.toString();
       final todoList = TodoList(
-        percentage: 0,
+        percentage: percentage,
         name: event.name,
         createDate: createDate,
       );
       final createdTodoList =
           await abstractNotesDataBase.createTodoList(todoList);
-      final List<Todo> existingTodos = state.todo;
 
-      final updatedTodos = existingTodos.map((todo) {
-        return todo.copyWith(listNoteId: createdTodoList.id);
-      }).toList();
+      final List<Todo> existingTodos = state.todo;
+      final updatedTodos = <Todo>[];
+
+      for (final todo in existingTodos) {
+        final todoWithListId = todo.copyWith(listNoteId: createdTodoList.id);
+        final createdTodo =
+            await abstractNotesDataBase.createTodo(todoWithListId);
+        updatedTodos.add(createdTodo);
+      }
 
       emit(state.copyWith(todo: updatedTodos));
 
       autoRouter.pushAndPopUntil(const ListTodoRoute(),
           predicate: (route) => false);
     } catch (e) {
-      log('$e');
       emit(state.copyWith(error: e));
     }
   }

@@ -7,7 +7,6 @@ ThemeData darkTheme = ThemeData(
     iconTheme: const IconThemeData(color: Colors.white, size: 24),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: floatingButtonColor, foregroundColor: Colors.white),
-    //indicatorColor: ,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: elevatedButton,
