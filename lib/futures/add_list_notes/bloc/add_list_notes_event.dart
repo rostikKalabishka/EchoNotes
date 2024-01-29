@@ -25,6 +25,18 @@ class ExitPageEvent extends AddListNotesEvent {
   const ExitPageEvent();
 }
 
+class CheckboxTodoEvent extends AddListNotesEvent {
+  final bool value;
+  final Todo todo;
+  final int todoIndex;
+
+  const CheckboxTodoEvent(
+      {required this.value, required this.todo, required this.todoIndex});
+
+  @override
+  List<Object> get props => super.props..addAll([value, todo]);
+}
+
 class CreateTodoListEvent extends AddListNotesEvent {
   final String name;
   final BuildContext context;

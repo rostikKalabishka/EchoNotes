@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -25,6 +23,8 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         await _createTodoList(event, emit);
       } else if (event is LoadDefaultValue) {
         _loadDefaultValue(event, emit);
+      } else if (event is CheckboxTodoEvent) {
+        checkBox(event, emit);
       }
     });
   }
@@ -32,6 +32,18 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
   void _loadDefaultValue(
       LoadDefaultValue event, Emitter<AddListTodoState> emit) {
     emit(state.copyWith(todo: [], todoListName: 'Todo', error: ''));
+  }
+
+  void checkBox(CheckboxTodoEvent event, Emitter<AddListTodoState> emit) {
+    try {
+      List<Todo> updatedTodoList = List.from(state.todo);
+      Todo updatedTodo = event.todo.copyWith(isDone: event.value);
+      updatedTodoList[event.todoIndex] = updatedTodo;
+      emit(state.copyWith(todo: updatedTodoList));
+      print('Checkbox state updated');
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
   }
 
   Future<void> _createTodo(
@@ -59,7 +71,20 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
     final autoRouter = AutoRouter.of(event.context);
     try {
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
-      String percentage = 0.toString();
+      int count = 0;
+
+      for (var e in state.todo) {
+        if (e.isDone == true) {
+          count++;
+        }
+      }
+      String percentage;
+      if (state.todo.isNotEmpty) {
+        percentage = ((count / state.todo.length) * 100).toStringAsFixed(0);
+      } else {
+        percentage = 0.toString();
+      }
+
       final todoList = TodoList(
         percentage: percentage,
         name: event.name,
@@ -78,7 +103,7 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         updatedTodos.add(createdTodo);
       }
 
-      emit(state.copyWith(todo: updatedTodos));
+      // emit(state.copyWith(todo: updatedTodos));
 
       autoRouter.pushAndPopUntil(const ListTodoRoute(),
           predicate: (route) => false);

@@ -102,7 +102,13 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                                     leading: Checkbox(
                                       value: todo.isDone,
                                       onChanged: (bool? value) {
-                                        //value = !value!;
+                                        context
+                                            .read<AddListNotesBloc>()
+                                            .add(CheckboxTodoEvent(
+                                              value: value ?? false,
+                                              todo: todo,
+                                              todoIndex: index,
+                                            ));
                                       },
                                     ),
                                   ),
