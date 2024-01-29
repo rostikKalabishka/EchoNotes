@@ -42,8 +42,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-assets:
-  - assets/lottie/voice.json
-    # - assets/fonts/
+  assets:
+    - assets/lottie/
+
   # - assets/images/
   # - assets/lottie/
