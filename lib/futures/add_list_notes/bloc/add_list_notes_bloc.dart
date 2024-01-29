@@ -36,11 +36,12 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
     emit(state.copyWith(todo: [], todoListName: 'Todo', error: ''));
   }
 
-  void checkBox(CheckboxTodoEvent event, Emitter<AddListTodoState> emit) {
+  void checkBox(CheckboxTodoEvent event, Emitter<AddListTodoState> emit) async {
     try {
       List<Todo> updatedTodoList = List.from(state.todo);
       Todo updatedTodo = event.todo.copyWith(isDone: event.value);
       updatedTodoList[event.todoIndex] = updatedTodo;
+
       emit(state.copyWith(todo: updatedTodoList));
     } catch (e) {
       emit(state.copyWith(error: e));
@@ -112,8 +113,6 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
             await abstractNotesDataBase.createTodo(todoWithListId);
         updatedTodos.add(createdTodo);
       }
-
-      // emit(state.copyWith(todo: updatedTodos));
 
       autoRouter.pushAndPopUntil(const ListTodoRoute(),
           predicate: (route) => false);

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
@@ -20,8 +21,66 @@ class CurrentTodoListInfoBloc
         await _loadTodoList(event, emit);
       } else if (event is DeleteCurrentTodoListEvent) {
         await _deleteNote(event, emit);
+      } else if (event is ChangeNameCurrentTodoListEvent) {
+        await _saveNameTodoList(event, emit);
+      } else if (event is CheckboxTodoEvent) {
+        await _checkBox(event, emit);
+      } else if (event is CreateNewTodoEvent) {
+        await _createTodo(event, emit);
       }
-    });
+    }, transformer: sequential());
+  }
+
+  Future<void> _createTodo(
+      CreateNewTodoEvent event, Emitter<CurrentTodoListInfoState> emit) async {
+    final autoRouter = AutoRouter.of(event.context);
+    try {
+      final todo = Todo(
+          isDone: false,
+          name: event.name,
+          listNoteId: event.id,
+          createDate: DateTime.now().toString());
+
+      final updatedList = [...state.todo, todo];
+
+      emit(state.copyWith(todo: updatedList));
+      await abstractNotesDataBase.createTodo(todo);
+
+      autoRouter.pop();
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _checkBox(
+      CheckboxTodoEvent event, Emitter<CurrentTodoListInfoState> emit) async {
+    try {
+      List<Todo> updatedTodoList = List.from(state.todo);
+      Todo updatedTodo = event.todo.copyWith(isDone: event.value);
+      updatedTodoList[event.todoIndex] = updatedTodo;
+
+      await abstractNotesDataBase.updateTodo(updatedTodo);
+      emit(state.copyWith(todo: updatedTodoList));
+
+      int doneCount = updatedTodoList.where((todo) => todo.isDone).length;
+      double percentage = (doneCount / updatedTodoList.length) * 100;
+
+      await abstractNotesDataBase.updateTodoList(
+          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)));
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _saveNameTodoList(ChangeNameCurrentTodoListEvent event,
+      Emitter<CurrentTodoListInfoState> emit) async {
+    try {
+      emit(state.copyWith(name: event.name));
+      await abstractNotesDataBase
+          .updateTodoList(event.todoList.copyWith(name: event.name));
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
   }
 
   Future<void> _loadTodoList(

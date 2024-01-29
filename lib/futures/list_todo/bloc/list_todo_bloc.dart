@@ -58,9 +58,11 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
 
   Future<void> _deleteTodoList(
       DeleteTodoListEvent event, Emitter<ListTodoState> emit) async {
+    final autoRouter = AutoRouter.of(event.context);
     try {
       await abstractNotesDataBase.deleteTodoList(event.todoList);
       emit(state);
+      autoRouter.pop();
     } catch (e) {
       emit(state.copyWith(error: e));
     }

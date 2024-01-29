@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:lottie/lottie.dart';
 
 import 'package:note_app/futures/current_todo_list_info/bloc/current_todo_list_info_bloc.dart';
 import 'package:note_app/repository/model/todo_list.dart';
-
 import 'package:note_app/ui/widgets/widget.dart';
 import 'package:note_app/utilities/utilities.dart';
 
@@ -22,6 +22,7 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
   final TextEditingController addTodoController = TextEditingController();
   final Utilities utilities = Utilities();
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController changeNameController = TextEditingController();
 
   @override
   void initState() {
@@ -51,9 +52,11 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                   context: context,
                   modalHeight: modalAddTodoHeight,
                   child: AddTodo(
+                    indexTodoList: widget.todoList.id!,
                     addTodoController: addTodoController,
                     utilities: utilities,
                     formKey: _formKey,
+                    todoList: widget.todoList,
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
@@ -73,6 +76,8 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                               child: ChangeFolder(
                                 todoListName: state.name,
                                 todoList: widget.todoList,
+                                utilities: utilities,
+                                controller: changeNameController,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -108,7 +113,13 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                                     leading: Checkbox(
                                       value: todo.isDone,
                                       onChanged: (bool? value) {
-                                        //value = !value!;
+                                        context
+                                            .read<CurrentTodoListInfoBloc>()
+                                            .add(CheckboxTodoEvent(
+                                                value: value ?? false,
+                                                todo: todo,
+                                                todoIndex: index,
+                                                todoList: widget.todoList));
                                       },
                                     ),
                                   ),
@@ -134,10 +145,14 @@ class AddTodo extends StatelessWidget {
     required this.addTodoController,
     required this.utilities,
     required this.formKey,
+    required this.indexTodoList,
+    required this.todoList,
   }) : super(key: key);
   final TextEditingController addTodoController;
   final Utilities utilities;
   final GlobalKey<FormState> formKey;
+  final int indexTodoList;
+  final TodoList todoList;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -183,6 +198,12 @@ class AddTodo extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
+                        context.read<CurrentTodoListInfoBloc>().add(
+                            CreateNewTodoEvent(
+                                id: indexTodoList,
+                                name: addTodoController.text,
+                                context: context,
+                                todoList: todoList));
                         addTodoController.clear();
                       }
                     },
@@ -201,9 +222,15 @@ class AddTodo extends StatelessWidget {
 
 class ChangeFolder extends StatelessWidget {
   const ChangeFolder(
-      {super.key, required this.todoListName, required this.todoList});
+      {super.key,
+      required this.todoListName,
+      required this.todoList,
+      required this.utilities,
+      required this.controller});
   final String todoListName;
   final TodoList todoList;
+  final Utilities utilities;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -237,20 +264,21 @@ class ChangeFolder extends StatelessWidget {
             children: [
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {},
+                onTap: () {
+                  openDialog(
+                      validator: (val) => utilities.textFieldValidator(val!),
+                      context: context,
+                      state: CurrentTodoListInfoBloc,
+                      controller: controller,
+                      saveName: () {
+                        context.read<CurrentTodoListInfoBloc>().add(
+                            ChangeNameCurrentTodoListEvent(
+                                name: controller.text, todoList: todoList));
+                      });
+                },
                 iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 15, 68, 17),
-                onTap: () {},
-                iconColor: const Color.fromARGB(255, 81, 255, 87),
-                icon: Icons.save,
-                text: 'Save todo list',
               ),
               const SizedBox(
                 height: 10,

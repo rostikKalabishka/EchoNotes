@@ -24,7 +24,12 @@ class _ListTodoPageState extends State<ListTodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ListTodoBloc, ListTodoState>(
+    return BlocConsumer<ListTodoBloc, ListTodoState>(
+      listener: (BuildContext context, ListTodoState state) {
+        if (state.isLoading) {
+          context.read<ListTodoBloc>().add(LoadTodoListEvent());
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           floatingActionButton: CustomFloatingActionButton(
@@ -275,9 +280,8 @@ class ChangeFolder extends StatelessWidget {
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 156, 77, 77),
                 onTap: () {
-                  context
-                      .read<ListTodoBloc>()
-                      .add(DeleteTodoListEvent(todoList: todoList));
+                  context.read<ListTodoBloc>().add(DeleteTodoListEvent(
+                      todoList: todoList, context: context));
                 },
                 iconColor: Colors.red,
                 icon: Icons.delete_outline,
