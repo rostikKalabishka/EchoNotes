@@ -72,6 +72,7 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                               modalHeight: modalHeight,
                               child: ChangeFolder(
                                 todoListName: state.name,
+                                todoList: widget.todoList,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -199,8 +200,10 @@ class AddTodo extends StatelessWidget {
 }
 
 class ChangeFolder extends StatelessWidget {
-  const ChangeFolder({super.key, required this.todoListName});
+  const ChangeFolder(
+      {super.key, required this.todoListName, required this.todoList});
   final String todoListName;
+  final TodoList todoList;
 
   @override
   Widget build(BuildContext context) {
@@ -248,6 +251,20 @@ class ChangeFolder extends StatelessWidget {
                 iconColor: const Color.fromARGB(255, 81, 255, 87),
                 icon: Icons.save,
                 text: 'Save todo list',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ButtonInBottomSheet(
+                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                onTap: () {
+                  context.read<CurrentTodoListInfoBloc>().add(
+                      DeleteCurrentTodoListEvent(
+                          context: context, todo: todoList));
+                },
+                iconColor: Colors.red,
+                icon: Icons.delete_outline,
+                text: 'Delete note',
               ),
             ],
           ),

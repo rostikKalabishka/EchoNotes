@@ -37,6 +37,19 @@ class CheckboxTodoEvent extends AddListNotesEvent {
   List<Object> get props => super.props..addAll([value, todo]);
 }
 
+class SaveNameTodoListEvent extends AddListNotesEvent {
+  final String name;
+
+  const SaveNameTodoListEvent({
+    required this.name,
+  });
+  @override
+  List<Object> get props => super.props
+    ..addAll([
+      name,
+    ]);
+}
+
 class CreateTodoListEvent extends AddListNotesEvent {
   final String name;
   final BuildContext context;

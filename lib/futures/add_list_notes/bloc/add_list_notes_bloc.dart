@@ -25,6 +25,8 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         _loadDefaultValue(event, emit);
       } else if (event is CheckboxTodoEvent) {
         checkBox(event, emit);
+      } else if (event is SaveNameTodoListEvent) {
+        _saveNameTodoList(event, emit);
       }
     });
   }
@@ -40,7 +42,15 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
       Todo updatedTodo = event.todo.copyWith(isDone: event.value);
       updatedTodoList[event.todoIndex] = updatedTodo;
       emit(state.copyWith(todo: updatedTodoList));
-      print('Checkbox state updated');
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  void _saveNameTodoList(
+      SaveNameTodoListEvent event, Emitter<AddListTodoState> emit) async {
+    try {
+      emit(state.copyWith(todoListName: event.name));
     } catch (e) {
       emit(state.copyWith(error: e));
     }

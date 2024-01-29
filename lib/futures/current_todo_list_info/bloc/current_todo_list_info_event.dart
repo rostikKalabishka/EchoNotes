@@ -15,3 +15,12 @@ class LoadTodoListEvent extends CurrentTodoListInfoEvent {
   @override
   List<Object> get props => super.props..addAll([todoList]);
 }
+
+class DeleteCurrentTodoListEvent extends CurrentTodoListInfoEvent {
+  final TodoList todo;
+  final BuildContext context;
+
+  const DeleteCurrentTodoListEvent({required this.todo, required this.context});
+  @override
+  List<Object> get props => super.props..addAll([todo, context]);
+}

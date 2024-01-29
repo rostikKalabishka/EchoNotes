@@ -20,6 +20,8 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
   final TextEditingController addTodoController = TextEditingController();
   final Utilities utilities = Utilities();
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController addNameTodoListController =
+      TextEditingController();
   @override
   void initState() {
     context.read<AddListNotesBloc>().add(LoadDefaultValue());
@@ -67,6 +69,8 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                               modalHeight: modalHeight,
                               child: ChangeFolder(
                                 todoListName: state.todoListName,
+                                controller: addNameTodoListController,
+                                utilities: utilities,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -205,8 +209,14 @@ class AddTodo extends StatelessWidget {
 }
 
 class ChangeFolder extends StatelessWidget {
-  const ChangeFolder({super.key, required this.todoListName});
+  const ChangeFolder(
+      {super.key,
+      required this.todoListName,
+      required this.controller,
+      required this.utilities});
   final String todoListName;
+  final TextEditingController controller;
+  final Utilities utilities;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +250,18 @@ class ChangeFolder extends StatelessWidget {
             children: [
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {},
+                onTap: () {
+                  openDialog(
+                      validator: (val) => utilities.textFieldValidator(val!),
+                      context: context,
+                      state: AddListNotesBloc,
+                      controller: controller,
+                      saveName: () {
+                        context
+                            .read<AddListNotesBloc>()
+                            .add(SaveNameTodoListEvent(name: controller.text));
+                      });
+                },
                 iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
