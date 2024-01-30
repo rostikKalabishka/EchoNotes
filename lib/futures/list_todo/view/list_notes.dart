@@ -6,6 +6,7 @@ import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 import 'package:note_app/repository/model/todo_list.dart';
 
 import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
 class ListTodoPage extends StatefulWidget {
@@ -16,6 +17,8 @@ class ListTodoPage extends StatefulWidget {
 }
 
 class _ListTodoPageState extends State<ListTodoPage> {
+  final Utilities utilities = Utilities();
+  final TextEditingController changeNameController = TextEditingController();
   @override
   void initState() {
     context.read<ListTodoBloc>().add(LoadTodoListEvent());
@@ -65,6 +68,9 @@ class _ListTodoPageState extends State<ListTodoPage> {
                         },
                         cardInfo: CardInfoWidget(
                           todoList: todoList,
+                          utilities: utilities,
+                          controller: changeNameController,
+                          index: index,
                         ),
                       ),
                     );
@@ -119,10 +125,16 @@ class ClickedCardWidget extends StatelessWidget {
 
 class CardInfoWidget extends StatelessWidget {
   final TodoList todoList;
+  final Utilities utilities;
+  final TextEditingController controller;
+  final int index;
 
   const CardInfoWidget({
     Key? key,
     required this.todoList,
+    required this.utilities,
+    required this.controller,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -174,6 +186,9 @@ class CardInfoWidget extends StatelessWidget {
                           modalHeight: modalHeight,
                           child: ChangeFolder(
                             todoList: todoList,
+                            utilities: utilities,
+                            controller: controller,
+                            index: index,
                           ));
                     },
                     icon: const Icon(Icons.more_vert))
@@ -235,8 +250,16 @@ class CardInfoWidget extends StatelessWidget {
 }
 
 class ChangeFolder extends StatelessWidget {
-  const ChangeFolder({super.key, required this.todoList});
+  const ChangeFolder(
+      {super.key,
+      required this.todoList,
+      required this.utilities,
+      required this.controller,
+      required this.index});
   final TodoList todoList;
+  final Utilities utilities;
+  final TextEditingController controller;
+  final int index;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -268,8 +291,21 @@ class ChangeFolder extends StatelessWidget {
           child: Column(
             children: [
               ButtonInBottomSheet(
-                backgroundColor: Color.fromARGB(187, 191, 179, 4),
-                onTap: () {},
+                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
+                onTap: () {
+                  openDialog(
+                      validator: (val) => utilities.textFieldValidator(val!),
+                      context: context,
+                      state: ListTodoBloc,
+                      controller: controller,
+                      saveName: () {
+                        context.read<ListTodoBloc>().add(
+                            ChangeNameCurrentTodoListEvent(
+                                name: controller.text,
+                                todoList: todoList,
+                                index: index));
+                      });
+                },
                 iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',

@@ -22,6 +22,8 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
         await _deleteTodoList(event, emit);
       } else if (event is NavigateToCurrentTodoInfoListEvent) {
         _navigateToCurrentTodoListInfoPage(event, emit);
+      } else if (event is ChangeNameCurrentTodoListEvent) {
+        await _saveNameTodoList(event, emit);
       }
     }, transformer: sequential());
   }
@@ -53,6 +55,27 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
     } catch (e) {
       print(e);
       emit(state.copyWith(isLoading: false, error: e));
+    }
+  }
+
+  Future<void> _saveNameTodoList(
+      ChangeNameCurrentTodoListEvent event, Emitter<ListTodoState> emit) async {
+    var newState = state;
+    try {
+      var updatedTodoList = newState.todoList
+          .map((todoList) => todoList.copyWith(
+              name: (todoList == newState.todoList[event.index])
+                  ? event.name
+                  : todoList.name))
+          .toList();
+
+      newState = newState.copyWith(todoList: updatedTodoList);
+
+      emit(newState);
+      await abstractNotesDataBase
+          .updateTodoList(event.todoList.copyWith(name: event.name));
+    } catch (e) {
+      emit(state.copyWith(error: e));
     }
   }
 

@@ -27,6 +27,20 @@ class NavigateToCurrentTodoInfoListEvent extends ListTodoListEvent {
   List<Object> get props => super.props..addAll([context, todoList]);
 }
 
+class ChangeNameCurrentTodoListEvent extends ListTodoListEvent {
+  final String name;
+  final TodoList todoList;
+  final int index;
+
+  const ChangeNameCurrentTodoListEvent({
+    required this.name,
+    required this.todoList,
+    required this.index,
+  });
+  @override
+  List<Object> get props => super.props..addAll([name, todoList, index]);
+}
+
 class DeleteTodoListEvent extends ListTodoListEvent {
   final TodoList todoList;
   final BuildContext context;
