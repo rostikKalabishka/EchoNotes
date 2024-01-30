@@ -23,7 +23,12 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<NotesBloc, NotesState>(
+    return BlocConsumer<NotesBloc, NotesState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          context.read<NotesBloc>().add(LoadNotesEvent());
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,

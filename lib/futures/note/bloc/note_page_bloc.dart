@@ -21,6 +21,10 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
         await _loadNote(event, emit);
       } else if (event is DeleteNoteEvent) {
         await _deleteNote(event, emit);
+      } else if (event is ChangeNameNoteEvent) {
+        await _changeNameNote(event, emit);
+      } else if (event is ChangeDescriptionNoteEvent) {
+        await _changeNoteDescription(event, emit);
       }
     });
   }
@@ -31,6 +35,32 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
       final ImagePicker imagePicker = ImagePicker();
       XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
       emit(state.copyWith(selectedImage: file!.path));
+      await abstractNotesDataBase
+          .updateNote(event.note.copyWith(imageUrl: file.path));
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _changeNameNote(
+      ChangeNameNoteEvent event, Emitter<NotePageState> emit) async {
+    try {
+      emit(state.copyWith(name: event.name));
+      await abstractNotesDataBase
+          .updateNote(event.note.copyWith(name: event.name));
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _changeNoteDescription(
+      ChangeDescriptionNoteEvent event, Emitter<NotePageState> emit) async {
+    final autoRoute = AutoRouter.of(event.context);
+    try {
+      emit(state.copyWith(description: event.description));
+      await abstractNotesDataBase
+          .updateNote(event.note.copyWith(description: event.description));
+      autoRoute.pop();
     } catch (e) {
       emit(state.copyWith(error: e));
     }
@@ -44,7 +74,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
           description: note.description,
           name: note.name,
           voice: note.voiceNote,
-          // selectedImage: note.imageUrl,
+          selectedImage: note.imageUrl,
           createDate: note.createDate));
     } catch (e) {
       emit(state.copyWith(error: e));
@@ -57,7 +87,8 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
     try {
       await abstractNotesDataBase.deleteNote(event.note);
-      autoRouter.push(const NotesRoute());
+      autoRouter.pushAndPopUntil(const NotesRoute(),
+          predicate: (route) => false);
     } catch (e) {
       emit(state.copyWith(error: e));
     }

@@ -7,6 +7,7 @@ import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/repository/model/model.dart';
 import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
 class NotePage extends StatefulWidget {
@@ -18,9 +19,15 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
+  final TextEditingController changeNameNote = TextEditingController();
+  late final TextEditingController changeNote =
+      TextEditingController(text: widget.note.description);
+  final _formKey = GlobalKey<FormState>();
+  final Utilities utilities = Utilities();
   @override
   void initState() {
     context.read<NotePageBloc>().add(LoadNoteInfoEvent(id: widget.note.id!));
+    //  changeNote = TextEditingController(text: state.name);
     super.initState();
   }
 
@@ -30,7 +37,8 @@ class _NotePageState extends State<NotePage> {
     double bottomPadding = MediaQuery.of(context).padding.bottom;
     final theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    final double modalHeight = size.height * 0.5;
+    final double modalHeight = size.height * 0.45;
+    final double modalAddTodoHeight = size.height * 0.7;
 
     return BlocBuilder<NotePageBloc, NotePageState>(
       builder: (context, state) {
@@ -47,6 +55,8 @@ class _NotePageState extends State<NotePage> {
                   modalHeight: modalHeight,
                   child: MenuWidget(
                     note: widget.note,
+                    utilities: utilities,
+                    controller: changeNameNote,
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
@@ -68,6 +78,8 @@ class _NotePageState extends State<NotePage> {
                               modalHeight: modalHeight,
                               child: MenuWidget(
                                 note: widget.note,
+                                utilities: utilities,
+                                controller: changeNameNote,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -127,17 +139,27 @@ class _NotePageState extends State<NotePage> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
-                                  child: Text(
-                                    state.description,
-                                    style: theme.textTheme.labelLarge,
+                                  child: GestureDetector(
+                                    onLongPress: () {
+                                      showModalMenuBottomSheet(
+                                          context: context,
+                                          modalHeight: modalAddTodoHeight,
+                                          child: AddNode(
+                                            addTodoController: changeNote,
+                                            utilities: utilities,
+                                            formKey: _formKey,
+                                            note: widget.note,
+                                          ));
+                                    },
+                                    child: Text(
+                                      state.description,
+                                      style: theme.textTheme.labelLarge,
+                                    ),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                          // SizedBox(
-                          //   height: MediaQuery.of(context).size.height * 0.05,
-                          // ),
                           state.selectedImage.isNotEmpty
                               ? Padding(
                                   padding:
@@ -183,7 +205,9 @@ class _NotePageState extends State<NotePage> {
                         theme: theme,
                         size: size,
                         onTap: () {
-                          context.read<NotePageBloc>().add(ImagePickerEvent());
+                          context
+                              .read<NotePageBloc>()
+                              .add(ImagePickerEvent(note: widget.note));
                         },
                         child: const Icon(Icons.attachment),
                       ),
@@ -203,8 +227,12 @@ class MenuWidget extends StatelessWidget {
   const MenuWidget({
     Key? key,
     required this.note,
+    required this.utilities,
+    required this.controller,
   }) : super(key: key);
   final Note note;
+  final Utilities utilities;
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -237,7 +265,18 @@ class MenuWidget extends StatelessWidget {
             children: [
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {},
+                onTap: () {
+                  openDialog(
+                      validator: (val) => utilities.textFieldValidator(val!),
+                      context: context,
+                      state: NotePageBloc,
+                      controller: controller,
+                      saveName: () {
+                        context.read<NotePageBloc>().add(ChangeNameNoteEvent(
+                            name: controller.text, note: note));
+                      });
+                  controller.clear();
+                },
                 iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
@@ -266,16 +305,6 @@ class MenuWidget extends StatelessWidget {
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(217, 155, 36, 179),
-                onTap: () {},
-                iconColor: const Color.fromARGB(255, 236, 66, 255),
-                icon: Icons.save,
-                text: 'Save change',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 156, 77, 77),
                 onTap: () {
                   context
@@ -289,6 +318,87 @@ class MenuWidget extends StatelessWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class AddNode extends StatelessWidget {
+  const AddNode({
+    Key? key,
+    required this.addTodoController,
+    required this.utilities,
+    required this.formKey,
+    required this.note,
+  }) : super(key: key);
+  final TextEditingController addTodoController;
+  final Utilities utilities;
+  final GlobalKey<FormState> formKey;
+  final Note note;
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+            Text(
+              'Change description',
+              style: theme.textTheme.labelLarge,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                CustomTextField(
+                  mixLines: 1,
+                  validator: (value) => utilities.textFieldValidator(value!),
+                  hintText: 'Add note name',
+                  textEditorController: addTodoController,
+                  maxLines: 15,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<NotePageBloc>().add(
+                              ChangeDescriptionNoteEvent(
+                                  description: addTodoController.text,
+                                  context: context,
+                                  note: note),
+                            );
+                        addTodoController.clear();
+                      }
+                    },
+                    child: Text(
+                      'add todo',
+                      style: theme.textTheme.labelLarge,
+                    ))
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
