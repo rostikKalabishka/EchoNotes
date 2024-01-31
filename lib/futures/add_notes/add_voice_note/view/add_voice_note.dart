@@ -45,8 +45,8 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                 context.read<AddVoiceNoteBloc>().add(SpeechToTextEvent());
               },
               dataButton: Icon(state.isListening == true
-                  ? Icons.mic_outlined
-                  : Icons.mic_off_outlined),
+                  ? Icons.mic_off_outlined
+                  : Icons.mic_outlined),
             ),
           ),
           body: Stack(
@@ -78,8 +78,6 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(
                         children: [
-                          //add image
-
                           state.description.isEmpty
                               ? Lottie.asset('assets/lottie/voice.json',
                                   fit: BoxFit.fill,
