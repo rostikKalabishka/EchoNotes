@@ -5,6 +5,7 @@ import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dar
 import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
 import 'package:note_app/futures/add_list_notes/view/add_list_notes.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
+import 'package:note_app/futures/add_notes/add_voice_note/view/add_voice_note.dart';
 import 'package:note_app/futures/current_todo_list_info/bloc/current_todo_list_info_bloc.dart';
 import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 
@@ -45,7 +46,10 @@ class _EchoNotesState extends State<EchoNotes> {
         BlocProvider(create: (_) => _notesBloc),
         BlocProvider(create: (_) => _addDefaultNoteBloc),
         BlocProvider(create: (_) => _notePageBloc),
-        BlocProvider(create: (_) => _addVoiceNoteBloc),
+        BlocProvider(
+          create: (_) => _addVoiceNoteBloc,
+          child: const AddVoiceNotePage(),
+        ),
         BlocProvider(create: (_) => _listNotesBloc),
         BlocProvider(
           create: (_) => _addListNotesBloc,

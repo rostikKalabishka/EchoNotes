@@ -45,6 +45,11 @@ class CurrentTodoListInfoBloc
 
       emit(state.copyWith(todo: updatedList));
       await abstractNotesDataBase.createTodo(todo);
+      int doneCount = updatedList.where((todo) => todo.isDone).length;
+      double percentage = (doneCount / updatedList.length) * 100;
+
+      await abstractNotesDataBase.updateTodoList(
+          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)));
 
       autoRouter.pop();
     } catch (e) {

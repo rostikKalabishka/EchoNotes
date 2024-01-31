@@ -28,6 +28,10 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photo Library usage</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Create a note using your voice</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Create a note using your voice</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

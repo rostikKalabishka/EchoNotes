@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:note_app/futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
-import 'package:note_app/ui/widgets/button_in_bottom_sheet.dart';
 
-import 'package:note_app/ui/widgets/custom_floating_action_button_widget.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
@@ -21,24 +20,34 @@ class AddVoiceNotePage extends StatefulWidget {
 class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     double bottomPadding = MediaQuery.of(context).padding.bottom;
     Size size = MediaQuery.of(context).size;
     double modalHeight = size.height * 0.5;
+    final theme = Theme.of(context);
 
     return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: CustomFloatingActionButton(
-            height: size.height * 0.075,
-            width: size.height * 0.075,
-            borderRadius: BorderRadius.circular(12),
-            onPressed: () {},
-            dataButton: const Icon(Icons.mic_outlined
-                //?? Icons.mic_off_outlined
-                ),
+          floatingActionButton: AvatarGlow(
+            animate: state.isListening,
+            duration: const Duration(microseconds: 2000),
+            glowColor:
+                theme.floatingActionButtonTheme.backgroundColor!.withOpacity(1),
+            glowRadiusFactor: 1,
+            repeat: true,
+            child: CustomFloatingActionButton(
+              height: size.height * 0.075,
+              width: size.height * 0.075,
+              borderRadius: BorderRadius.circular(20),
+              onPressed: () {
+                context.read<AddVoiceNoteBloc>().add(SpeechToTextEvent());
+              },
+              dataButton: Icon(state.isListening == true
+                  ? Icons.mic_outlined
+                  : Icons.mic_off_outlined),
+            ),
           ),
           body: Stack(
             children: [
@@ -71,42 +80,45 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                         children: [
                           //add image
 
-                          Lottie.asset('assets/lottie/voice.json',
-                              //  height: size.height * 0.65,
-                              fit: BoxFit.fill,
-                              errorBuilder: (context, error, stackTrace) {
-                            print(error);
-                            return Text('$error');
-                          }),
-
-                          // const CustomBoxShadowContainer(
-                          //   cardInfo: Column(
-                          //     children: [
-                          //       Row(
-                          //         children: [
-                          //           Padding(
-                          //             padding: EdgeInsets.all(8.0),
-                          //             child: CustomBoxShadowContainer(
-                          //               width: 50,
-                          //               height: 50,
-                          //               cardInfo: Icon(Icons.play_arrow),
-                          //             ),
-                          //           ),
-                          //           SizedBox(
-                          //             width: 10,
-                          //           ),
-                          //           Text('0:00:08')
-                          //         ],
-                          //       ),
-                          //       Padding(
-                          //         padding: EdgeInsets.symmetric(vertical: 10),
-                          //         child: Text(
-                          //           'bibiabibibbboasdasdazsd saddasddas',
-                          //         ),
-                          //       )
-                          //     ],
-                          //   ),
-                          // ),
+                          state.description.isEmpty
+                              ? Lottie.asset('assets/lottie/voice.json',
+                                  fit: BoxFit.fill,
+                                  errorBuilder: (context, error, stackTrace) {
+                                  print(error);
+                                  return Text('$error');
+                                })
+                              : CustomBoxShadowContainer(
+                                  cardInfo: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: CustomBoxShadowContainer(
+                                              width: 50,
+                                              height: 50,
+                                              cardInfo:
+                                                  const Icon(Icons.play_arrow),
+                                              cardColor: theme.cardColor,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          const Text('0:00:08')
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child: Text(
+                                          state.description,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  cardColor: theme.cardColor,
+                                ),
 
                           // state.selectedImage.isNotEmpty
                           //     ? Padding(
