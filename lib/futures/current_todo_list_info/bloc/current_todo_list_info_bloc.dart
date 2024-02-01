@@ -39,7 +39,8 @@ class CurrentTodoListInfoBloc
           isDone: false,
           name: event.name,
           listNoteId: event.id,
-          createDate: DateTime.now().toString());
+          createDate: DateTime.now().toString(),
+          createAt: DateTime.now());
 
       final updatedList = [...state.todo, todo];
 

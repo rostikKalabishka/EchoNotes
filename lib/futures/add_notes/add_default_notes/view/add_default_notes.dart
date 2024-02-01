@@ -58,8 +58,8 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                         maxLines: 1,
                       ),
                       CustomTextField(
-                        // validator: (value) =>
-                        //     _utilities.textFieldValidator(value!),
+                        validator: (value) =>
+                            _utilities.textFieldValidator(value!),
                         hintText: 'Add description',
                         textEditorController: description,
                         maxLines: 23,

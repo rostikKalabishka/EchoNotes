@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:note_app/futures/account_settings/view/account_settings.dart';
-import 'package:note_app/futures/folder_list/view/list_folder.dart';
+
 import 'package:note_app/futures/list_todo/view/list_notes.dart';
 
 import 'package:note_app/futures/notes/view/notes.dart';
@@ -43,7 +43,6 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> pages = [
     const NotesPage(),
     const ListTodoPage(),
-    const FolderListPage(),
     const AccountSettingsPage()
   ];
 
@@ -63,7 +62,6 @@ class _HomePageState extends State<HomePage> {
 
   bottomNavigationBar() {
     return GNav(
-      // padding: const EdgeInsets.all(8),
       gap: 8,
       onTabChange: onBottomNavigationBarTap,
       selectedIndex: _indexPage,
@@ -75,10 +73,6 @@ class _HomePageState extends State<HomePage> {
         GButton(
           icon: FontAwesomeIcons.listCheck,
           text: 'List',
-        ),
-        GButton(
-          icon: FontAwesomeIcons.folder,
-          text: 'Folder',
         ),
         GButton(
           icon: FontAwesomeIcons.user,

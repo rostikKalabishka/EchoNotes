@@ -11,7 +11,8 @@ class NoteFields {
     imageUrl,
     isDone,
     createDate,
-    voiceNote
+    voiceNote,
+    createAt
   ];
 
   static const String id = '_id';
@@ -22,6 +23,7 @@ class NoteFields {
   static const String createDate = 'createDate';
   static const String imageUrl = 'imageUrl';
   static const String voiceNote = 'voiceNote';
+  static const String createAt = 'createAt';
 }
 
 class Note extends Equatable {
@@ -33,6 +35,7 @@ class Note extends Equatable {
   final bool isDone;
   final bool isImportant;
   final String voiceNote;
+  final DateTime createAt;
 
   const Note(
       {this.id,
@@ -41,6 +44,7 @@ class Note extends Equatable {
       required this.description,
       required this.createDate,
       required this.imageUrl,
+      required this.createAt,
       required this.isImportant,
       required this.isDone});
 
@@ -53,6 +57,7 @@ class Note extends Equatable {
     bool? isImportant,
     String? voiceNote,
     String? imageUrl,
+    DateTime? createAt,
   }) {
     return Note(
         id: id ?? this.id,
@@ -61,6 +66,7 @@ class Note extends Equatable {
         createDate: createDate ?? this.createDate,
         isDone: isDone ?? this.isDone,
         imageUrl: imageUrl ?? this.imageUrl,
+        createAt: createAt ?? this.createAt,
         isImportant: isImportant ?? this.isImportant,
         voiceNote: voiceNote ?? this.voiceNote);
   }
@@ -73,7 +79,8 @@ class Note extends Equatable {
       isImportant: json[NoteFields.isImportant] == 1,
       imageUrl: json[NoteFields.imageUrl] as String,
       isDone: json[NoteFields.isDone] == 0,
-      voiceNote: json[NoteFields.voiceNote] as String);
+      voiceNote: json[NoteFields.voiceNote] as String,
+      createAt: DateTime.parse(json[NoteFields.createAt] as String));
 
   Map<String, Object?> toJson() => {
         NoteFields.id: id,
@@ -83,7 +90,8 @@ class Note extends Equatable {
         NoteFields.isDone: isDone ? 0 : 1,
         NoteFields.isImportant: isImportant ? 1 : 0,
         NoteFields.voiceNote: voiceNote,
-        NoteFields.imageUrl: imageUrl
+        NoteFields.imageUrl: imageUrl,
+        NoteFields.createAt: createAt.toIso8601String(),
       };
 
   @override
@@ -95,6 +103,7 @@ class Note extends Equatable {
         isDone,
         isImportant,
         voiceNote,
-        imageUrl
+        imageUrl,
+        createAt
       ];
 }

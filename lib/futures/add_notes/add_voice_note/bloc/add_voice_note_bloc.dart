@@ -67,6 +67,7 @@ class AddVoiceNoteBloc extends Bloc<AddVoiceNoteEvent, AddVoiceNoteState> {
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
 
       final note = Note(
+          createAt: DateTime.now(),
           name: state.name,
           voiceNote: '',
           description: state.description,
@@ -75,11 +76,15 @@ class AddVoiceNoteBloc extends Bloc<AddVoiceNoteEvent, AddVoiceNoteState> {
           isImportant: false,
           isDone: false);
 
-      await abstractNotesDataBase.createNotes(note);
-      emit(state);
-
-      autoRoute.pushAndPopUntil(const NotesRoute(),
-          predicate: (route) => false);
+      if (state.description.isNotEmpty) {
+        await abstractNotesDataBase.createNotes(note);
+        emit(state);
+        autoRoute.pushAndPopUntil(const NotesRoute(),
+            predicate: (route) => false);
+      } else {
+        autoRoute.pop();
+        throw 'You need to create a description for the note';
+      }
     } catch (e) {
       emit(state.copyWith(error: e));
     }

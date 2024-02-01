@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -29,6 +31,7 @@ class AddDefaultNoteBloc
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
 
       final note = Note(
+          createAt: DateTime.now(),
           name: event.noteName,
           voiceNote: '',
           description: event.description,
@@ -43,6 +46,7 @@ class AddDefaultNoteBloc
       _autoRoute.pushAndPopUntil(const NotesRoute(),
           predicate: (route) => false);
     } catch (e) {
+      log(e.toString());
       emit(state.copyWith(error: e));
     }
   }

@@ -64,7 +64,8 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
           isDone: false,
           name: event.name,
           listNoteId: null,
-          createDate: DateTime.now().toString());
+          createDate: DateTime.now().toString(),
+          createAt: DateTime.now());
 
       final updatedList = [...state.todo, todo];
 
@@ -100,6 +101,7 @@ class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
         percentage: percentage,
         name: event.name,
         createDate: createDate,
+        createAt: DateTime.now(),
       );
       final createdTodoList =
           await abstractNotesDataBase.createTodoList(todoList);

@@ -37,7 +37,17 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
     final double modalChangeDescription = size.height * 0.9;
     final theme = Theme.of(context);
 
-    return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
+    return BlocConsumer<AddVoiceNoteBloc, AddVoiceNoteState>(
+      listener: (context, state) {
+        String _errorMsg = '';
+        if (state.error.toString().isNotEmpty) {
+          _errorMsg = state.error.toString();
+          utilities.errorSnackBar(
+              errorMsg: _errorMsg, context: context, theme: theme);
+        } else {
+          _errorMsg = '';
+        }
+      },
       builder: (context, state) {
         final editDescriptionController =
             TextEditingController(text: state.description);
@@ -113,6 +123,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                                             editDescriptionController,
                                         utilities: utilities,
                                         formKey: _formKey,
+                                        //description: state.description,
                                       ),
                                     );
                                   },
@@ -278,10 +289,12 @@ class ChangeDescriptionWidget extends StatelessWidget {
     required this.addTodoController,
     required this.utilities,
     required this.formKey,
+    //required this.description,
   }) : super(key: key);
   final TextEditingController addTodoController;
   final Utilities utilities;
   final GlobalKey<FormState> formKey;
+  // final String description;
 
   @override
   Widget build(BuildContext context) {

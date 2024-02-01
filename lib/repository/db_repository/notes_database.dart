@@ -22,7 +22,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 2, onCreate: _createDB);
+    return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -40,14 +40,16 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.isDone} $boolType,
       ${NoteFields.isImportant} $boolType,
       ${NoteFields.voiceNote} $textType,
-      ${NoteFields.imageUrl} $textType
+      ${NoteFields.imageUrl} $textType,
+       ${NoteFields.createAt} $textType
     )''');
 
     await db.execute('''CREATE TABLE $tableTodoList(
   ${TodoListFields.id} $idType,
   ${TodoListFields.createDate} $textType,
   ${TodoListFields.percentage} $textType,
-  ${TodoListFields.name} $textType
+  ${TodoListFields.name} $textType,
+   ${TodoListFields.createAt} $textType
 )''');
 
 //,
@@ -58,6 +60,7 @@ class NotesDatabase implements AbstractNotesDataBase {
   ${TodoFields.createDate} $textType,
   ${TodoFields.isDone} $boolType,
   ${TodoFields.listNoteId} $integerType,
+  ${TodoFields.createAt} $textType,
   FOREIGN KEY (${TodoFields.listNoteId}) REFERENCES $tableTodoList(${TodoListFields.id})
 )''');
   }
@@ -94,7 +97,7 @@ class NotesDatabase implements AbstractNotesDataBase {
   @override
   Future<List<Note>> readAllNotes() async {
     final db = await instance.database;
-    const String orderBy = '${NoteFields.createDate} DESC';
+    const String orderBy = '${NoteFields.createAt} DESC';
     final result = await db.query(tableNotes, orderBy: orderBy);
 
     return result.map((json) => Note.fromJson(json)).toList();
@@ -138,7 +141,7 @@ class NotesDatabase implements AbstractNotesDataBase {
   @override
   Future<List<TodoList>> readAllTodoList() async {
     final db = await instance.database;
-    const String orderBy = '${TodoListFields.createDate} DESC';
+    const String orderBy = '${TodoListFields.createAt} DESC';
     final result = await db.query(tableTodoList, orderBy: orderBy);
 
     return result.map((json) => TodoList.fromJson(json)).toList();
@@ -193,7 +196,7 @@ class NotesDatabase implements AbstractNotesDataBase {
   @override
   Future<List<Todo>> readAllTodo(int listNoteId) async {
     final db = await instance.database;
-    const String orderBy = '${TodoFields.createDate} DESC';
+    const String orderBy = '${TodoFields.createAt} DESC';
     const String where = '${TodoFields.listNoteId} = ?';
     final List<int> whereArgs = [listNoteId];
     final result = await db.query(tableTodo,
