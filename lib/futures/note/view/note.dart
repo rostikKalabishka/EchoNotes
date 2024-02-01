@@ -103,53 +103,21 @@ class _NotePageState extends State<NotePage> {
                             cardInfo: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                state.voice.isNotEmpty
-                                    ? Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: InkWell(
-                                              onTap: () {
-                                                play = !play;
-                                                setState(() {});
-                                              },
-                                              child: CustomBoxShadowContainer(
-                                                width: size.height * 0.07,
-                                                height: size.height * 0.07,
-                                                cardInfo: Icon(play == false
-                                                    ? FontAwesomeIcons.play
-                                                    : FontAwesomeIcons.pause),
-                                                cardColor: theme
-                                                        .floatingActionButtonTheme
-                                                        .backgroundColor ??
-                                                    theme.cardColor,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            '0:00:08',
-                                            style: theme.textTheme.labelLarge,
-                                          )
-                                        ],
-                                      )
-                                    : const SizedBox.shrink(),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 10),
                                   child: GestureDetector(
                                     onLongPress: () {
                                       showModalMenuBottomSheet(
-                                          context: context,
-                                          modalHeight: modalAddTodoHeight,
-                                          child: AddNode(
-                                            addTodoController: changeNote,
-                                            utilities: utilities,
-                                            formKey: _formKey,
-                                            note: widget.note,
-                                          ));
+                                        context: context,
+                                        modalHeight: modalAddTodoHeight,
+                                        child: AddNode(
+                                          addTodoController: changeNote,
+                                          utilities: utilities,
+                                          formKey: _formKey,
+                                          note: widget.note,
+                                        ),
+                                      );
                                     },
                                     child: Text(
                                       state.description,
@@ -197,7 +165,7 @@ class _NotePageState extends State<NotePage> {
                         size: size,
                         onTap: () {},
                         child: Text(
-                          'UA',
+                          'EN',
                           style: theme.textTheme.labelMedium,
                         ),
                       ),

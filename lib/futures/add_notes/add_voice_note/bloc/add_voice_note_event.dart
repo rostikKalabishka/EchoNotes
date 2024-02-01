@@ -16,6 +16,8 @@ class CreateNameNoteEvent extends AddVoiceNoteEvent {
   List<Object> get props => super.props..addAll([name, context]);
 }
 
+class ImagePickerEvent extends AddVoiceNoteEvent {}
+
 class ChangeDescriptionEvent extends AddVoiceNoteEvent {
   final String description;
   final BuildContext context;
@@ -26,4 +28,14 @@ class ChangeDescriptionEvent extends AddVoiceNoteEvent {
   List<Object> get props => super.props..addAll([description, context]);
 }
 
+class LoadBaseData extends AddVoiceNoteEvent {}
+
 class SpeechToTextEvent extends AddVoiceNoteEvent {}
+
+class AddNoteEvent extends AddVoiceNoteEvent {
+  final BuildContext context;
+
+  const AddNoteEvent({required this.context});
+  @override
+  List<Object> get props => super.props..addAll([context]);
+}

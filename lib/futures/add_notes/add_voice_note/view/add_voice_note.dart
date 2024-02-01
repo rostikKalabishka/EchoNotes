@@ -8,6 +8,7 @@ import 'package:note_app/futures/add_notes/add_voice_note/bloc/add_voice_note_bl
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 
 import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
 class AddVoiceNotePage extends StatefulWidget {
@@ -18,15 +19,28 @@ class AddVoiceNotePage extends StatefulWidget {
 }
 
 class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
+  final utilities = Utilities();
+  final _formKey = GlobalKey<FormState>();
+  final editNameController = TextEditingController();
+
+  @override
+  void initState() {
+    context.read<AddVoiceNoteBloc>().add(LoadBaseData());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    double bottomPadding = MediaQuery.of(context).padding.bottom;
-    Size size = MediaQuery.of(context).size;
-    double modalHeight = size.height * 0.5;
+    final double bottomPadding = MediaQuery.of(context).padding.bottom;
+    final Size size = MediaQuery.of(context).size;
+    final double modalHeight = size.height * 0.4;
+    final double modalChangeDescription = size.height * 0.9;
     final theme = Theme.of(context);
 
     return BlocBuilder<AddVoiceNoteBloc, AddVoiceNoteState>(
       builder: (context, state) {
+        final editDescriptionController =
+            TextEditingController(text: state.description);
         return Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
@@ -54,14 +68,18 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
               CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    title: const Text('Note'),
+                    title: Text(state.name),
                     actions: [
                       IconButton(
                         onPressed: () {
                           showModalMenuBottomSheet(
                               context: context,
                               modalHeight: modalHeight,
-                              child: const MenuWidget());
+                              child: MenuWidget(
+                                utilities: utilities,
+                                controller: editNameController,
+                                formKey: _formKey,
+                              ));
                         },
                         icon: const Icon(Icons.more_horiz),
                       ),
@@ -75,66 +93,58 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
                       child: Column(
                         children: [
                           state.description.isEmpty
                               ? Lottie.asset('assets/lottie/voice.json',
                                   fit: BoxFit.fill,
                                   errorBuilder: (context, error, stackTrace) {
-                                  print(error);
                                   return Text('$error');
                                 })
-                              : CustomBoxShadowContainer(
-                                  cardInfo: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CustomBoxShadowContainer(
-                                              width: 50,
-                                              height: 50,
-                                              cardInfo:
-                                                  const Icon(Icons.play_arrow),
-                                              cardColor: theme.cardColor,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          const Text('0:00:08')
-                                        ],
+                              : GestureDetector(
+                                  onLongPress: () {
+                                    showModalMenuBottomSheet(
+                                      context: context,
+                                      modalHeight: modalChangeDescription,
+                                      child: ChangeDescriptionWidget(
+                                        addTodoController:
+                                            editDescriptionController,
+                                        utilities: utilities,
+                                        formKey: _formKey,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10),
-                                        child: Text(
-                                          state.description,
-                                        ),
-                                      )
-                                    ],
+                                    );
+                                  },
+                                  child: CustomBoxShadowContainer(
+                                    width: size.width * 0.95,
+                                    cardInfo: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: Text(
+                                        state.description,
+                                        style: theme.textTheme.labelLarge,
+                                      ),
+                                    ),
+                                    cardColor: theme.cardColor,
                                   ),
-                                  cardColor: theme.cardColor,
                                 ),
-
-                          // state.selectedImage.isNotEmpty
-                          //     ? Padding(
-                          //         padding:
-                          //             const EdgeInsets.symmetric(vertical: 20),
-                          //         child: Container(
-                          //           constraints: BoxConstraints(
-                          //             maxHeight:
-                          //                 MediaQuery.of(context).size.height *
-                          //                     0.54,
-                          //           ),
-                          //           child: ClipRRect(
-                          //               borderRadius: BorderRadius.circular(20),
-                          //               child:
-                          //                   Image.asset(state.selectedImage)),
-                          //         ),
-                          //       )
-                          //     : const SizedBox.shrink()
+                          state.imageUrl.isNotEmpty
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.54,
+                                    ),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.asset(state.imageUrl)),
+                                  ),
+                                )
+                              : const SizedBox.shrink()
                         ],
                       ),
                     ),
@@ -155,7 +165,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                         size: size,
                         onTap: () {},
                         child: Text(
-                          'UA',
+                          'EN',
                           style: theme.textTheme.labelMedium,
                         ),
                       ),
@@ -163,7 +173,9 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                         theme: theme,
                         size: size,
                         onTap: () {
-                          //   context.read<NotePageBloc>().add(ImagePickerEvent());
+                          context
+                              .read<AddVoiceNoteBloc>()
+                              .add(ImagePickerEvent());
                         },
                         child: const Icon(Icons.attachment),
                       ),
@@ -182,8 +194,13 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
 class MenuWidget extends StatelessWidget {
   const MenuWidget({
     super.key,
+    required this.utilities,
+    required this.controller,
+    required this.formKey,
   });
-
+  final Utilities utilities;
+  final TextEditingController controller;
+  final GlobalKey<FormState> formKey;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -216,7 +233,19 @@ class MenuWidget extends StatelessWidget {
             children: [
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {},
+                onTap: () {
+                  openDialog(
+                      validator: (val) => utilities.textFieldValidator(val!),
+                      context: context,
+                      state: AddVoiceNoteState,
+                      controller: controller,
+                      saveName: () {
+                        context.read<AddVoiceNoteBloc>().add(
+                            CreateNameNoteEvent(
+                                name: controller.text, context: context));
+                        controller.clear();
+                      });
+                },
                 iconColor: Colors.yellow,
                 icon: Icons.edit_outlined,
                 text: 'Change note name',
@@ -225,45 +254,97 @@ class MenuWidget extends StatelessWidget {
                 height: 10,
               ),
               ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
-                iconColor: Colors.red,
-                icon: Icons.folder_outlined,
-                text: 'Add to folder',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
-                iconColor: Colors.red,
-                icon: Icons.change_circle_outlined,
-                text: 'Delete note',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
-                iconColor: Colors.red,
+                backgroundColor: const Color.fromARGB(255, 15, 68, 17),
+                onTap: () {
+                  context
+                      .read<AddVoiceNoteBloc>()
+                      .add(AddNoteEvent(context: context));
+                },
+                iconColor: const Color.fromARGB(255, 81, 255, 87),
                 icon: Icons.save,
-                text: 'Save change',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {},
-                iconColor: Colors.red,
-                icon: Icons.delete_outline,
-                text: 'Delete note',
+                text: 'Save note',
               ),
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class ChangeDescriptionWidget extends StatelessWidget {
+  const ChangeDescriptionWidget({
+    Key? key,
+    required this.addTodoController,
+    required this.utilities,
+    required this.formKey,
+  }) : super(key: key);
+  final TextEditingController addTodoController;
+  final Utilities utilities;
+  final GlobalKey<FormState> formKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.15,
+            ),
+            Text(
+              'Change description',
+              style: theme.textTheme.labelLarge,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            IconButton(
+              onPressed: () {
+                AutoRouter.of(context).pop();
+              },
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                CustomTextField(
+                  mixLines: 1,
+                  validator: (value) => utilities.textFieldValidator(value!),
+                  hintText: 'Add note name',
+                  textEditorController: addTodoController,
+                  maxLines: 15,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AddVoiceNoteBloc>().add(
+                            ChangeDescriptionEvent(
+                                context: context,
+                                description: addTodoController.text));
+                        addTodoController.clear();
+                      }
+                    },
+                    child: Text(
+                      'add todo',
+                      style: theme.textTheme.labelLarge,
+                    ))
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
