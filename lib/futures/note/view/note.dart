@@ -27,7 +27,7 @@ class _NotePageState extends State<NotePage> {
   @override
   void initState() {
     context.read<NotePageBloc>().add(LoadNoteInfoEvent(id: widget.note.id!));
-    //  changeNote = TextEditingController(text: state.name);
+
     super.initState();
   }
 
@@ -57,6 +57,7 @@ class _NotePageState extends State<NotePage> {
                     note: widget.note,
                     utilities: utilities,
                     controller: changeNameNote,
+                    formKey: _formKey,
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
@@ -80,6 +81,7 @@ class _NotePageState extends State<NotePage> {
                                 note: widget.note,
                                 utilities: utilities,
                                 controller: changeNameNote,
+                                formKey: _formKey,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -197,96 +199,100 @@ class MenuWidget extends StatelessWidget {
     required this.note,
     required this.utilities,
     required this.controller,
+    required this.formKey,
   }) : super(key: key);
   final Note note;
   final Utilities utilities;
   final TextEditingController controller;
+  final GlobalKey<FormState> formKey;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Form(
+      key: formKey,
+      child: SingleChildScrollView(
+        child: Column(
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                ),
+                Text(
+                  'Menu',
+                  style: theme.textTheme.labelLarge,
+                ),
+                IconButton(
+                  onPressed: () {
+                    AutoRouter.of(context).pop();
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              ],
             ),
-            Text(
-              'Menu',
-              style: theme.textTheme.labelLarge,
+            const SizedBox(
+              height: 20,
             ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Column(
+                children: [
+                  ButtonInBottomSheet(
+                    backgroundColor: const Color.fromARGB(187, 191, 179, 4),
+                    onTap: () {
+                      openDialog(
+                          validator: (val) =>
+                              utilities.textFieldValidator(val!),
+                          context: context,
+                          state: NotePageBloc,
+                          controller: controller,
+                          saveName: () {
+                            if (formKey.currentState!.validate()) {
+                              context.read<NotePageBloc>().add(
+                                  ChangeNameNoteEvent(
+                                      name: controller.text.isNotEmpty
+                                          ? controller.text
+                                          : 'Note',
+                                      note: note));
+                            }
+                          });
+                      controller.clear();
+                    },
+                    iconColor: Colors.yellow,
+                    icon: Icons.edit_outlined,
+                    text: 'Change note name',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ButtonInBottomSheet(
+                    backgroundColor: const Color.fromARGB(255, 6, 70, 246),
+                    onTap: () {},
+                    iconColor: Colors.blue,
+                    icon: FontAwesomeIcons.faceDizzy,
+                    text: 'Delete note',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ButtonInBottomSheet(
+                    backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                    onTap: () {
+                      context
+                          .read<NotePageBloc>()
+                          .add(DeleteNoteEvent(note: note, context: context));
+                    },
+                    iconColor: Colors.red,
+                    icon: Icons.delete_outline,
+                    text: 'Delete note',
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
-            children: [
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {
-                  openDialog(
-                      validator: (val) => utilities.textFieldValidator(val!),
-                      context: context,
-                      state: NotePageBloc,
-                      controller: controller,
-                      saveName: () {
-                        context.read<NotePageBloc>().add(ChangeNameNoteEvent(
-                            name: controller.text, note: note));
-                      });
-                  controller.clear();
-                },
-                iconColor: Colors.yellow,
-                icon: Icons.edit_outlined,
-                text: 'Change note name',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(228, 45, 151, 28),
-                onTap: () {},
-                iconColor: const Color.fromARGB(255, 74, 254, 80),
-                icon: Icons.folder_outlined,
-                text: 'Add to folder',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 6, 70, 246),
-                onTap: () {},
-                iconColor: Colors.blue,
-                icon: FontAwesomeIcons.faceDizzy,
-                text: 'Delete note',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {
-                  context
-                      .read<NotePageBloc>()
-                      .add(DeleteNoteEvent(note: note, context: context));
-                },
-                iconColor: Colors.red,
-                icon: Icons.delete_outline,
-                text: 'Delete note',
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

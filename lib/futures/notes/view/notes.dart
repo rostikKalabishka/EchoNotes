@@ -96,7 +96,7 @@ class CardInfoWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            name,
+            name.isNotEmpty ? name : 'Note',
             style: theme.textTheme.labelLarge,
             overflow: TextOverflow.ellipsis,
           ),

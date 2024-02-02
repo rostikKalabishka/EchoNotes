@@ -215,70 +215,72 @@ class MenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Menu',
-              style: theme.textTheme.labelLarge,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {
-                  openDialog(
-                      validator: (val) => utilities.textFieldValidator(val!),
-                      context: context,
-                      state: AddVoiceNoteState,
-                      controller: controller,
-                      saveName: () {
-                        context.read<AddVoiceNoteBloc>().add(
-                            CreateNameNoteEvent(
-                                name: controller.text, context: context));
-                        controller.clear();
-                      });
-                },
-                iconColor: Colors.yellow,
-                icon: Icons.edit_outlined,
-                text: 'Change note name',
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
               ),
-              const SizedBox(
-                height: 10,
+              Text(
+                'Menu',
+                style: theme.textTheme.labelLarge,
               ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 15, 68, 17),
-                onTap: () {
-                  context
-                      .read<AddVoiceNoteBloc>()
-                      .add(AddNoteEvent(context: context));
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
                 },
-                iconColor: const Color.fromARGB(255, 81, 255, 87),
-                icon: Icons.save,
-                text: 'Save note',
+                icon: const Icon(Icons.close),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Column(
+              children: [
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(187, 191, 179, 4),
+                  onTap: () {
+                    openDialog(
+                        validator: (val) => utilities.textFieldValidator(val!),
+                        context: context,
+                        state: AddVoiceNoteState,
+                        controller: controller,
+                        saveName: () {
+                          context.read<AddVoiceNoteBloc>().add(
+                              CreateNameNoteEvent(
+                                  name: controller.text, context: context));
+                          controller.clear();
+                        });
+                  },
+                  iconColor: Colors.yellow,
+                  icon: Icons.edit_outlined,
+                  text: 'Change note name',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(255, 15, 68, 17),
+                  onTap: () {
+                    context
+                        .read<AddVoiceNoteBloc>()
+                        .add(AddNoteEvent(context: context));
+                  },
+                  iconColor: const Color.fromARGB(255, 81, 255, 87),
+                  icon: Icons.save,
+                  text: 'Save note',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

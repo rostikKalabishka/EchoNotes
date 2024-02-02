@@ -131,8 +131,17 @@ class NotesDatabase implements AbstractNotesDataBase {
   @override
   Future<int> deleteTodoList(TodoList todoList) async {
     final db = await instance.database;
-    return db.delete(tableTodoList,
-        where: '${TodoListFields.id} = ?', whereArgs: [todoList.id]);
+    await db.delete(
+      tableTodo,
+      where: '${TodoFields.listNoteId} = ?',
+      whereArgs: [todoList.id],
+    );
+
+    return db.delete(
+      tableTodoList,
+      where: '${TodoListFields.id} = ?',
+      whereArgs: [todoList.id],
+    );
   }
 
   @override
@@ -186,8 +195,11 @@ class NotesDatabase implements AbstractNotesDataBase {
   @override
   Future<int> deleteTodo(Todo todo) async {
     final db = await instance.database;
-    return db.delete(tableTodoList,
-        where: '${TodoFields.id} = ?', whereArgs: [todo.id]);
+    return db.delete(
+      tableTodo,
+      where: '${TodoFields.id} = ? AND ${TodoFields.listNoteId} = ?',
+      whereArgs: [todo.id, todo.listNoteId],
+    );
   }
 
   @override

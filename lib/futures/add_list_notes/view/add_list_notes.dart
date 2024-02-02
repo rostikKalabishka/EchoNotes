@@ -34,7 +34,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
 
     final Size size = MediaQuery.of(context).size;
     final double modalHeight = size.height * 0.4;
-    final double modalAddTodoHeight = size.height * 0.7;
+    final double modalAddTodoHeight = size.height * 0.8;
     return BlocBuilder<AddListNotesBloc, AddListTodoState>(
       builder: (context, state) {
         return Scaffold(
@@ -145,65 +145,67 @@ class AddTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Todo',
-              style: theme.textTheme.labelLarge,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                CustomTextField(
-                  mixLines: 1,
-                  validator: (value) => utilities.textFieldValidator(value!),
-                  hintText: 'Add note name',
-                  textEditorController: addTodoController,
-                  maxLines: 15,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<AddListNotesBloc>().add(
-                              CreateTodoEvent(
-                                  name: addTodoController.text,
-                                  context: context),
-                            );
-                        addTodoController.clear();
-                      }
-                    },
-                    child: Text(
-                      'add todo',
-                      style: theme.textTheme.labelLarge,
-                    ))
-              ],
-            ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
+              ),
+              Text(
+                'Todo',
+                style: theme.textTheme.labelLarge,
+              ),
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ],
           ),
-        )
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  CustomTextField(
+                    mixLines: 1,
+                    validator: (value) => utilities.textFieldValidator(value!),
+                    hintText: 'Add note name',
+                    textEditorController: addTodoController,
+                    maxLines: 15,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<AddListNotesBloc>().add(
+                                CreateTodoEvent(
+                                    name: addTodoController.text,
+                                    context: context),
+                              );
+                          addTodoController.clear();
+                        }
+                      },
+                      child: Text(
+                        'add todo',
+                        style: theme.textTheme.labelLarge,
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

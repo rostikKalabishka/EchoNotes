@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 
@@ -40,7 +41,7 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
 
     final Size size = MediaQuery.of(context).size;
     final double modalHeight = size.height * 0.4;
-    final double modalAddTodoHeight = size.height * 0.7;
+    final double modalAddTodoHeight = size.height * 0.8;
     return BlocBuilder<CurrentTodoListInfoBloc, CurrentTodoListInfoState>(
       builder: (context, state) {
         return Scaffold(
@@ -111,19 +112,42 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                                 padding: const EdgeInsets.all(10),
                                 child: CustomBoxShadowContainer(
                                   cardColor: theme.cardColor,
-                                  cardInfo: ListTile(
-                                    title: Text(todo.name),
-                                    leading: Checkbox(
-                                      value: todo.isDone,
-                                      onChanged: (bool? value) {
-                                        context
-                                            .read<CurrentTodoListInfoBloc>()
-                                            .add(CheckboxTodoEvent(
-                                                value: value ?? false,
-                                                todo: todo,
-                                                todoIndex: index,
-                                                todoList: widget.todoList));
-                                      },
+                                  cardInfo: Slidable(
+                                    endActionPane: ActionPane(
+                                        motion: const ScrollMotion(),
+                                        children: [
+                                          SlidableAction(
+                                            onPressed: (_) {
+                                              context
+                                                  .read<
+                                                      CurrentTodoListInfoBloc>()
+                                                  .add(DeleteTodoEvent(
+                                                      context: context,
+                                                      index: index,
+                                                      todo: todo));
+                                            },
+                                            backgroundColor:
+                                                const Color(0xFFFE4A49),
+                                            foregroundColor: Colors.white,
+                                            icon: Icons.delete,
+                                            spacing: 2,
+                                            // label: 'Delete',
+                                          ),
+                                        ]),
+                                    child: ListTile(
+                                      title: Text(todo.name),
+                                      leading: Checkbox(
+                                        value: todo.isDone,
+                                        onChanged: (bool? value) {
+                                          context
+                                              .read<CurrentTodoListInfoBloc>()
+                                              .add(CheckboxTodoEvent(
+                                                  value: value ?? false,
+                                                  todo: todo,
+                                                  todoIndex: index,
+                                                  todoList: widget.todoList));
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -159,66 +183,68 @@ class AddTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Todo',
-              style: theme.textTheme.labelLarge,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                CustomTextField(
-                  mixLines: 1,
-                  validator: (value) => utilities.textFieldValidator(value!),
-                  hintText: 'Add note name',
-                  textEditorController: addTodoController,
-                  maxLines: 15,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<CurrentTodoListInfoBloc>().add(
-                            CreateNewTodoEvent(
-                                id: indexTodoList,
-                                name: addTodoController.text,
-                                context: context,
-                                todoList: todoList));
-                        addTodoController.clear();
-                      }
-                    },
-                    child: Text(
-                      'add todo',
-                      style: theme.textTheme.labelLarge,
-                    ))
-              ],
-            ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
+              ),
+              Text(
+                'Todo',
+                style: theme.textTheme.labelLarge,
+              ),
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ],
           ),
-        )
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  CustomTextField(
+                    mixLines: 1,
+                    validator: (value) => utilities.textFieldValidator(value!),
+                    hintText: 'Add note name',
+                    textEditorController: addTodoController,
+                    maxLines: 15,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<CurrentTodoListInfoBloc>().add(
+                              CreateNewTodoEvent(
+                                  id: indexTodoList,
+                                  name: addTodoController.text,
+                                  context: context,
+                                  todoList: todoList));
+                          addTodoController.clear();
+                        }
+                      },
+                      child: Text(
+                        'add todo',
+                        style: theme.textTheme.labelLarge,
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -238,69 +264,71 @@ class ChangeFolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Menu',
-              style: theme.textTheme.labelLarge,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {
-                  openDialog(
-                      validator: (val) => utilities.textFieldValidator(val!),
-                      context: context,
-                      state: CurrentTodoListInfoBloc,
-                      controller: controller,
-                      saveName: () {
-                        context.read<CurrentTodoListInfoBloc>().add(
-                            ChangeNameCurrentTodoListEvent(
-                                name: controller.text, todoList: todoList));
-                      });
-                },
-                iconColor: Colors.yellow,
-                icon: Icons.edit_outlined,
-                text: 'Change note name',
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
               ),
-              const SizedBox(
-                height: 10,
+              Text(
+                'Menu',
+                style: theme.textTheme.labelLarge,
               ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 156, 77, 77),
-                onTap: () {
-                  context.read<CurrentTodoListInfoBloc>().add(
-                      DeleteCurrentTodoListEvent(
-                          context: context, todo: todoList));
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
                 },
-                iconColor: Colors.red,
-                icon: Icons.delete_outline,
-                text: 'Delete note',
+                icon: const Icon(Icons.close),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Column(
+              children: [
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(187, 191, 179, 4),
+                  onTap: () {
+                    openDialog(
+                        validator: (val) => utilities.textFieldValidator(val!),
+                        context: context,
+                        state: CurrentTodoListInfoBloc,
+                        controller: controller,
+                        saveName: () {
+                          context.read<CurrentTodoListInfoBloc>().add(
+                              ChangeNameCurrentTodoListEvent(
+                                  name: controller.text, todoList: todoList));
+                        });
+                  },
+                  iconColor: Colors.yellow,
+                  icon: Icons.edit_outlined,
+                  text: 'Change note name',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(255, 156, 77, 77),
+                  onTap: () {
+                    context.read<CurrentTodoListInfoBloc>().add(
+                        DeleteCurrentTodoListEvent(
+                            context: context, todo: todoList));
+                  },
+                  iconColor: Colors.red,
+                  icon: Icons.delete_outline,
+                  text: 'Delete note',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

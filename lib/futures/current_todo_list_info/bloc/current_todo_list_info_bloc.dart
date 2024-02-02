@@ -20,13 +20,15 @@ class CurrentTodoListInfoBloc
       if (event is LoadTodoListEvent) {
         await _loadTodoList(event, emit);
       } else if (event is DeleteCurrentTodoListEvent) {
-        await _deleteNote(event, emit);
+        await _deleteCurrentTodoList(event, emit);
       } else if (event is ChangeNameCurrentTodoListEvent) {
         await _saveNameTodoList(event, emit);
       } else if (event is CheckboxTodoEvent) {
         await _checkBox(event, emit);
       } else if (event is CreateNewTodoEvent) {
         await _createTodo(event, emit);
+      } else if (event is DeleteTodoEvent) {
+        await _deleteTodo(event, emit);
       }
     }, transformer: sequential());
   }
@@ -67,7 +69,6 @@ class CurrentTodoListInfoBloc
     try {
       List<Todo> updatedTodoList = List.from(state.todo);
 
-      // Ensure that the Todo and its properties are not null
       if (event.todo.id != null && event.todo.listNoteId != null) {
         Todo updatedTodo = event.todo.copyWith(isDone: event.value);
         updatedTodoList[event.todoIndex] = updatedTodo;
@@ -114,7 +115,20 @@ class CurrentTodoListInfoBloc
     }
   }
 
-  Future<void> _deleteNote(DeleteCurrentTodoListEvent event,
+  Future<void> _deleteTodo(
+      DeleteTodoEvent event, Emitter<CurrentTodoListInfoState> emit) async {
+    try {
+      final deleteTodo = state.todo[event.index];
+      final List<Todo> updatedTodoList = List.from(state.todo)
+        ..removeAt(event.index);
+      emit(state.copyWith(todo: updatedTodoList));
+      await abstractNotesDataBase.deleteTodo(deleteTodo);
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _deleteCurrentTodoList(DeleteCurrentTodoListEvent event,
       Emitter<CurrentTodoListInfoState> emit) async {
     final autoRouter = AutoRouter.of(event.context);
 
