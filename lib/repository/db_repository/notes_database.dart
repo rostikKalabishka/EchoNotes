@@ -30,7 +30,6 @@ class NotesDatabase implements AbstractNotesDataBase {
     const String textType = 'TEXT NOT NULL';
     const String boolType = 'BOOLEAN NOT NULL';
     const String integerType = 'INTEGER NOT NULL';
-    // const String integerNullType = 'INTEGER';
 
     await db.execute('''CREATE TABLE $tableNotes(
       ${NoteFields.id} $idType,
@@ -52,8 +51,6 @@ class NotesDatabase implements AbstractNotesDataBase {
    ${TodoListFields.createAt} $textType
 )''');
 
-//,
-    // PRIMARY KEY (${TodoListFields.id})
     await db.execute('''CREATE TABLE $tableTodo(
   ${TodoFields.id} $idType,
   ${TodoFields.name} $textType,

@@ -42,10 +42,14 @@ class CurrentTodoListInfoBloc
           createDate: DateTime.now().toString(),
           createAt: DateTime.now());
 
-      final updatedList = [...state.todo, todo];
+      final insertedTodoId = await abstractNotesDataBase.createTodo(todo);
+
+      final updatedTodo = todo.copyWith(id: insertedTodoId.id);
+
+      final updatedList = [...state.todo, updatedTodo];
 
       emit(state.copyWith(todo: updatedList));
-      await abstractNotesDataBase.createTodo(todo);
+
       int doneCount = updatedList.where((todo) => todo.isDone).length;
       double percentage = (doneCount / updatedList.length) * 100;
 
@@ -62,17 +66,24 @@ class CurrentTodoListInfoBloc
       CheckboxTodoEvent event, Emitter<CurrentTodoListInfoState> emit) async {
     try {
       List<Todo> updatedTodoList = List.from(state.todo);
-      Todo updatedTodo = event.todo.copyWith(isDone: event.value);
-      updatedTodoList[event.todoIndex] = updatedTodo;
 
-      await abstractNotesDataBase.updateTodo(updatedTodo);
-      emit(state.copyWith(todo: updatedTodoList));
+      // Ensure that the Todo and its properties are not null
+      if (event.todo.id != null && event.todo.listNoteId != null) {
+        Todo updatedTodo = event.todo.copyWith(isDone: event.value);
+        updatedTodoList[event.todoIndex] = updatedTodo;
 
-      int doneCount = updatedTodoList.where((todo) => todo.isDone).length;
-      double percentage = (doneCount / updatedTodoList.length) * 100;
+        await abstractNotesDataBase.updateTodo(updatedTodo);
+        emit(state.copyWith(todo: updatedTodoList));
 
-      await abstractNotesDataBase.updateTodoList(
-          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)));
+        int doneCount = updatedTodoList.where((todo) => todo.isDone).length;
+        double percentage = (doneCount / updatedTodoList.length) * 100;
+
+        await abstractNotesDataBase.updateTodoList(
+          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)),
+        );
+      } else {
+        emit(state.copyWith(error: 'Todo or its properties are null.'));
+      }
     } catch (e) {
       emit(state.copyWith(error: e));
     }
