@@ -27,7 +27,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AddDefaultNotesPage(),
       );
     },
-    AddListNotesRoute.name: (routeData) {
+    AddListTodoRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const AddListTodoPage(),
@@ -124,14 +124,14 @@ class AddDefaultNotesRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AddListTodoPage]
-class AddListNotesRoute extends PageRouteInfo<void> {
-  const AddListNotesRoute({List<PageRouteInfo>? children})
+class AddListTodoRoute extends PageRouteInfo<void> {
+  const AddListTodoRoute({List<PageRouteInfo>? children})
       : super(
-          AddListNotesRoute.name,
+          AddListTodoRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'AddListNotesRoute';
+  static const String name = 'AddListTodoRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

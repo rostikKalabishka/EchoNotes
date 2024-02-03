@@ -23,7 +23,7 @@ part 'router.gr.dart';
 class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: HomeRoute.page, path: '/', children: [
+        AutoRoute(page: HomeRoute.page, path: '/', initial: true, children: [
           AutoRoute(
             page: NotesRoute.page,
             path: 'notes',
@@ -54,7 +54,7 @@ class AppRouter extends _$AppRouter {
           path: '/notes/add_notes/add_default_note',
         ),
         AutoRoute(
-          page: AddListNotesRoute.page,
+          page: AddListTodoRoute.page,
           path: '/list_todo/add_list_notes',
         ),
         AutoRoute(

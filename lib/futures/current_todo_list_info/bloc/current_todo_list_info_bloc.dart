@@ -48,7 +48,10 @@ class CurrentTodoListInfoBloc
 
       final updatedTodo = todo.copyWith(id: insertedTodoId.id);
 
-      final updatedList = [...state.todo, updatedTodo];
+      final List<Todo> updatedList = [
+        updatedTodo,
+        ...state.todo,
+      ];
 
       emit(state.copyWith(todo: updatedList));
 

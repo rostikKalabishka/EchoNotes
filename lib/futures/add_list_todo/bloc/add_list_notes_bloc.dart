@@ -67,7 +67,10 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
           createDate: DateTime.now().toString(),
           createAt: DateTime.now());
 
-      final updatedList = [...state.todo, todo];
+      final updatedList = [
+        todo,
+        ...state.todo,
+      ];
 
       emit(state.copyWith(todo: updatedList));
       AutoRouter.of(event.context).pop();
@@ -118,6 +121,8 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
 
       autoRouter.pushAndPopUntil(const ListTodoRoute(),
           predicate: (route) => false);
+      // autoRouter.root
+      //     .pushAndPopUntil(const ListTodoRoute(), predicate: (route) => false);
     } catch (e) {
       emit(state.copyWith(error: e));
     }

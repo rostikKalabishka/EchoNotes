@@ -31,7 +31,7 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
       NavigateToAddTodoNotesEvent event, Emitter<ListTodoState> emit) {
     final autoRouter = AutoRouter.of(event.context);
 
-    autoRouter.push(const AddListNotesRoute());
+    autoRouter.push(const AddListTodoRoute());
   }
 
   void _navigateToCurrentTodoListInfoPage(
