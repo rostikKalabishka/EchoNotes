@@ -119,8 +119,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
         updatedTodos.add(createdTodo);
       }
 
-      autoRouter.pushAndPopUntil(const ListTodoRoute(),
-          predicate: (route) => false);
+      event.context.navigateNamedTo('/list_todo');
       // autoRouter.root
       //     .pushAndPopUntil(const ListTodoRoute(), predicate: (route) => false);
     } catch (e) {
