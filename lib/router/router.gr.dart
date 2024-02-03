@@ -30,7 +30,7 @@ abstract class _$AppRouter extends RootStackRouter {
     AddListNotesRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AddListNotesPage(),
+        child: const AddListTodoPage(),
       );
     },
     AddNotesRoute.name: (routeData) {
@@ -55,12 +55,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           todoList: args.todoList,
         ),
-      );
-    },
-    FolderListRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const FolderListPage(),
       );
     },
     HomeRoute.name: (routeData) {
@@ -129,7 +123,7 @@ class AddDefaultNotesRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [AddListNotesPage]
+/// [AddListTodoPage]
 class AddListNotesRoute extends PageRouteInfo<void> {
   const AddListNotesRoute({List<PageRouteInfo>? children})
       : super(
@@ -222,20 +216,6 @@ class CurrentTodoListInfoRouteArgs {
   String toString() {
     return 'CurrentTodoListInfoRouteArgs{key: $key, todoList: $todoList}';
   }
-}
-
-/// generated route for
-/// [FolderListPage]
-class FolderListRoute extends PageRouteInfo<void> {
-  const FolderListRoute({List<PageRouteInfo>? children})
-      : super(
-          FolderListRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'FolderListRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

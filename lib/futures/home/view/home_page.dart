@@ -32,53 +32,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  onBottomNavigationBarTap(int index) {
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  final List<Widget> pages = [
-    const NotesPage(),
-    const ListTodoPage(),
-    const AccountSettingsPage()
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      bottomNavigationBar: bottomNavigationBar(),
       body: PageView(
         controller: _pageController,
         onPageChanged: onPageChanged,
-        children: pages,
+        children: const [
+          NotesPage(),
+          ListTodoPage(),
+          AccountSettingsPage(),
+        ],
       ),
-    );
-  }
-
-  bottomNavigationBar() {
-    return GNav(
-      gap: 8,
-      onTabChange: onBottomNavigationBarTap,
-      selectedIndex: _indexPage,
-      tabs: const [
-        GButton(
-          icon: FontAwesomeIcons.noteSticky,
-          text: 'Notes',
-        ),
-        GButton(
-          icon: FontAwesomeIcons.listCheck,
-          text: 'List',
-        ),
-        GButton(
-          icon: FontAwesomeIcons.user,
-          text: 'Account',
-        )
-      ],
+      bottomNavigationBar: GNav(
+        gap: 8,
+        onTabChange: (index) {
+          _pageController.animateToPage(index,
+              duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        },
+        selectedIndex: _indexPage,
+        tabs: const [
+          GButton(
+            icon: FontAwesomeIcons.noteSticky,
+            text: 'Notes',
+          ),
+          GButton(
+            icon: FontAwesomeIcons.listCheck,
+            text: 'List',
+          ),
+          GButton(
+            icon: FontAwesomeIcons.user,
+            text: 'Account',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,15 +1,15 @@
 part of 'add_list_notes_bloc.dart';
 
-sealed class AddListNotesEvent extends Equatable {
-  const AddListNotesEvent();
+sealed class AddListTodoEvent extends Equatable {
+  const AddListTodoEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadDefaultValue extends AddListNotesEvent {}
+class LoadDefaultValue extends AddListTodoEvent {}
 
-class CreateTodoEvent extends AddListNotesEvent {
+class CreateTodoEvent extends AddListTodoEvent {
   final String name;
   final BuildContext context;
 
@@ -21,11 +21,11 @@ class CreateTodoEvent extends AddListNotesEvent {
   List<Object> get props => super.props..addAll([name]);
 }
 
-class ExitPageEvent extends AddListNotesEvent {
+class ExitPageEvent extends AddListTodoEvent {
   const ExitPageEvent();
 }
 
-class CheckboxTodoEvent extends AddListNotesEvent {
+class CheckboxTodoEvent extends AddListTodoEvent {
   final bool value;
   final Todo todo;
   final int todoIndex;
@@ -37,7 +37,7 @@ class CheckboxTodoEvent extends AddListNotesEvent {
   List<Object> get props => super.props..addAll([value, todo]);
 }
 
-class SaveNameTodoListEvent extends AddListNotesEvent {
+class SaveNameTodoListEvent extends AddListTodoEvent {
   final String name;
 
   const SaveNameTodoListEvent({
@@ -50,7 +50,7 @@ class SaveNameTodoListEvent extends AddListNotesEvent {
     ]);
 }
 
-class CreateTodoListEvent extends AddListNotesEvent {
+class CreateTodoListEvent extends AddListTodoEvent {
   final String name;
   final BuildContext context;
   const CreateTodoListEvent({

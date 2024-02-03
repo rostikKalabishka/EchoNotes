@@ -56,6 +56,7 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                         hintText: 'Add note name',
                         textEditorController: noteName,
                         maxLines: 1,
+                        autofocus: false,
                       ),
                       CustomTextField(
                         validator: (value) =>
@@ -63,6 +64,7 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                         hintText: 'Add description',
                         textEditorController: description,
                         maxLines: 23,
+                        autofocus: false,
                       )
                     ],
                   ),

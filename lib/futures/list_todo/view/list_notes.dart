@@ -42,6 +42,7 @@ class _ListTodoPageState extends State<ListTodoPage> {
                   .add(NavigateToAddTodoNotesEvent(context: context));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
+            heroTag: 'add_list_todo',
           ),
           body: CustomScrollView(
             slivers: [

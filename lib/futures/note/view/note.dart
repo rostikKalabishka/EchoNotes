@@ -61,6 +61,7 @@ class _NotePageState extends State<NotePage> {
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
+            heroTag: 'add_change_note',
           ),
           body: Stack(
             children: [
@@ -349,6 +350,7 @@ class AddNode extends StatelessWidget {
                   hintText: 'Add note name',
                   textEditorController: addTodoController,
                   maxLines: 15,
+                  autofocus: true,
                 ),
                 const SizedBox(
                   height: 20,

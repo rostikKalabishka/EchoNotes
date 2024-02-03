@@ -8,12 +8,14 @@ class CustomFloatingActionButton extends StatelessWidget {
     this.height,
     this.width,
     required this.dataButton,
+    required this.heroTag,
   });
   final VoidCallback onPressed;
   final BorderRadiusGeometry? borderRadius;
   final double? height;
   final double? width;
   final Widget dataButton;
+  final Object heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class CustomFloatingActionButton extends StatelessWidget {
       height: height,
       width: width,
       child: FloatingActionButton(
+        heroTag: heroTag,
         shape: RoundedRectangleBorder(
           borderRadius: borderRadius ??
               const BorderRadius.only(

@@ -7,12 +7,14 @@ class CustomTextField extends StatelessWidget {
       this.hintText,
       this.maxLines,
       this.validator,
-      this.mixLines});
+      this.mixLines,
+      required this.autofocus});
   final TextEditingController textEditorController;
   final String? hintText;
   final int? maxLines;
   final String? Function(String?)? validator;
   final int? mixLines;
+  final bool autofocus;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TextFormField(
+            autofocus: autofocus,
             validator: validator,
             minLines: mixLines,
             maxLines: maxLines,

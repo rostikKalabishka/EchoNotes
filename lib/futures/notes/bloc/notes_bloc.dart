@@ -44,6 +44,7 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
   void _navigateToNotePage(OpenNotesEvent event, Emitter<NotesState> emit) {
     try {
       final autoRouter = AutoRouter.of(event.context);
+
       autoRouter.push(NoteRoute(note: event.note));
     } catch (e) {
       emit(state.copyWith(error: e));

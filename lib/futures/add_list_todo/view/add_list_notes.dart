@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
-import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
+import 'package:note_app/futures/add_list_todo/bloc/add_list_notes_bloc.dart';
 
 import 'package:note_app/ui/widgets/widget.dart';
 import 'package:note_app/utilities/utilities.dart';
 
 @RoutePage()
-class AddListNotesPage extends StatefulWidget {
-  const AddListNotesPage({super.key});
+class AddListTodoPage extends StatefulWidget {
+  const AddListTodoPage({super.key});
 
   @override
-  State<AddListNotesPage> createState() => _AddListNotesPageState();
+  State<AddListTodoPage> createState() => _AddListTodoPageState();
 }
 
-class _AddListNotesPageState extends State<AddListNotesPage> {
+class _AddListTodoPageState extends State<AddListTodoPage> {
   final TextEditingController addTodoController = TextEditingController();
   final Utilities utilities = Utilities();
   final _formKey = GlobalKey<FormState>();
@@ -24,7 +24,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
       TextEditingController();
   @override
   void initState() {
-    context.read<AddListNotesBloc>().add(LoadDefaultValue());
+    context.read<AddListTodoBloc>().add(LoadDefaultValue());
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
     final Size size = MediaQuery.of(context).size;
     final double modalHeight = size.height * 0.4;
     final double modalAddTodoHeight = size.height * 0.8;
-    return BlocBuilder<AddListNotesBloc, AddListTodoState>(
+    return BlocBuilder<AddListTodoBloc, AddListTodoState>(
       builder: (context, state) {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -54,6 +54,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
+            heroTag: 'add_list_notes',
           ),
           body: Stack(
             children: [
@@ -107,7 +108,7 @@ class _AddListNotesPageState extends State<AddListNotesPage> {
                                       value: todo.isDone,
                                       onChanged: (bool? value) {
                                         context
-                                            .read<AddListNotesBloc>()
+                                            .read<AddListTodoBloc>()
                                             .add(CheckboxTodoEvent(
                                               value: value ?? false,
                                               todo: todo,
@@ -181,6 +182,7 @@ class AddTodo extends StatelessWidget {
                     hintText: 'Add note name',
                     textEditorController: addTodoController,
                     maxLines: 15,
+                    autofocus: true,
                   ),
                   const SizedBox(
                     height: 20,
@@ -188,7 +190,7 @@ class AddTodo extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          context.read<AddListNotesBloc>().add(
+                          context.read<AddListTodoBloc>().add(
                                 CreateTodoEvent(
                                     name: addTodoController.text,
                                     context: context),
@@ -256,11 +258,11 @@ class ChangeFolder extends StatelessWidget {
                   openDialog(
                       validator: (val) => utilities.textFieldValidator(val!),
                       context: context,
-                      state: AddListNotesBloc,
+                      state: AddListTodoBloc,
                       controller: controller,
                       saveName: () {
                         context
-                            .read<AddListNotesBloc>()
+                            .read<AddListTodoBloc>()
                             .add(SaveNameTodoListEvent(name: controller.text));
                       });
                 },
@@ -274,7 +276,7 @@ class ChangeFolder extends StatelessWidget {
               ButtonInBottomSheet(
                 backgroundColor: const Color.fromARGB(255, 15, 68, 17),
                 onTap: () {
-                  context.read<AddListNotesBloc>().add(CreateTodoListEvent(
+                  context.read<AddListTodoBloc>().add(CreateTodoListEvent(
                       name: todoListName, context: context));
                 },
                 iconColor: const Color.fromARGB(255, 81, 255, 87),

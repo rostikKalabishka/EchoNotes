@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
-import 'package:note_app/futures/add_list_notes/bloc/add_list_notes_bloc.dart';
-import 'package:note_app/futures/add_list_notes/view/add_list_notes.dart';
+
+import 'package:note_app/futures/add_list_todo/bloc/add_list_notes_bloc.dart';
+import 'package:note_app/futures/add_list_todo/view/add_list_notes.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
 import 'package:note_app/futures/add_notes/add_voice_note/view/add_voice_note.dart';
 import 'package:note_app/futures/current_todo_list_info/bloc/current_todo_list_info_bloc.dart';
@@ -15,7 +17,7 @@ import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/router/router.dart';
 import 'package:note_app/ui/theme/theme.dart';
 
-import 'futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
+import '../futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
 
 class EchoNotes extends StatefulWidget {
   const EchoNotes({super.key});
@@ -34,7 +36,7 @@ class _EchoNotesState extends State<EchoNotes> {
   final _notePageBloc = NotePageBloc(GetIt.I<AbstractNotesDataBase>());
   final _addVoiceNoteBloc = AddVoiceNoteBloc(GetIt.I<AbstractNotesDataBase>());
   final _listNotesBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
-  final _addListNotesBloc = AddListNotesBloc(GetIt.I<AbstractNotesDataBase>());
+  final _addListNotesBloc = AddListTodoBloc(GetIt.I<AbstractNotesDataBase>());
   final _listTodoBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
   final _currentTodoListInfoBloc =
       CurrentTodoListInfoBloc(GetIt.I<AbstractNotesDataBase>());
@@ -53,7 +55,7 @@ class _EchoNotesState extends State<EchoNotes> {
         BlocProvider(create: (_) => _listNotesBloc),
         BlocProvider(
           create: (_) => _addListNotesBloc,
-          child: const AddListNotesPage(),
+          child: const AddListTodoPage(),
         ),
         BlocProvider(create: (_) => _listTodoBloc),
         BlocProvider(create: (_) => _currentTodoListInfoBloc)
@@ -62,7 +64,11 @@ class _EchoNotesState extends State<EchoNotes> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: darkTheme,
-        routerConfig: _appRouter.config(),
+        routerDelegate: AutoRouterDelegate(
+          _appRouter,
+          navigatorObservers: () => [AutoRouteObserver()],
+        ),
+        routeInformationParser: _appRouter.defaultRouteParser(),
       ),
     );
   }

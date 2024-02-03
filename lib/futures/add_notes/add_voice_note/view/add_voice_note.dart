@@ -71,6 +71,7 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
               dataButton: Icon(state.isListening == true
                   ? Icons.mic_off_outlined
                   : Icons.mic_outlined),
+              heroTag: 'add_voice_note',
             ),
           ),
           body: Stack(
@@ -338,6 +339,7 @@ class ChangeDescriptionWidget extends StatelessWidget {
                   hintText: 'Add note name',
                   textEditorController: addTodoController,
                   maxLines: 15,
+                  autofocus: true,
                 ),
                 const SizedBox(
                   height: 20,

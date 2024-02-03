@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/futures/account_settings/account_settings.dart';
-import 'package:note_app/futures/add_list_notes/view/add_list_notes.dart';
+import 'package:note_app/futures/add_list_todo/view/add_list_notes.dart';
+
 import 'package:note_app/futures/add_notes/add_default_notes/add_default_notes.dart';
 import 'package:note_app/futures/add_notes/add_notes.dart';
 import 'package:note_app/futures/add_notes/add_voice_note/add_voice_note.dart';
 import 'package:note_app/futures/current_todo_list_info/view/current_todo_list_info.dart';
-import 'package:note_app/futures/folder_list/folder_list.dart';
+
 import 'package:note_app/futures/home/home.dart';
 import 'package:note_app/futures/list_todo/view/list_notes.dart';
 
@@ -29,11 +30,7 @@ class AppRouter extends _$AppRouter {
           ),
           AutoRoute(
             page: ListTodoRoute.page,
-            path: 'list_notes',
-          ),
-          AutoRoute(
-            page: FolderListRoute.page,
-            path: 'folder_list',
+            path: 'list_todo',
           ),
           AutoRoute(
             page: AccountSettingsRoute.page,
@@ -42,27 +39,27 @@ class AppRouter extends _$AppRouter {
         ]),
         AutoRoute(
           page: NoteRoute.page,
-          path: '/note',
+          path: '/notes/note',
         ),
         AutoRoute(
           page: AddNotesRoute.page,
-          path: '/add_notes',
+          path: '/notes/add_notes',
         ),
         AutoRoute(
           page: AddVoiceNoteRoute.page,
-          path: '/add_voice_note',
+          path: '/notes/add_notes/add_voice_note',
         ),
         AutoRoute(
           page: AddDefaultNotesRoute.page,
-          path: '/add_default_note',
+          path: '/notes/add_notes/add_default_note',
         ),
         AutoRoute(
           page: AddListNotesRoute.page,
-          path: '/add_list_notes',
+          path: '/list_todo/add_list_notes',
         ),
         AutoRoute(
           page: CurrentTodoListInfoRoute.page,
-          path: '/current_todo_list_info_route',
+          path: '/list_todo/current_todo_list_info_route',
         )
       ];
 }

@@ -12,11 +12,11 @@ import 'package:note_app/router/router.dart';
 part 'add_list_notes_event.dart';
 part 'add_list_notes_state.dart';
 
-class AddListNotesBloc extends Bloc<AddListNotesEvent, AddListTodoState> {
+class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
   final AbstractNotesDataBase abstractNotesDataBase;
-  AddListNotesBloc(this.abstractNotesDataBase)
+  AddListTodoBloc(this.abstractNotesDataBase)
       : super(const AddListTodoState()) {
-    on<AddListNotesEvent>((event, emit) async {
+    on<AddListTodoEvent>((event, emit) async {
       if (event is CreateTodoEvent) {
         await _createTodo(event, emit);
       } else if (event is CreateTodoListEvent) {

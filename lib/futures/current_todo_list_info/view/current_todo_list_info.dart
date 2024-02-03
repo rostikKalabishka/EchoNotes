@@ -63,6 +63,7 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
+            heroTag: 'add_todo_in_current_list',
           ),
           body: Stack(
             children: [
@@ -219,6 +220,7 @@ class AddTodo extends StatelessWidget {
                     hintText: 'Add note name',
                     textEditorController: addTodoController,
                     maxLines: 15,
+                    autofocus: true,
                   ),
                   const SizedBox(
                     height: 20,

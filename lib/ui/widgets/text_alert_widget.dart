@@ -39,6 +39,7 @@ Future openDialog<T>(
             maxLines: 1,
             mixLines: 1,
             textEditorController: controller,
+            autofocus: true,
           ),
         );
       },
