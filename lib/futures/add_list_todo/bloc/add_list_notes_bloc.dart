@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/todo.dart';
 import 'package:note_app/repository/model/todo_list.dart';
-import 'package:note_app/router/router.dart';
 
 part 'add_list_notes_event.dart';
 part 'add_list_notes_state.dart';
@@ -83,7 +82,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
     CreateTodoListEvent event,
     Emitter<AddListTodoState> emit,
   ) async {
-    final autoRouter = AutoRouter.of(event.context);
+    final autoRouter = event.context;
     try {
       final createDate = DateFormat('dd.MM.yyyy').format(DateTime.now());
       int count = 0;
@@ -119,9 +118,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
         updatedTodos.add(createdTodo);
       }
 
-      event.context.navigateNamedTo('/list_todo');
-      // autoRouter.root
-      //     .pushAndPopUntil(const ListTodoRoute(), predicate: (route) => false);
+      autoRouter.navigateNamedTo('/list_todo');
     } catch (e) {
       emit(state.copyWith(error: e));
     }

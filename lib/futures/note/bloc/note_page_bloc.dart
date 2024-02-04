@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/router/router.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../repository/model/model.dart';
 
@@ -34,12 +37,34 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     try {
       final ImagePicker imagePicker = ImagePicker();
       XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-      emit(state.copyWith(selectedImage: file!.path));
-      await abstractNotesDataBase
-          .updateNote(event.note.copyWith(imageUrl: file.path));
+
+      if (file != null) {
+        // Store the picked image in a persistent location
+        // You may want to use a different method to generate a new path
+        String newPath = await _storeImageInPersistentLocation(file);
+
+        emit(state.copyWith(selectedImage: newPath));
+        await abstractNotesDataBase
+            .updateNote(event.note.copyWith(imageUrl: newPath));
+      } else {
+        emit(state.copyWith(error: 'No image selected'));
+      }
     } catch (e) {
+      print('Error in _pickImage: $e');
       emit(state.copyWith(error: e));
     }
+  }
+
+  Future<String> _storeImageInPersistentLocation(XFile file) async {
+    // Use a method to copy the file to a more persistent location
+    // For example, the app's document directory
+    // You might need to import the 'path_provider' package for this
+    // Update the method accordingly based on your needs
+    // This is just a simple example
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    final newImagePath = '${appDocumentDir.path}/picked_image.jpg';
+    await File(file.path).copy(newImagePath);
+    return newImagePath;
   }
 
   Future<void> _changeNameNote(

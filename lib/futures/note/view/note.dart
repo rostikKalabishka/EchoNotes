@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -143,8 +145,8 @@ class _NotePageState extends State<NotePage> {
                                     ),
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
-                                        child:
-                                            Image.asset(state.selectedImage)),
+                                        child: Image.file(
+                                            File(state.selectedImage))),
                                   ),
                                 )
                               : const SizedBox.shrink()
