@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -39,13 +40,11 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
       XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
 
       if (file != null) {
-        // Store the picked image in a persistent location
-        // You may want to use a different method to generate a new path
-        String newPath = await _storeImageInPersistentLocation(file);
-
-        emit(state.copyWith(selectedImage: newPath));
+        //String newPath = await _storeImageInPersistentLocation(file);
+        String imgString = base64Encode(await file.readAsBytes());
+        emit(state.copyWith(selectedImage: imgString));
         await abstractNotesDataBase
-            .updateNote(event.note.copyWith(imageUrl: newPath));
+            .updateNote(event.note.copyWith(imageUrl: imgString));
       } else {
         emit(state.copyWith(error: 'No image selected'));
       }
@@ -56,11 +55,6 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   }
 
   Future<String> _storeImageInPersistentLocation(XFile file) async {
-    // Use a method to copy the file to a more persistent location
-    // For example, the app's document directory
-    // You might need to import the 'path_provider' package for this
-    // Update the method accordingly based on your needs
-    // This is just a simple example
     final appDocumentDir = await getApplicationDocumentsDirectory();
     final newImagePath = '${appDocumentDir.path}/picked_image.jpg';
     await File(file.path).copy(newImagePath);

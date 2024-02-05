@@ -1,13 +1,15 @@
 part of 'note_page_bloc.dart';
 
 class NotePageState extends Equatable {
-  const NotePageState(
-      {this.error = '',
-      this.createDate = '',
-      this.selectedImage = '',
-      this.voice = '',
-      this.description = '',
-      this.name = ''});
+  const NotePageState({
+    this.error = '',
+    this.createDate = '',
+    this.selectedImage = '',
+    this.voice = '',
+    this.description = '',
+    this.name = '',
+  });
+
   final Object error;
   final String selectedImage;
   final String voice;
