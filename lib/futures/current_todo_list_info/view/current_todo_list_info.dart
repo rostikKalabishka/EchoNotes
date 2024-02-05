@@ -10,8 +10,8 @@ import 'package:lottie/lottie.dart';
 
 import 'package:note_app/futures/current_todo_list_info/bloc/current_todo_list_info_bloc.dart';
 import 'package:note_app/repository/model/todo_list.dart';
-import 'package:note_app/ui/widgets/widget.dart';
-import 'package:note_app/utilities/utilities.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
+import 'package:note_app/core/utilities/utilities.dart';
 
 @RoutePage()
 class CurrentTodoListInfoPage extends StatefulWidget {
@@ -138,7 +138,10 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                                           ),
                                         ]),
                                     child: ListTile(
-                                      title: Text(todo.name),
+                                      title: Text(
+                                        todo.name,
+                                        style: theme.textTheme.labelMedium,
+                                      ),
                                       leading: Checkbox(
                                         value: todo.isDone,
                                         onChanged: (bool? value) {

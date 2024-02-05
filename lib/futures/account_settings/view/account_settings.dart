@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
-import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
 
 @RoutePage()
 class AccountSettingsPage extends StatefulWidget {

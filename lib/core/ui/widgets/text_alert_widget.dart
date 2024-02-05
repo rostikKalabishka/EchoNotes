@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:note_app/ui/widgets/custom_text_field.dart';
+import 'package:note_app/core/ui/widgets/custom_text_field.dart';
 
 Future openDialog<T>(
         {required BuildContext context,

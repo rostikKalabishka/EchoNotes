@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/ui/theme/const.dart';
+import 'package:note_app/core/ui/theme/const.dart';
 
 final ThemeData darkTheme = ThemeData(
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -18,6 +18,7 @@ final ThemeData darkTheme = ThemeData(
       errorStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
     ),
     appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.white),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: appBarColor,
@@ -44,13 +45,14 @@ final ThemeData lightTheme = ThemeData(
         foregroundColor: Colors.white),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: elevatedButton,
+        backgroundColor: elevatedButtonLight,
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
       errorStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
     ),
     appBarTheme: const AppBarTheme(
+        iconTheme: IconThemeData(color: Colors.white),
         foregroundColor: Colors.white,
         elevation: 0,
         backgroundColor: appBarColorLight,

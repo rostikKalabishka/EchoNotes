@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
-import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
 
 @RoutePage()
 class NotesPage extends StatefulWidget {

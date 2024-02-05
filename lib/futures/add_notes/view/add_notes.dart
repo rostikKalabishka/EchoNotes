@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/add_notes/bloc/add_notes_bloc.dart';
-import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
 
 @RoutePage()
 class AddNotesPage extends StatelessWidget {
@@ -89,12 +89,16 @@ class ButtonOptionCreateNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ElevatedButton(
+      //style: theme.s,
       onPressed: onPressed,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(buttonIcon),
+          Icon(
+            buttonIcon,
+            color: theme.iconTheme.color,
+          ),
           const SizedBox(
             width: 15,
           ),

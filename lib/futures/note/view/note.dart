@@ -6,8 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 import 'package:note_app/repository/model/model.dart';
-import 'package:note_app/ui/widgets/widget.dart';
-import 'package:note_app/utilities/utilities.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
+import 'package:note_app/core/utilities/utilities.dart';
 
 @RoutePage()
 class NotePage extends StatefulWidget {

@@ -3,9 +3,10 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
-import 'package:note_app/router/router.dart';
-import 'package:note_app/utilities/utilities.dart';
+
+import 'package:note_app/core/utilities/utilities.dart';
 
 import '../../../repository/model/model.dart';
 

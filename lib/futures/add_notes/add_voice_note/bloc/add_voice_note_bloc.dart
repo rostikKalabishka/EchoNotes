@@ -8,10 +8,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/note.dart';
-import 'package:note_app/router/router.dart';
-import 'package:note_app/utilities/utilities.dart';
+
+import 'package:note_app/core/utilities/utilities.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 part 'add_voice_note_event.dart';

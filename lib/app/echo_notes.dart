@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:note_app/core/router/router.dart';
 import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
 
 import 'package:note_app/futures/add_list_todo/bloc/add_list_notes_bloc.dart';
@@ -15,8 +16,8 @@ import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/shared_pref_theme/abstract_shared_pref_theme.dart';
-import 'package:note_app/router/router.dart';
-import 'package:note_app/ui/theme/theme.dart';
+
+import 'package:note_app/core/ui/theme/theme.dart';
 
 import '../futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
 
@@ -38,9 +39,10 @@ class _EchoNotesState extends State<EchoNotes> {
       AddDefaultNoteBloc(GetIt.I<AbstractNotesDataBase>());
   final _notePageBloc = NotePageBloc(GetIt.I<AbstractNotesDataBase>());
   final _addVoiceNoteBloc = AddVoiceNoteBloc(GetIt.I<AbstractNotesDataBase>());
-  final _listNotesBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
+
   final _addListNotesBloc = AddListTodoBloc(GetIt.I<AbstractNotesDataBase>());
-  final _listTodoBloc = ListTodoBloc(GetIt.I<AbstractNotesDataBase>());
+  final _listTodoBloc = ListTodoBloc(
+      GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractSharedPrefTheme>());
   final _currentTodoListInfoBloc =
       CurrentTodoListInfoBloc(GetIt.I<AbstractNotesDataBase>());
 
@@ -62,7 +64,6 @@ class _EchoNotesState extends State<EchoNotes> {
           create: (_) => _addVoiceNoteBloc,
           child: const AddVoiceNotePage(),
         ),
-        BlocProvider(create: (_) => _listNotesBloc),
         BlocProvider(
           create: (_) => _addListNotesBloc,
           child: const AddListTodoPage(),

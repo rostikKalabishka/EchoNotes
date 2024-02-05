@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:note_app/futures/add_list_todo/bloc/add_list_notes_bloc.dart';
 
-import 'package:note_app/ui/widgets/widget.dart';
-import 'package:note_app/utilities/utilities.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
+import 'package:note_app/core/utilities/utilities.dart';
 
 @RoutePage()
 class AddListTodoPage extends StatefulWidget {
@@ -103,7 +103,10 @@ class _AddListTodoPageState extends State<AddListTodoPage> {
                                 child: CustomBoxShadowContainer(
                                   cardColor: theme.cardColor,
                                   cardInfo: ListTile(
-                                    title: Text(todo.name),
+                                    title: Text(
+                                      todo.name,
+                                      style: theme.textTheme.labelMedium,
+                                    ),
                                     leading: Checkbox(
                                       value: todo.isDone,
                                       onChanged: (bool? value) {
@@ -225,68 +228,69 @@ class ChangeFolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Menu',
-              style: theme.textTheme.labelLarge,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(187, 191, 179, 4),
-                onTap: () {
-                  openDialog(
-                      validator: (val) => utilities.textFieldValidator(val!),
-                      context: context,
-                      state: AddListTodoBloc,
-                      controller: controller,
-                      saveName: () {
-                        context
-                            .read<AddListTodoBloc>()
-                            .add(SaveNameTodoListEvent(name: controller.text));
-                      });
-                },
-                iconColor: Colors.yellow,
-                icon: Icons.edit_outlined,
-                text: 'Change note name',
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
               ),
-              const SizedBox(
-                height: 10,
+              Text(
+                'Menu',
+                style: theme.textTheme.labelLarge,
               ),
-              ButtonInBottomSheet(
-                backgroundColor: const Color.fromARGB(255, 15, 68, 17),
-                onTap: () {
-                  context.read<AddListTodoBloc>().add(CreateTodoListEvent(
-                      name: todoListName, context: context));
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
                 },
-                iconColor: const Color.fromARGB(255, 81, 255, 87),
-                icon: Icons.save,
-                text: 'Save todo list',
+                icon: const Icon(Icons.close),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Column(
+              children: [
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(187, 191, 179, 4),
+                  onTap: () {
+                    openDialog(
+                        validator: (val) => utilities.textFieldValidator(val!),
+                        context: context,
+                        state: AddListTodoBloc,
+                        controller: controller,
+                        saveName: () {
+                          context.read<AddListTodoBloc>().add(
+                              SaveNameTodoListEvent(name: controller.text));
+                        });
+                  },
+                  iconColor: Colors.yellow,
+                  icon: Icons.edit_outlined,
+                  text: 'Change note name',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(255, 15, 68, 17),
+                  onTap: () {
+                    context.read<AddListTodoBloc>().add(CreateTodoListEvent(
+                        name: todoListName, context: context));
+                  },
+                  iconColor: const Color.fromARGB(255, 81, 255, 87),
+                  icon: Icons.save,
+                  text: 'Save todo list',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

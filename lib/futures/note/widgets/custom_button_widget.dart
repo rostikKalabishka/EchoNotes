@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/ui/widgets/custom_box_shadow_container_widget.dart';
+import 'package:note_app/core/ui/widgets/custom_box_shadow_container_widget.dart';
 
 class CustomButtonWidget extends StatelessWidget {
   const CustomButtonWidget({

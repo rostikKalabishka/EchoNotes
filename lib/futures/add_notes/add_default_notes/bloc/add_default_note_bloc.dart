@@ -5,9 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/note.dart';
-import 'package:note_app/router/router.dart';
 
 part 'add_default_note_event.dart';
 part 'add_default_note_state.dart';

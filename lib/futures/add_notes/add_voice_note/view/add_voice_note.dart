@@ -7,8 +7,8 @@ import 'package:lottie/lottie.dart';
 import 'package:note_app/futures/add_notes/add_voice_note/bloc/add_voice_note_bloc.dart';
 import 'package:note_app/futures/note/widgets/custom_button_widget.dart';
 
-import 'package:note_app/ui/widgets/widget.dart';
-import 'package:note_app/utilities/utilities.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
+import 'package:note_app/core/utilities/utilities.dart';
 
 @RoutePage()
 class AddVoiceNotePage extends StatefulWidget {

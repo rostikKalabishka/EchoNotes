@@ -58,13 +58,13 @@ class AccountSettingsBloc
               ? ThemeMode.dark
               : ThemeMode.light;
 
-      if (await abstractSharedPrefTheme.getThemeData() == null) {
-        await abstractSharedPrefTheme.setThemeData(
-            switchBool: systemTheme == ThemeMode.dark);
-
+      if (await abstractSharedPrefTheme.getThemeData() != null) {
         final bool? boolSwitch = await abstractSharedPrefTheme.getThemeData();
         emit(state.copyWith(switchBoolTheme: boolSwitch));
       } else {
+        await abstractSharedPrefTheme.setThemeData(
+            switchBool: systemTheme == ThemeMode.dark);
+
         final bool? boolSwitch = await abstractSharedPrefTheme.getThemeData();
         emit(state.copyWith(switchBoolTheme: boolSwitch));
       }

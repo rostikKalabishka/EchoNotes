@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 import 'package:note_app/repository/model/todo_list.dart';
 
-import 'package:note_app/ui/widgets/widget.dart';
-import 'package:note_app/utilities/utilities.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
+import 'package:note_app/core/utilities/utilities.dart';
 
 @RoutePage()
 class ListTodoPage extends StatefulWidget {
@@ -68,6 +68,7 @@ class _ListTodoPageState extends State<ListTodoPage> {
                                   context: context, todoList: todoList));
                         },
                         cardInfo: CardInfoWidget(
+                          systemTheme: state.currentTheme,
                           todoList: todoList,
                           utilities: utilities,
                           controller: changeNameController,
@@ -129,13 +130,14 @@ class CardInfoWidget extends StatelessWidget {
   final Utilities utilities;
   final TextEditingController controller;
   final int index;
-
+  final bool systemTheme;
   const CardInfoWidget({
     Key? key,
     required this.todoList,
     required this.utilities,
     required this.controller,
     required this.index,
+    required this.systemTheme,
   }) : super(key: key);
 
   @override
@@ -161,16 +163,26 @@ class CardInfoWidget extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Colors.deepPurple,
-                        Colors.pink,
-                        Colors.pinkAccent,
-                        Colors.purple
-                      ],
-                    ),
+                    gradient: systemTheme
+                        ? const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Colors.deepPurple,
+                              Colors.pink,
+                              Colors.pinkAccent,
+                              Colors.purple
+                            ],
+                          )
+                        : const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              Color.fromARGB(255, 43, 42, 42),
+                              Color.fromARGB(255, 103, 103, 103),
+                              Color.fromARGB(255, 222, 218, 218)
+                            ],
+                          ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -195,7 +207,6 @@ class CardInfoWidget extends StatelessWidget {
                     icon: const Icon(Icons.more_vert))
               ],
             ),
-
             Text(
               todoList.name,
               style: theme.textTheme.labelLarge,
@@ -218,31 +229,6 @@ class CardInfoWidget extends StatelessWidget {
             SizedBox(
               height: size.width * 0.01,
             ),
-            // if (widget.taskCount > 0) // Check if there are tasks
-            //   Expanded(
-            //     child: ListView.builder(
-            //       itemCount: widget.taskCount,
-            //       itemBuilder: (context, index) {
-            //         return CheckboxListTile(
-            //           title: Text(
-            //             'Task $index',
-            //             style: theme.textTheme.labelSmall,
-            //           ),
-            //           value: taskCheckList[index],
-            //           onChanged: (bool? value) {
-            //             setState(() {
-            //               taskCheckList[index] = value!;
-            //             });
-            //           },
-            //         );
-            //       },
-            //     ),
-            //   ),
-            // if (widget.taskCount == 0)
-            //   Text(
-            //     'No tasks available',
-            //     style: theme.textTheme.labelSmall,
-            //   ),
           ],
         ),
       ),

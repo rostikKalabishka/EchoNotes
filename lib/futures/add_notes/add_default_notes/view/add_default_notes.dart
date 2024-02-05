@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:note_app/futures/add_notes/add_default_notes/bloc/add_default_note_bloc.dart';
-import 'package:note_app/ui/widgets/widget.dart';
+import 'package:note_app/core/ui/widgets/widget.dart';
 
-import '../../../../utilities/utilities.dart';
+import '../../../../core/utilities/utilities.dart';
 
 @RoutePage()
 class AddDefaultNotesPage extends StatefulWidget {
@@ -22,6 +22,7 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<AddDefaultNoteBloc, AddDefaultNoteState>(
       builder: (context, state) {
         return Scaffold(
@@ -41,7 +42,10 @@ class _AddDefaultNotesPageState extends State<AddDefaultNotesPage> {
                             );
                       }
                     },
-                    child: const Icon(FontAwesomeIcons.plus),
+                    child: Icon(
+                      FontAwesomeIcons.plus,
+                      color: theme.iconTheme.color,
+                    ),
                   )
                 ],
               ),

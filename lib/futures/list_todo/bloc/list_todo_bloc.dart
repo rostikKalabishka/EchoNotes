@@ -3,16 +3,19 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/todo_list.dart';
-import 'package:note_app/router/router.dart';
+import 'package:note_app/repository/shared_pref_theme/abstract_shared_pref_theme.dart';
 
 part 'list_todo_event.dart';
 part 'list_todo_state.dart';
 
 class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
   final AbstractNotesDataBase abstractNotesDataBase;
-  ListTodoBloc(this.abstractNotesDataBase) : super(const ListTodoState()) {
+  final AbstractSharedPrefTheme abstractSharedPrefTheme;
+  ListTodoBloc(this.abstractNotesDataBase, this.abstractSharedPrefTheme)
+      : super(const ListTodoState()) {
     on<ListTodoListEvent>((event, emit) async {
       if (event is NavigateToAddTodoNotesEvent) {
         _navigateToAddNotesPage(event, emit);
@@ -51,7 +54,11 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
     try {
       final List<TodoList> todoList =
           await abstractNotesDataBase.readAllTodoList();
-      emit(state.copyWith(isLoading: false, todoList: todoList));
+      final bool? currentTheme = await abstractSharedPrefTheme.getThemeData();
+      if (currentTheme != null) {
+        emit(state.copyWith(
+            isLoading: false, todoList: todoList, currentTheme: currentTheme));
+      }
     } catch (e) {
       print(e);
       emit(state.copyWith(isLoading: false, error: e));
