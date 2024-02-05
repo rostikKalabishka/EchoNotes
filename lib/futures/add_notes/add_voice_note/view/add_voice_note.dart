@@ -153,7 +153,8 @@ class _AddVoiceNotePageState extends State<AddVoiceNotePage> {
                                     ),
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
-                                        child: Image.asset(state.imageUrl)),
+                                        child: utilities.imageFromBase64String(
+                                            state.imageUrl)),
                                   ),
                                 )
                               : const SizedBox.shrink()

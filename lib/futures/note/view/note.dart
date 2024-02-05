@@ -145,9 +145,8 @@ class _NotePageState extends State<NotePage> {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20),
-                                      child: Image.memory(
-                                        base64Decode(state.selectedImage),
-                                      ),
+                                      child: utilities.imageFromBase64String(
+                                          state.selectedImage),
                                     ),
                                   ),
                                 )

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/note.dart';
 import 'package:note_app/router/router.dart';
+import 'package:note_app/utilities/utilities.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 part 'add_voice_note_event.dart';
@@ -19,6 +20,7 @@ part 'add_voice_note_state.dart';
 class AddVoiceNoteBloc extends Bloc<AddVoiceNoteEvent, AddVoiceNoteState> {
   final AbstractNotesDataBase abstractNotesDataBase;
   final speech = stt.SpeechToText();
+  final utilities = Utilities();
   String description = '';
   AddVoiceNoteBloc(this.abstractNotesDataBase)
       : super(const AddVoiceNoteState()) {
@@ -95,7 +97,12 @@ class AddVoiceNoteBloc extends Bloc<AddVoiceNoteEvent, AddVoiceNoteState> {
     try {
       final ImagePicker imagePicker = ImagePicker();
       XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
-      emit(state.copyWith(imageUrl: file!.path));
+      if (file != null) {
+        String imgString = utilities.base64String(await file.readAsBytes());
+        emit(state.copyWith(imageUrl: imgString));
+      } else {
+        emit(state.copyWith(error: 'No image selected'));
+      }
     } catch (e) {
       emit(state.copyWith(error: e));
     }

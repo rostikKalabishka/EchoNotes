@@ -55,11 +55,7 @@ class CurrentTodoListInfoBloc
 
       emit(state.copyWith(todo: updatedList));
 
-      int doneCount = updatedList.where((todo) => todo.isDone).length;
-      double percentage = (doneCount / updatedList.length) * 100;
-
-      await abstractNotesDataBase.updateTodoList(
-          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)));
+      await _updatePercentage(updatedList, event.todoList);
 
       autoRouter.pop();
     } catch (e) {
@@ -79,12 +75,7 @@ class CurrentTodoListInfoBloc
         await abstractNotesDataBase.updateTodo(updatedTodo);
         emit(state.copyWith(todo: updatedTodoList));
 
-        int doneCount = updatedTodoList.where((todo) => todo.isDone).length;
-        double percentage = (doneCount / updatedTodoList.length) * 100;
-
-        await abstractNotesDataBase.updateTodoList(
-          event.todoList.copyWith(percentage: percentage.toStringAsFixed(0)),
-        );
+        await _updatePercentage(updatedTodoList, event.todoList);
       } else {
         emit(state.copyWith(error: 'Todo or its properties are null.'));
       }
@@ -126,9 +117,20 @@ class CurrentTodoListInfoBloc
         ..removeAt(event.index);
       emit(state.copyWith(todo: updatedTodoList));
       await abstractNotesDataBase.deleteTodo(deleteTodo);
+      await _updatePercentage(updatedTodoList, event.todoList);
     } catch (e) {
       emit(state.copyWith(error: e));
     }
+  }
+
+  Future<void> _updatePercentage(
+      List<Todo> updatedTodoList, TodoList todoList) async {
+    int doneCount = updatedTodoList.where((todo) => todo.isDone).length;
+    double percentage = (doneCount / updatedTodoList.length) * 100;
+
+    await abstractNotesDataBase.updateTodoList(
+      todoList.copyWith(percentage: percentage.toStringAsFixed(0)),
+    );
   }
 
   Future<void> _deleteCurrentTodoList(DeleteCurrentTodoListEvent event,

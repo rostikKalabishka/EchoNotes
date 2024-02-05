@@ -74,9 +74,13 @@ class DeleteTodoEvent extends CurrentTodoListInfoEvent {
   final Todo todo;
   final int index;
   final BuildContext context;
+  final TodoList todoList;
 
   const DeleteTodoEvent(
-      {required this.todo, required this.context, required this.index});
+      {required this.todo,
+      required this.context,
+      required this.index,
+      required this.todoList});
   @override
   List<Object> get props => super.props..addAll([todo, context, index]);
 }

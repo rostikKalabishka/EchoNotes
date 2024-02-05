@@ -125,7 +125,9 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                                                   .add(DeleteTodoEvent(
                                                       context: context,
                                                       index: index,
-                                                      todo: todo));
+                                                      todo: todo,
+                                                      todoList:
+                                                          widget.todoList));
                                             },
                                             backgroundColor:
                                                 const Color(0xFFFE4A49),

@@ -19,52 +19,66 @@ import 'package:note_app/repository/model/todo_list.dart';
 
 part 'router.gr.dart';
 
+class AppRouterPath {
+  static String homeRoutePath = '/';
+  static String notesRoutePath = 'notes';
+  static String listTodoRoutePath = 'list_todo';
+  static String accountSettingsRoutePath = 'account_settings';
+  static String noteRoutePath = '/notes/note';
+  static String addNotesRoutePath = '/notes/add_notes';
+  static String addVoiceNoteRoutePath = '/notes/add_notes/add_voice_note';
+  static String addDefaultNotesRoutePath = '/notes/add_notes/add_default_note';
+  static String addListTodoRoutePath = '/list_todo/add_list_notes';
+  static String currentTodoListInfoRoutePath =
+      '/list_todo/current_todo_list_info_route';
+}
+
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         CustomRoute(
             page: HomeRoute.page,
-            path: '/',
+            path: AppRouterPath.homeRoutePath,
             initial: true,
             durationInMilliseconds: 0,
             children: [
               CustomRoute(
                   page: NotesRoute.page,
-                  path: 'notes',
+                  path: AppRouterPath.notesRoutePath,
                   durationInMilliseconds: 0),
               CustomRoute(
                   page: ListTodoRoute.page,
-                  path: 'list_todo',
+                  path: AppRouterPath.listTodoRoutePath,
                   durationInMilliseconds: 0),
               CustomRoute(
                   page: AccountSettingsRoute.page,
-                  path: 'account_settings',
+                  path: AppRouterPath.accountSettingsRoutePath,
                   durationInMilliseconds: 0),
             ]),
         CustomRoute(
             page: NoteRoute.page,
-            path: '/notes/note',
+            path: AppRouterPath.noteRoutePath,
             durationInMilliseconds: 0),
         CustomRoute(
             page: AddNotesRoute.page,
-            path: '/notes/add_notes',
+            path: AppRouterPath.addNotesRoutePath,
             durationInMilliseconds: 0),
         CustomRoute(
             page: AddVoiceNoteRoute.page,
-            path: '/notes/add_notes/add_voice_note',
+            path: AppRouterPath.addVoiceNoteRoutePath,
             durationInMilliseconds: 0),
         CustomRoute(
             page: AddDefaultNotesRoute.page,
-            path: '/notes/add_notes/add_default_note',
+            path: AppRouterPath.addDefaultNotesRoutePath,
             durationInMilliseconds: 0),
         CustomRoute(
             page: AddListTodoRoute.page,
-            path: '/list_todo/add_list_notes',
+            path: AppRouterPath.addListTodoRoutePath,
             durationInMilliseconds: 0),
         CustomRoute(
             page: CurrentTodoListInfoRoute.page,
-            path: '/list_todo/current_todo_list_info_route',
+            path: AppRouterPath.currentTodoListInfoRoutePath,
             durationInMilliseconds: 0),
       ];
 }

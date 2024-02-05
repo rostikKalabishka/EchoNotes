@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -8,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/router/router.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:note_app/utilities/utilities.dart';
 
 import '../../../repository/model/model.dart';
 
@@ -17,6 +14,7 @@ part 'note_page_state.dart';
 
 class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   final AbstractNotesDataBase abstractNotesDataBase;
+  final utilities = Utilities();
   NotePageBloc(this.abstractNotesDataBase) : super(const NotePageState()) {
     on<NotePageEvent>((event, emit) async {
       if (event is ImagePickerEvent) {
@@ -40,8 +38,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
       XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
 
       if (file != null) {
-        //String newPath = await _storeImageInPersistentLocation(file);
-        String imgString = base64Encode(await file.readAsBytes());
+        String imgString = utilities.base64String(await file.readAsBytes());
         emit(state.copyWith(selectedImage: imgString));
         await abstractNotesDataBase
             .updateNote(event.note.copyWith(imageUrl: imgString));
@@ -49,16 +46,8 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
         emit(state.copyWith(error: 'No image selected'));
       }
     } catch (e) {
-      print('Error in _pickImage: $e');
       emit(state.copyWith(error: e));
     }
-  }
-
-  Future<String> _storeImageInPersistentLocation(XFile file) async {
-    final appDocumentDir = await getApplicationDocumentsDirectory();
-    final newImagePath = '${appDocumentDir.path}/picked_image.jpg';
-    await File(file.path).copy(newImagePath);
-    return newImagePath;
   }
 
   Future<void> _changeNameNote(
