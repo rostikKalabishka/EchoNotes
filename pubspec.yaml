@@ -30,6 +30,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   avatar_glow: ^3.0.1
   flutter_slidable: ^3.0.1
+  shared_preferences: ^2.2.2
 
   lottie: ^3.0.0
 

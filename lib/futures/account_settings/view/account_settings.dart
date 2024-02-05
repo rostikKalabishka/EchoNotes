@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:note_app/futures/account_settings/bloc/account_settings_bloc.dart';
 import 'package:note_app/ui/widgets/widget.dart';
 
 @RoutePage()
@@ -14,58 +16,51 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          const SliverAppBar(
-            title: Text('EchoNotes'),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-              child: Text(
-                'Settings',
-                style: theme.textTheme.labelLarge,
+    return BlocBuilder<AccountSettingsBloc, AccountSettingsState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              const SliverAppBar(
+                title: Text('EchoNotes'),
               ),
-            ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                  child: Text(
+                    'Settings',
+                    style: theme.textTheme.labelLarge,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: ColumnSettings(
+                  state: state,
+                ),
+              )
+            ],
           ),
-          const SliverToBoxAdapter(
-            child: ColumnSettings(),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-class ColumnSettings extends StatefulWidget {
-  const ColumnSettings({super.key});
+class ColumnSettings extends StatelessWidget {
+  const ColumnSettings({super.key, required this.state});
+  final AccountSettingsState state;
 
-  @override
-  State<ColumnSettings> createState() => _ColumnSettingsState();
-}
-
-class _ColumnSettingsState extends State<ColumnSettings> {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(12.0),
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SettingsInfoWidget(),
-          SizedBox(
-            height: 20,
+          SettingsInfoWidget(
+            state: state,
           ),
-          SettingsInfoWidget(),
-          SizedBox(
-            height: 20,
-          ),
-          SettingsInfoWidget(),
-          SizedBox(
-            height: 20,
-          ),
-          SettingsInfoWidget()
         ],
       ),
     );
@@ -75,14 +70,14 @@ class _ColumnSettingsState extends State<ColumnSettings> {
 class SettingsInfoWidget extends StatefulWidget {
   const SettingsInfoWidget({
     super.key,
+    required this.state,
   });
-
+  final AccountSettingsState state;
   @override
   State<SettingsInfoWidget> createState() => _SettingsInfoWidgetState();
 }
 
 class _SettingsInfoWidgetState extends State<SettingsInfoWidget> {
-  bool switchValue = true;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -100,10 +95,15 @@ class _SettingsInfoWidgetState extends State<SettingsInfoWidget> {
             Transform.scale(
               scale: 0.8,
               child: Switch.adaptive(
-                  value: switchValue,
+                  value: widget.state.switchBoolTheme,
                   onChanged: (value) {
-                    switchValue = value;
-                    setState(() {});
+                    value
+                        ? context
+                            .read<AccountSettingsBloc>()
+                            .add(SwitchThemeOnEvent())
+                        : context
+                            .read<AccountSettingsBloc>()
+                            .add(SwitchThemeOffEvent());
                   }),
             )
           ],

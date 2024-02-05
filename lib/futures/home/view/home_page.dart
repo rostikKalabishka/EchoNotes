@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: PageView(
         controller: _pageController,
@@ -45,6 +46,8 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       bottomNavigationBar: GNav(
+        backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
+            theme.scaffoldBackgroundColor,
         gap: 8,
         onTabChange: (index) {
           _pageController.animateToPage(index,
@@ -53,17 +56,17 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: _indexPage,
         tabs: const [
           GButton(
-            icon: FontAwesomeIcons.noteSticky,
-            text: 'Notes',
-          ),
+              icon: FontAwesomeIcons.noteSticky,
+              text: 'Notes',
+              textColor: Colors.white),
           GButton(
-            icon: FontAwesomeIcons.listCheck,
-            text: 'List',
-          ),
+              icon: FontAwesomeIcons.listCheck,
+              text: 'List',
+              textColor: Colors.white),
           GButton(
-            icon: FontAwesomeIcons.user,
-            text: 'Account',
-          ),
+              icon: FontAwesomeIcons.user,
+              text: 'Account',
+              textColor: Colors.white),
         ],
       ),
     );
