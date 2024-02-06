@@ -30,6 +30,7 @@ class CustomTextField extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TextFormField(
+            style: theme.inputDecorationTheme.hintStyle,
             autofocus: autofocus,
             validator: validator,
             minLines: mixLines,
@@ -37,6 +38,7 @@ class CustomTextField extends StatelessWidget {
             decoration: InputDecoration(
               errorStyle: theme.inputDecorationTheme.errorStyle,
               hintText: hintText,
+              hintStyle: theme.inputDecorationTheme.hintStyle,
               border: InputBorder.none,
             ),
             controller: textEditorController,

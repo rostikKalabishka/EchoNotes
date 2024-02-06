@@ -283,7 +283,7 @@ class MenuWidget extends StatelessWidget {
                               .add(RemoveProtectedEvent(note: note));
                     },
                     iconColor: Colors.blue,
-                    icon: FontAwesomeIcons.faceDizzy,
+                    icon: FontAwesomeIcons.lock,
                     text: protected == false
                         ? 'Add protection'
                         : 'Remove protection',
@@ -379,11 +379,10 @@ class AddNode extends StatelessWidget {
                                     context: context,
                                     note: note),
                               );
-                          addTodoController.clear();
                         }
                       },
                       child: Text(
-                        'add todo',
+                        'Add changes',
                         style: theme.textTheme.labelLarge,
                       ))
                 ],

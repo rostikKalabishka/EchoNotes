@@ -95,7 +95,10 @@ class _ListTodoPageState extends State<ListTodoPage> {
                                               context: context,
                                               todoList: todoList));
                                     },
-                                    theChild: const Icon(Icons.security))
+                                    theChild: const Icon(
+                                      FontAwesomeIcons.lock,
+                                      color: Color.fromARGB(255, 3, 20, 248),
+                                    ))
                               ],
                             ),
                     );

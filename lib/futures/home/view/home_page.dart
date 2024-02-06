@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:note_app/futures/account_settings/view/account_settings.dart';
 
-import 'package:note_app/futures/list_todo/view/list_notes.dart';
+import 'package:note_app/futures/list_todo/view/list_todo.dart';
 
 import 'package:note_app/futures/notes/view/notes.dart';
 

@@ -77,7 +77,7 @@ class _NotesPageState extends State<NotesPage> {
                                 ),
                                 BlurBox(
                                   theChild: const Icon(
-                                    Icons.security,
+                                    FontAwesomeIcons.lock,
                                     color: Color.fromARGB(255, 3, 20, 248),
                                   ),
                                   onTap: () {

@@ -174,12 +174,11 @@ class CurrentTodoListInfoBloc
 
   Future<void> _deleteCurrentTodoList(DeleteCurrentTodoListEvent event,
       Emitter<CurrentTodoListInfoState> emit) async {
-    final autoRouter = AutoRouter.of(event.context);
+    final autoRouter = event.context;
 
     try {
       await abstractNotesDataBase.deleteTodoList(event.todo);
-      autoRouter.pushAndPopUntil(const ListTodoRoute(),
-          predicate: (route) => false);
+      autoRouter.navigateNamedTo('/${AppRouterPath.listTodoRoutePath}');
     } catch (e) {
       emit(state.copyWith(error: e));
     }

@@ -15,6 +15,7 @@ final ThemeData darkTheme = ThemeData(
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
+      hintStyle: TextStyle(color: Colors.white),
       errorStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
     ),
     appBarTheme: const AppBarTheme(
@@ -49,6 +50,9 @@ final ThemeData lightTheme = ThemeData(
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
+      hintStyle: TextStyle(
+        color: Colors.white,
+      ),
       errorStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
     ),
     appBarTheme: const AppBarTheme(

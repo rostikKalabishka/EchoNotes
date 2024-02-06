@@ -335,7 +335,7 @@ class ChangeFolder extends StatelessWidget {
                             .add(RemoveProtectedEvent(todo: todoList));
                   },
                   iconColor: Colors.blue,
-                  icon: FontAwesomeIcons.faceDizzy,
+                  icon: FontAwesomeIcons.lock,
                   text: protected == false
                       ? 'Add protection'
                       : 'Remove protection',

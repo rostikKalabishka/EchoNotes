@@ -91,7 +91,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
       int doneCount = state.todo.where((todo) => todo.isDone).length;
       String percentage;
       if (state.todo.isNotEmpty) {
-        percentage = ((doneCount / state.todo.length) * 100).toString();
+        percentage = ((doneCount / state.todo.length) * 100).toStringAsFixed(0);
       } else {
         percentage = 0.toString();
       }

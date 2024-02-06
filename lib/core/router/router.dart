@@ -9,7 +9,7 @@ import 'package:note_app/futures/add_notes/add_voice_note/add_voice_note.dart';
 import 'package:note_app/futures/current_todo_list_info/view/current_todo_list_info.dart';
 
 import 'package:note_app/futures/home/home.dart';
-import 'package:note_app/futures/list_todo/view/list_notes.dart';
+import 'package:note_app/futures/list_todo/view/list_todo.dart';
 
 import 'package:note_app/futures/note/note.dart';
 import 'package:note_app/futures/notes/notes.dart';
