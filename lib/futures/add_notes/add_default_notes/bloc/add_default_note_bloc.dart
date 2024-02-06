@@ -38,7 +38,8 @@ class AddDefaultNoteBloc
           createDate: createDate,
           imageUrl: '',
           isImportant: false,
-          isDone: false);
+          isDone: false,
+          protected: false);
 
       await abstractNotesDataBase.createNotes(note);
       emit(state);

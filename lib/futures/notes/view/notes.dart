@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:note_app/core/ui/widgets/blur_container_widget.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/core/ui/widgets/widget.dart';
 
@@ -50,21 +51,43 @@ class _NotesPageState extends State<NotesPage> {
                 children: List.generate(state.noteList.length, (index) {
                   final notes = state.noteList[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    child: ClickedCardWidget(
-                      colorsCard: theme.cardColor,
-                      cardInfo: CardInfoWidget(
-                          name: notes.name,
-                          description: notes.description,
-                          dateTime: notes.createDate.toString()),
-                      onTap: () {
-                        context
-                            .read<NotesBloc>()
-                            .add(OpenNotesEvent(context: context, note: notes));
-                      },
-                    ),
-                  );
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      child: notes.protected == false
+                          ? ClickedCardWidget(
+                              colorsCard: theme.cardColor,
+                              cardInfo: CardInfoWidget(
+                                  name: notes.name,
+                                  description: notes.description,
+                                  dateTime: notes.createDate.toString()),
+                              onTap: () {
+                                context.read<NotesBloc>().add(OpenNotesEvent(
+                                    context: context, note: notes));
+                              },
+                            )
+                          : Stack(
+                              children: [
+                                ClickedCardWidget(
+                                  colorsCard: theme.cardColor,
+                                  cardInfo: CardInfoWidget(
+                                    name: notes.name,
+                                    description: notes.description,
+                                    dateTime: notes.createDate.toString(),
+                                  ),
+                                ),
+                                BlurBox(
+                                  theChild: const Icon(
+                                    Icons.security,
+                                    color: Color.fromARGB(255, 3, 20, 248),
+                                  ),
+                                  onTap: () {
+                                    context.read<NotesBloc>().add(
+                                        OpenNotesEvent(
+                                            context: context, note: notes));
+                                  },
+                                ),
+                              ],
+                            ));
                 }),
               ),
             ],

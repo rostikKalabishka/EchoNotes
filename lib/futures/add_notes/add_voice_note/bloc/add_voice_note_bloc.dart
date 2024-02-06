@@ -77,7 +77,8 @@ class AddVoiceNoteBloc extends Bloc<AddVoiceNoteEvent, AddVoiceNoteState> {
           createDate: createDate,
           imageUrl: state.imageUrl,
           isImportant: false,
-          isDone: false);
+          isDone: false,
+          protected: false);
 
       if (state.description.isNotEmpty) {
         await abstractNotesDataBase.createNotes(note);

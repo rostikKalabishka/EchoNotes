@@ -78,6 +78,7 @@ class _CurrentTodoListInfoState extends State<CurrentTodoListInfoPage> {
                               context: context,
                               modalHeight: modalHeight,
                               child: ChangeFolder(
+                                protected: state.protected,
                                 todoListName: state.name,
                                 todoList: widget.todoList,
                                 utilities: utilities,
@@ -262,11 +263,13 @@ class ChangeFolder extends StatelessWidget {
       required this.todoListName,
       required this.todoList,
       required this.utilities,
-      required this.controller});
+      required this.controller,
+      this.protected});
   final String todoListName;
   final TodoList todoList;
   final Utilities utilities;
   final TextEditingController controller;
+  final bool? protected;
 
   @override
   Widget build(BuildContext context) {
@@ -316,6 +319,26 @@ class ChangeFolder extends StatelessWidget {
                   iconColor: Colors.yellow,
                   icon: Icons.edit_outlined,
                   text: 'Change note name',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ButtonInBottomSheet(
+                  backgroundColor: const Color.fromARGB(255, 6, 70, 246),
+                  onTap: () {
+                    protected == false
+                        ? context
+                            .read<CurrentTodoListInfoBloc>()
+                            .add(AddProtectedEvent(todo: todoList))
+                        : context
+                            .read<CurrentTodoListInfoBloc>()
+                            .add(RemoveProtectedEvent(todo: todoList));
+                  },
+                  iconColor: Colors.blue,
+                  icon: FontAwesomeIcons.faceDizzy,
+                  text: protected == false
+                      ? 'Add protection'
+                      : 'Remove protection',
                 ),
                 const SizedBox(
                   height: 10,

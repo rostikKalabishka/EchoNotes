@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:note_app/core/ui/widgets/blur_container_widget.dart';
 import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 import 'package:note_app/repository/model/todo_list.dart';
 
@@ -61,20 +62,42 @@ class _ListTodoPageState extends State<ListTodoPage> {
 
                     return Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: ClickedCardWidget(
-                        onTap: () {
-                          context.read<ListTodoBloc>().add(
-                              NavigateToCurrentTodoInfoListEvent(
-                                  context: context, todoList: todoList));
-                        },
-                        cardInfo: CardInfoWidget(
-                          systemTheme: state.currentTheme,
-                          todoList: todoList,
-                          utilities: utilities,
-                          controller: changeNameController,
-                          index: index,
-                        ),
-                      ),
+                      child: todoList.protected == false
+                          ? ClickedCardWidget(
+                              onTap: () {
+                                context.read<ListTodoBloc>().add(
+                                    NavigateToCurrentTodoInfoListEvent(
+                                        context: context, todoList: todoList));
+                              },
+                              cardInfo: CardInfoWidget(
+                                systemTheme: state.currentTheme,
+                                todoList: todoList,
+                                utilities: utilities,
+                                controller: changeNameController,
+                                index: index,
+                              ),
+                            )
+                          : Stack(
+                              children: [
+                                ClickedCardWidget(
+                                  cardInfo: CardInfoWidget(
+                                    systemTheme: state.currentTheme,
+                                    todoList: todoList,
+                                    utilities: utilities,
+                                    controller: changeNameController,
+                                    index: index,
+                                  ),
+                                ),
+                                BlurBox(
+                                    onTap: () {
+                                      context.read<ListTodoBloc>().add(
+                                          NavigateToCurrentTodoInfoListEvent(
+                                              context: context,
+                                              todoList: todoList));
+                                    },
+                                    theChild: const Icon(Icons.security))
+                              ],
+                            ),
                     );
                   },
                 ),
@@ -105,12 +128,12 @@ class MySliverGridDelegateWithMaxCrossAxisExtent
 }
 
 class ClickedCardWidget extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final CardInfoWidget cardInfo;
 
   const ClickedCardWidget({
     Key? key,
-    required this.onTap,
+    this.onTap,
     required this.cardInfo,
   }) : super(key: key);
 

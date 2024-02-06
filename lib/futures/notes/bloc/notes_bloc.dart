@@ -7,12 +7,16 @@ import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 import 'package:note_app/repository/model/model.dart';
 
+import '../../../repository/local_auth_repository/abstract_local_auth_repository.dart';
+
 part 'notes_event.dart';
 part 'notes_state.dart';
 
 class NotesBloc extends Bloc<NotesEvent, NotesState> {
   final AbstractNotesDataBase abstractNotesDataBase;
-  NotesBloc(this.abstractNotesDataBase) : super(const NotesState()) {
+  final AbstractLocalAuthRepository abstractLocalAuthRepository;
+  NotesBloc(this.abstractNotesDataBase, this.abstractLocalAuthRepository)
+      : super(const NotesState()) {
     on<NotesEvent>((event, emit) async {
       if (event is LoadNotesEvent) {
         await _loadNotes(event, emit);
@@ -41,11 +45,19 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
     autoRouter.push(AddNotesRoute());
   }
 
-  void _navigateToNotePage(OpenNotesEvent event, Emitter<NotesState> emit) {
+  void _navigateToNotePage(
+      OpenNotesEvent event, Emitter<NotesState> emit) async {
+    final autoRouter = AutoRouter.of(event.context);
     try {
-      final autoRouter = AutoRouter.of(event.context);
+      if (event.note.protected == false) {
+        autoRouter.push(NoteRoute(note: event.note));
+      }
 
-      autoRouter.push(NoteRoute(note: event.note));
+      if (event.note.protected == true) {
+        if (await abstractLocalAuthRepository.authenticate() == true) {
+          autoRouter.push(NoteRoute(note: event.note));
+        }
+      }
     } catch (e) {
       emit(state.copyWith(error: e));
     }

@@ -6,11 +6,11 @@ class ClickedCardWidget extends StatelessWidget {
   const ClickedCardWidget({
     super.key,
     required this.cardInfo,
-    required this.onTap,
+    this.onTap,
     required this.colorsCard,
   });
   final Widget cardInfo;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color colorsCard;
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,8 @@ class NoteFields {
     isDone,
     createDate,
     voiceNote,
-    createAt
+    createAt,
+    protected
   ];
 
   static const String id = '_id';
@@ -24,6 +25,7 @@ class NoteFields {
   static const String imageUrl = 'imageUrl';
   static const String voiceNote = 'voiceNote';
   static const String createAt = 'createAt';
+  static const String protected = 'protected';
 }
 
 class Note extends Equatable {
@@ -34,6 +36,7 @@ class Note extends Equatable {
   final String imageUrl;
   final bool isDone;
   final bool isImportant;
+  final bool protected;
   final String voiceNote;
   final DateTime createAt;
 
@@ -44,6 +47,7 @@ class Note extends Equatable {
       required this.description,
       required this.createDate,
       required this.imageUrl,
+      required this.protected,
       required this.createAt,
       required this.isImportant,
       required this.isDone});
@@ -55,6 +59,7 @@ class Note extends Equatable {
     String? createDate,
     bool? isDone,
     bool? isImportant,
+    bool? protected,
     String? voiceNote,
     String? imageUrl,
     DateTime? createAt,
@@ -68,7 +73,8 @@ class Note extends Equatable {
         imageUrl: imageUrl ?? this.imageUrl,
         createAt: createAt ?? this.createAt,
         isImportant: isImportant ?? this.isImportant,
-        voiceNote: voiceNote ?? this.voiceNote);
+        voiceNote: voiceNote ?? this.voiceNote,
+        protected: protected ?? this.protected);
   }
 
   factory Note.fromJson(Map<String, Object?> json) => Note(
@@ -80,7 +86,8 @@ class Note extends Equatable {
       imageUrl: json[NoteFields.imageUrl] as String,
       isDone: json[NoteFields.isDone] == 0,
       voiceNote: json[NoteFields.voiceNote] as String,
-      createAt: DateTime.parse(json[NoteFields.createAt] as String));
+      createAt: DateTime.parse(json[NoteFields.createAt] as String),
+      protected: json[NoteFields.protected] == 0);
 
   Map<String, Object?> toJson() => {
         NoteFields.id: id,
@@ -88,6 +95,7 @@ class Note extends Equatable {
         NoteFields.description: description,
         NoteFields.name: name,
         NoteFields.isDone: isDone ? 0 : 1,
+        NoteFields.protected: protected ? 0 : 1,
         NoteFields.isImportant: isImportant ? 1 : 0,
         NoteFields.voiceNote: voiceNote,
         NoteFields.imageUrl: imageUrl,
@@ -104,6 +112,7 @@ class Note extends Equatable {
         isImportant,
         voiceNote,
         imageUrl,
-        createAt
+        createAt,
+        protected
       ];
 }

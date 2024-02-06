@@ -15,6 +15,7 @@ import 'package:note_app/futures/list_todo/bloc/list_todo_bloc.dart';
 import 'package:note_app/futures/note/bloc/note_page_bloc.dart';
 import 'package:note_app/futures/notes/bloc/notes_bloc.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
+import 'package:note_app/repository/local_auth_repository/abstract_local_auth_repository.dart';
 import 'package:note_app/repository/shared_pref_theme/abstract_shared_pref_theme.dart';
 
 import 'package:note_app/core/ui/theme/theme.dart';
@@ -34,17 +35,21 @@ class _EchoNotesState extends State<EchoNotes> {
   final _appRouter = AppRouter();
   final _accountSettingsBloc = AccountSettingsBloc(
       GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractSharedPrefTheme>());
-  final _notesBloc = NotesBloc(GetIt.I<AbstractNotesDataBase>());
+  final _notesBloc = NotesBloc(
+      GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractLocalAuthRepository>());
   final _addDefaultNoteBloc =
       AddDefaultNoteBloc(GetIt.I<AbstractNotesDataBase>());
-  final _notePageBloc = NotePageBloc(GetIt.I<AbstractNotesDataBase>());
+  final _notePageBloc = NotePageBloc(
+      GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractLocalAuthRepository>());
   final _addVoiceNoteBloc = AddVoiceNoteBloc(GetIt.I<AbstractNotesDataBase>());
 
   final _addListNotesBloc = AddListTodoBloc(GetIt.I<AbstractNotesDataBase>());
   final _listTodoBloc = ListTodoBloc(
-      GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractSharedPrefTheme>());
-  final _currentTodoListInfoBloc =
-      CurrentTodoListInfoBloc(GetIt.I<AbstractNotesDataBase>());
+      GetIt.I<AbstractNotesDataBase>(),
+      GetIt.I<AbstractSharedPrefTheme>(),
+      GetIt.I<AbstractLocalAuthRepository>());
+  final _currentTodoListInfoBloc = CurrentTodoListInfoBloc(
+      GetIt.I<AbstractNotesDataBase>(), GetIt.I<AbstractLocalAuthRepository>());
 
   @override
   void initState() {

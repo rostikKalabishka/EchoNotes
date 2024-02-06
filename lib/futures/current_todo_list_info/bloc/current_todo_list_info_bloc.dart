@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
+import 'package:note_app/repository/local_auth_repository/abstract_local_auth_repository.dart';
 import 'package:note_app/repository/model/todo.dart';
 import 'package:note_app/repository/model/todo_list.dart';
 
@@ -14,7 +15,9 @@ part 'current_todo_list_info_state.dart';
 class CurrentTodoListInfoBloc
     extends Bloc<CurrentTodoListInfoEvent, CurrentTodoListInfoState> {
   final AbstractNotesDataBase abstractNotesDataBase;
-  CurrentTodoListInfoBloc(this.abstractNotesDataBase)
+  final AbstractLocalAuthRepository abstractLocalAuthRepository;
+  CurrentTodoListInfoBloc(
+      this.abstractNotesDataBase, this.abstractLocalAuthRepository)
       : super(const CurrentTodoListInfoState()) {
     on<CurrentTodoListInfoEvent>((event, emit) async {
       if (event is LoadTodoListEvent) {
@@ -29,8 +32,40 @@ class CurrentTodoListInfoBloc
         await _createTodo(event, emit);
       } else if (event is DeleteTodoEvent) {
         await _deleteTodo(event, emit);
+      } else if (event is AddProtectedEvent) {
+        await _addProtected(event, emit);
+      } else if (event is RemoveProtectedEvent) {
+        await _removeProtected(event, emit);
       }
     }, transformer: sequential());
+  }
+
+  Future<void> _addProtected(
+      AddProtectedEvent event, Emitter<CurrentTodoListInfoState> emit) async {
+    try {
+      final protected = await abstractLocalAuthRepository.authenticate();
+      if (protected) {
+        emit(state.copyWith(protected: true));
+        await abstractNotesDataBase
+            .updateTodoList(event.todo.copyWith(protected: true));
+      }
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _removeProtected(RemoveProtectedEvent event,
+      Emitter<CurrentTodoListInfoState> emit) async {
+    try {
+      final protected = await abstractLocalAuthRepository.authenticate();
+      if (protected) {
+        emit(state.copyWith(protected: false));
+        await abstractNotesDataBase
+            .updateTodoList(event.todo.copyWith(protected: false));
+      }
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
   }
 
   Future<void> _createTodo(
@@ -103,7 +138,11 @@ class CurrentTodoListInfoBloc
           await abstractNotesDataBase.readTodoList(event.todoList.id!);
       final List<Todo> todo =
           await abstractNotesDataBase.readAllTodo(event.todoList.id!);
-      emit(state.copyWith(isLoading: false, todo: todo, name: todoList.name));
+      emit(state.copyWith(
+          isLoading: false,
+          todo: todo,
+          name: todoList.name,
+          protected: todoList.protected));
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: e));
     }

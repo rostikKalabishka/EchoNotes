@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
+import 'package:note_app/repository/local_auth_repository/abstract_local_auth_repository.dart';
 import 'package:note_app/repository/model/todo_list.dart';
 import 'package:note_app/repository/shared_pref_theme/abstract_shared_pref_theme.dart';
 
@@ -14,7 +15,9 @@ part 'list_todo_state.dart';
 class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
   final AbstractNotesDataBase abstractNotesDataBase;
   final AbstractSharedPrefTheme abstractSharedPrefTheme;
-  ListTodoBloc(this.abstractNotesDataBase, this.abstractSharedPrefTheme)
+  final AbstractLocalAuthRepository abstractLocalAuthRepository;
+  ListTodoBloc(this.abstractNotesDataBase, this.abstractSharedPrefTheme,
+      this.abstractLocalAuthRepository)
       : super(const ListTodoState()) {
     on<ListTodoListEvent>((event, emit) async {
       if (event is NavigateToAddTodoNotesEvent) {
@@ -24,7 +27,7 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
       } else if (event is DeleteTodoListEvent) {
         await _deleteTodoList(event, emit);
       } else if (event is NavigateToCurrentTodoInfoListEvent) {
-        _navigateToCurrentTodoListInfoPage(event, emit);
+        await _navigateToCurrentTodoListInfoPage(event, emit);
       } else if (event is ChangeNameCurrentTodoListEvent) {
         await _saveNameTodoList(event, emit);
       }
@@ -37,12 +40,20 @@ class ListTodoBloc extends Bloc<ListTodoListEvent, ListTodoState> {
     autoRouter.push(const AddListTodoRoute());
   }
 
-  void _navigateToCurrentTodoListInfoPage(
-      NavigateToCurrentTodoInfoListEvent event, Emitter<ListTodoState> emit) {
+  Future<void> _navigateToCurrentTodoListInfoPage(
+      NavigateToCurrentTodoInfoListEvent event,
+      Emitter<ListTodoState> emit) async {
     try {
       final autoRouter = AutoRouter.of(event.context);
+      if (event.todoList.protected == false) {
+        autoRouter.push(CurrentTodoListInfoRoute(todoList: event.todoList));
+      }
 
-      autoRouter.push(CurrentTodoListInfoRoute(todoList: event.todoList));
+      if (event.todoList.protected == true) {
+        if (await abstractLocalAuthRepository.authenticate() == true) {
+          autoRouter.push(CurrentTodoListInfoRoute(todoList: event.todoList));
+        }
+      }
     } catch (e) {
       emit(state.copyWith(error: e));
     }

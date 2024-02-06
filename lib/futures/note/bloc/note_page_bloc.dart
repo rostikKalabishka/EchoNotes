@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,7 @@ import 'package:note_app/core/router/router.dart';
 import 'package:note_app/repository/db_repository/abstract_notes_database.dart';
 
 import 'package:note_app/core/utilities/utilities.dart';
+import 'package:note_app/repository/local_auth_repository/abstract_local_auth_repository.dart';
 
 import '../../../repository/model/model.dart';
 
@@ -15,21 +17,30 @@ part 'note_page_state.dart';
 
 class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   final AbstractNotesDataBase abstractNotesDataBase;
+  final AbstractLocalAuthRepository abstractLocalAuthRepository;
   final utilities = Utilities();
-  NotePageBloc(this.abstractNotesDataBase) : super(const NotePageState()) {
-    on<NotePageEvent>((event, emit) async {
-      if (event is ImagePickerEvent) {
-        await _pickImage(event, emit);
-      } else if (event is LoadNoteInfoEvent) {
-        await _loadNote(event, emit);
-      } else if (event is DeleteNoteEvent) {
-        await _deleteNote(event, emit);
-      } else if (event is ChangeNameNoteEvent) {
-        await _changeNameNote(event, emit);
-      } else if (event is ChangeDescriptionNoteEvent) {
-        await _changeNoteDescription(event, emit);
-      }
-    });
+  NotePageBloc(this.abstractNotesDataBase, this.abstractLocalAuthRepository)
+      : super(const NotePageState()) {
+    on<NotePageEvent>(
+      (event, emit) async {
+        if (event is ImagePickerEvent) {
+          await _pickImage(event, emit);
+        } else if (event is LoadNoteInfoEvent) {
+          await _loadNote(event, emit);
+        } else if (event is DeleteNoteEvent) {
+          await _deleteNote(event, emit);
+        } else if (event is ChangeNameNoteEvent) {
+          await _changeNameNote(event, emit);
+        } else if (event is ChangeDescriptionNoteEvent) {
+          await _changeNoteDescription(event, emit);
+        } else if (event is AddProtectedEvent) {
+          await _addProtected(event, emit);
+        } else if (event is RemoveProtectedEvent) {
+          await _removeProtected(event, emit);
+        }
+      },
+      transformer: sequential(),
+    );
   }
 
   Future<void> _pickImage(
@@ -51,6 +62,34 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     }
   }
 
+  Future<void> _addProtected(
+      AddProtectedEvent event, Emitter<NotePageState> emit) async {
+    try {
+      final protected = await abstractLocalAuthRepository.authenticate();
+      if (protected) {
+        emit(state.copyWith(protected: true));
+        await abstractNotesDataBase
+            .updateNote(event.note.copyWith(protected: true));
+      }
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _removeProtected(
+      RemoveProtectedEvent event, Emitter<NotePageState> emit) async {
+    try {
+      final protected = await abstractLocalAuthRepository.authenticate();
+      if (protected) {
+        emit(state.copyWith(protected: false));
+        await abstractNotesDataBase
+            .updateNote(event.note.copyWith(protected: false));
+      }
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
   Future<void> _changeNameNote(
       ChangeNameNoteEvent event, Emitter<NotePageState> emit) async {
     try {
@@ -66,9 +105,9 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
       ChangeDescriptionNoteEvent event, Emitter<NotePageState> emit) async {
     final autoRoute = AutoRouter.of(event.context);
     try {
-      emit(state.copyWith(description: event.description));
       await abstractNotesDataBase
           .updateNote(event.note.copyWith(description: event.description));
+      emit(state.copyWith(description: event.description));
       autoRoute.pop();
     } catch (e) {
       emit(state.copyWith(error: e));
@@ -80,6 +119,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     try {
       final Note note = await abstractNotesDataBase.readNote(event.id);
       emit(state.copyWith(
+          protected: note.protected,
           description: note.description,
           name: note.name,
           voice: note.voiceNote,

@@ -24,6 +24,20 @@ class LoadNoteInfoEvent extends NotePageEvent {
   List<Object> get props => super.props..add(id);
 }
 
+class AddProtectedEvent extends NotePageEvent {
+  final Note note;
+  const AddProtectedEvent({required this.note});
+  @override
+  List<Object> get props => super.props..addAll([note]);
+}
+
+class RemoveProtectedEvent extends NotePageEvent {
+  final Note note;
+  const RemoveProtectedEvent({required this.note});
+  @override
+  List<Object> get props => super.props..addAll([note]);
+}
+
 class ChangeNameNoteEvent extends NotePageEvent {
   final Note note;
   final String name;

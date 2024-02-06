@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -99,6 +101,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
         name: event.name,
         createDate: createDate,
         createAt: DateTime.now(),
+        protected: false,
       );
       final createdTodoList =
           await abstractNotesDataBase.createTodoList(todoList);
@@ -115,6 +118,7 @@ class AddListTodoBloc extends Bloc<AddListTodoEvent, AddListTodoState> {
 
       autoRouter.navigateNamedTo('/${AppRouterPath.listTodoRoutePath}');
     } catch (e) {
+      log(e.toString());
       emit(state.copyWith(error: e));
     }
   }

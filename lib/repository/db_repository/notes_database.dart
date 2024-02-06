@@ -22,7 +22,7 @@ class NotesDatabase implements AbstractNotesDataBase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 3, onCreate: _createDB);
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -40,7 +40,8 @@ class NotesDatabase implements AbstractNotesDataBase {
       ${NoteFields.isImportant} $boolType,
       ${NoteFields.voiceNote} $textType,
       ${NoteFields.imageUrl} $textType,
-       ${NoteFields.createAt} $textType
+      ${NoteFields.createAt} $textType,
+      ${NoteFields.protected} $boolType
     )''');
 
     await db.execute('''CREATE TABLE $tableTodoList(
@@ -48,7 +49,8 @@ class NotesDatabase implements AbstractNotesDataBase {
   ${TodoListFields.createDate} $textType,
   ${TodoListFields.percentage} $textType,
   ${TodoListFields.name} $textType,
-   ${TodoListFields.createAt} $textType
+  ${TodoListFields.createAt} $textType,
+  ${TodoListFields.protected} $boolType
 )''');
 
     await db.execute('''CREATE TABLE $tableTodo(

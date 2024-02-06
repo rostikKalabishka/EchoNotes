@@ -31,7 +31,6 @@ class _NotePageState extends State<NotePage> {
     super.initState();
   }
 
-  bool play = false;
   @override
   Widget build(BuildContext context) {
     double bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -58,6 +57,7 @@ class _NotePageState extends State<NotePage> {
                     utilities: utilities,
                     controller: changeNameNote,
                     formKey: _formKey,
+                    protected: state.protected,
                   ));
             },
             dataButton: const Icon(FontAwesomeIcons.plus),
@@ -83,6 +83,7 @@ class _NotePageState extends State<NotePage> {
                                 utilities: utilities,
                                 controller: changeNameNote,
                                 formKey: _formKey,
+                                protected: state.protected,
                               ));
                         },
                         icon: const Icon(Icons.more_horiz),
@@ -202,11 +203,13 @@ class MenuWidget extends StatelessWidget {
     required this.utilities,
     required this.controller,
     required this.formKey,
+    required this.protected,
   }) : super(key: key);
   final Note note;
   final Utilities utilities;
   final TextEditingController controller;
   final GlobalKey<FormState> formKey;
+  final bool? protected;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -270,10 +273,20 @@ class MenuWidget extends StatelessWidget {
                   ),
                   ButtonInBottomSheet(
                     backgroundColor: const Color.fromARGB(255, 6, 70, 246),
-                    onTap: () {},
+                    onTap: () {
+                      protected == false
+                          ? context
+                              .read<NotePageBloc>()
+                              .add(AddProtectedEvent(note: note))
+                          : context
+                              .read<NotePageBloc>()
+                              .add(RemoveProtectedEvent(note: note));
+                    },
                     iconColor: Colors.blue,
                     icon: FontAwesomeIcons.faceDizzy,
-                    text: 'Delete note',
+                    text: protected == false
+                        ? 'Add protection'
+                        : 'Remove protection',
                   ),
                   const SizedBox(
                     height: 10,
@@ -314,69 +327,71 @@ class AddNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.15,
-            ),
-            Text(
-              'Change description',
-              style: theme.textTheme.labelLarge,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            IconButton(
-              onPressed: () {
-                AutoRouter.of(context).pop();
-              },
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Form(
-            key: formKey,
-            child: Column(
-              children: [
-                CustomTextField(
-                  mixLines: 1,
-                  validator: (value) => utilities.textFieldValidator(value!),
-                  hintText: 'Add note name',
-                  textEditorController: addTodoController,
-                  maxLines: 15,
-                  autofocus: true,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        context.read<NotePageBloc>().add(
-                              ChangeDescriptionNoteEvent(
-                                  description: addTodoController.text,
-                                  context: context,
-                                  note: note),
-                            );
-                        addTodoController.clear();
-                      }
-                    },
-                    child: Text(
-                      'add todo',
-                      style: theme.textTheme.labelLarge,
-                    ))
-              ],
-            ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.15,
+              ),
+              Text(
+                'Change description',
+                style: theme.textTheme.labelLarge,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              IconButton(
+                onPressed: () {
+                  AutoRouter.of(context).pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ],
           ),
-        )
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  CustomTextField(
+                    mixLines: 1,
+                    validator: (value) => utilities.textFieldValidator(value!),
+                    hintText: 'Add note name',
+                    textEditorController: addTodoController,
+                    maxLines: 15,
+                    autofocus: true,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          context.read<NotePageBloc>().add(
+                                ChangeDescriptionNoteEvent(
+                                    description: addTodoController.text,
+                                    context: context,
+                                    note: note),
+                              );
+                          addTodoController.clear();
+                        }
+                      },
+                      child: Text(
+                        'add todo',
+                        style: theme.textTheme.labelLarge,
+                      ))
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
